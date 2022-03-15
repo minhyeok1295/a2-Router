@@ -1,8 +1,8 @@
 import socket
 import pickle
+import sys
 
 broadcast = '255.255.255.255'
-interface_ip = '127.0.0.'
 def make_packet(src_ip,dest_ip,message,ttl):
     data = {
         'src_ip' : src_ip,
@@ -13,16 +13,26 @@ def make_packet(src_ip,dest_ip,message,ttl):
     return pickle.dumps(data)
 
 if __name__ == "__main__":
-    print("Please Enter an IP address")
-    src_ip = interface_ip + input()
-    connection = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    address = (sys.argv[1], 9999)
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+    while True:
+        print(broadcast)
+        s.sendto(make_packet(address,broadcast,'',0),(broadcast,9999))
+        recv_data, addr = s.recvfrom(1024)
+        data = pickle.load(recv_data)
+        print(data['src_ip'])
+        break
+    s.close()
+    """connection = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     connection.bind((src_ip,8000)) # host port 8000
-    connection.connect((broadcast,8000))   # router broadcast port 8000
+    connection.connect(("10.0.0.2",8100))   # router broadcast port 8000
     connection.send(make_packet(src_ip,broadcast,'',0))
     recv_data = connection.recv(1024)
     connection.close()
     data = pickle.load(recv_data)
     router_ip = data['src_ip']
-    print(router_ip)
+    print(router_ip)"""
     
 
