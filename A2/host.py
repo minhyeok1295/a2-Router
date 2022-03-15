@@ -21,7 +21,7 @@ if __name__ == "__main__":
         print(broadcast)
         s.sendto(make_packet(address,broadcast,'',0),(broadcast,9999))
         recv_data, addr = s.recvfrom(1024)
-        data = pickle.load(recv_data)
+        data = pickle.loads(recv_data)
         print(data['src_ip'])
         break
     s.close()
