@@ -4,6 +4,7 @@ from mininet.node import Node
 from mininet.log import setLogLevel, info
 from mininet.cli import CLI
 
+topos = { 'mytopo': ( lambda: NetworkTopo() ) } 
 
 class LinuxRouter(Node):
     def config(self, **params):
@@ -57,9 +58,9 @@ def run():
     #info(net['r1'].cmd("ip route add 10.1.0.0/24 via 10.0.0.1 dev r1-eth2"))
     #info(net['r1'].cmd("ip route add 10.0.0.0/24 via 10.1.0.1 dev r1-eth1"))
 
-    net.start()
-    CLI(net)
-    net.stop()
+    #net.start()
+    #CLI(net)
+    #net.stop()
 
 
 if __name__ == '__main__':
