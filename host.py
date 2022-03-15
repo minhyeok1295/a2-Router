@@ -24,12 +24,10 @@ class Host():
         self.broad_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.broad_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.broad_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        while True:
-            self.broad_socket.sendto(make_packet(self.ip, '255.255.255.255','', 0),
-                                     ('255.255.255.255', 9999))
-            recv_data, addr = self.broad_socket.recvfrom(1024)
-            data = pickle.loads(recv_data)
-            break
+        self.broad_socket.sendto(make_packet(self.ip, '255.255.255.255','', 0),
+                                    ('255.255.255.255', 9999))
+        recv_data, addr = self.broad_socket.recvfrom(1024)
+        data = pickle.loads(recv_data)
         self.broad_socket.close()
         return data
             
@@ -56,6 +54,9 @@ class Host():
 
 
 if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Incorrect number of arguments: IP address needed")
+        raise
     host = Host(sys.argv[1], 9999)
     print("created host")
     print("Start broadcasting")
@@ -66,6 +67,7 @@ if __name__ == "__main__":
     while True:
         print("Enter message: ")
         msg = sys.stdin.readline()
+        print("msg is ", msg)
         data_packet = make_packet(host.ip, "192.168.1.10", msg[:-1], 2)
         host.send(data_packet)
         if(msg[:-1] == 'exit'):

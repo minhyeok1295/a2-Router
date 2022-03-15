@@ -1,5 +1,6 @@
 import socket
 import pickle
+import threading
 from helper import *
 
 broadcast = '255.255.255.255'
@@ -11,19 +12,19 @@ class Router():
     
     def __init__(self, ip):
         self.ip = ip
-    
+        self.bc_sock = None
+
+    def init_bc_sock(self):
+        self.bc_sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+        self.bc_sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        self.bc_sock.bind(('0.0.0.0',9999))
+
     def wait_for_broadcast(self):
-        bc_sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-        bc_sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        bc_sock.bind(('0.0.0.0',9999))
-        while True:
-            recv_data, addr = bc_sock.recvfrom(1024)
-            data = pickle.loads(recv_data)
-            print(data['src_ip'])
-            print(addr)
-            bc_sock.sendto(make_packet(self.ip,addr,'',0),addr)
-            break
-        bc_sock.close()
+        recv_data, addr = self.bc_sock.recvfrom(1024)
+        data = pickle.loads(recv_data)
+        print(data['src_ip'])
+        print(addr)
+        self.bc_sock.sendto(make_packet(self.ip,addr,'',0),addr)
     
     def open_server(self):
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -43,45 +44,49 @@ class Router():
         conn.close()
             
             
-            
+class BroadCastThread(threading.Thread):
+    
+    def __init__(self,router):
+        threading.Thread.__init__(self)
+        self.router = router
+        # https://stackoverflow.com/questions/323972/is-there-any-way-to-kill-a-thread
+        self._stop_event = threading.Event()
 
-        
+    def stop(self):
+        self._stop_event.set()
 
+    def stopped(self):
+        return self._stop_event.is_set()
 
+    def run(self):
+        self.router.init_bc_sock()
+        while not self.stopped():
+            self.router.wait_for_broadcast()
+        self.router.bc_sock.close()
+
+      
+class ServerThread(threading.Thread):
+    """ We don't need this yet
+    """
+    
+    def __init__(self,router):
+        threading.Thread.__init__(self)
+        self.router = router
+    
+    def run(self):
+        self.router.open_server()
 
 
 
 
 if __name__ == "__main__":
     router = Router("10.0.0.1")
-    router.wait_for_broadcast()
+
+    broadcast_t = BroadCastThread(router)
+    broadcast_t.start()
     router.open_server()
-    
-    """
-    src_name = socket.gethostname()
-    src_ip = "10.0.0.2"
-
-    bc_sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    bc_sock.bind((broadcast,8000))
-    bc_sock.listen(5)
-
-    router_in = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    router_in.bind((src_ip,8100)) # router recieve port 8100
-    router_in.listen(5)
-
-    router_out = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    router_out.bind((src_ip,8200)) # router send port 8200
-    router_out.listen(5)
-
-    while True:
-        hostsocket, addr = router_in.accept()
-        print("host addr ",addr)
-        data = hostsocket.recv(1024)
-        if data:
-            if data['dest_ip'] == broadcast:
-                hostsocket.send(make_packet(src_ip,addr,'',0))
-        hostsocket.close()
-    """
+    broadcast_t.stop()
+    broadcast_t.join()
     #1. receive broadcast message
     #2. send packet to host who sent broadcast message
     #3. forward the message packet received to the final destination
