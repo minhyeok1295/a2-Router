@@ -1,9 +1,0 @@
-ifconfig
-
-ssh -X mininet@ipaddress
-
-export XAUTHORITY=$HOME/.Xauthority
-
-sudo -E wireshark &
-
-sudo mn -x --custom ./simple_net.py --topo mytopo
