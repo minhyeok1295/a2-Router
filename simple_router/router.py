@@ -43,20 +43,23 @@ class Router():
                 print_packet(data)
                 if (data['message'] == 'exit'):
                     break
-                
-                dest = data['dest_ip']
-                self.lock.acquire()
-                if self.table.has_ip(dest):
-                    next_hop = self.table.get_next_hop(dest)
-                    print(next_hop)
-                    try:
-                        self.forward(data,next_hop)
-                        print(f"Successfully sent message to {data['dest_ip']}")
-                    except Exception:
-                        print("Error!!!!")
+                data['ttl'] -= 1
+                if (data['ttl'] < 0):
+                    dest = data['dest_ip']
+                    self.lock.acquire()
+                    if self.table.has_ip(dest):
+                        next_hop = self.table.get_next_hop(dest)
+                        print(next_hop)
+                        try:
+                            self.forward(data,next_hop)
+                            print(f"Successfully sent message to {data['dest_ip']}")
+                        except Exception:
+                            print("Error!!!!")
+                    else:
+                        print_error(data['src_ip'],data['dest_ip'])
+                    self.lock.release()
                 else:
-                    self.print_error(data['src_ip'],data['dest_ip'])
-                self.lock.release()
+                    print_ttl_expired(self.ip,data['src_ip'],data['dest_ip'])
             else:
                 print("nothing received")
             conn.close()
@@ -70,12 +73,6 @@ class Router():
         sock.connect((next_hop,8100))
         sock.send(packet)
         sock.close()
-    
-    def print_error(self,src_ip,dest_ip):
-        print("========== Error ==========")
-        print(f"Bad request from {src_ip}")
-        print(f"Destination {dest_ip} is unreachable\n\n")
-
 
 
 class TableCommandThread(ThreadSock):

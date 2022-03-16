@@ -46,24 +46,26 @@ class Host():
     def send(self):
         while True:
             msg = input("Enter message: ")
-            self.connect()
             if(msg == 'exit'):
                 exit_packet = make_packet("", "", msg, 0)
+                self.connect()
                 self.send_sock.send(exit_packet)
                 self.send_sock.close()
                 break
             else:
                 dest_ip = input("Enter destination: ")
+                ttl = self.get_ttl()
                 if (validate_ip(dest_ip)):
+                    self.connect()
                     print("send msg: " + msg + ", to dest: ", dest_ip)
-                    data_packet = make_packet(self.ip, dest_ip, msg, 2)
+                    data_packet = make_packet(self.ip, dest_ip, msg, ttl)
                     if (check_on_same_switch(self.ip, dest_ip)):
                         self.send_to_host(dest_ip, data_packet)
                     else:
                         self.send_sock.send(data_packet)
+                    self.send_sock.close()
                 else:
                     print("invalid ip address format")
-                self.send_sock.close()
         return 0
 
     def send_to_host(self, dest_ip, packet):
@@ -75,6 +77,18 @@ class Host():
         self.thread_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.thread_sock.bind((self.ip, 8100))
         self.thread_sock.listen(5)
+    
+    def get_ttl(self):
+        invalid_ttl = True
+        while invalid_ttl:
+            try:
+                ttl = int(input("Enter TTL: "))
+                if (ttl <= 0):
+                    raise
+                invalid_ttl = False
+            except Exception:
+                print("plase enter a valid ttl")
+        return ttl
     
     '''
     if an end system receives a message, it should display that message
