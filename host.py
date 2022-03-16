@@ -106,6 +106,7 @@ if __name__ == "__main__":
     data = host.broadcast()
     
     print("router ip: " + data['src_ip'])
+<<<<<<< HEAD
     host.set_next_hop(data['src_ip'])
 
     recv_t = ReceiveThread(host)
@@ -114,4 +115,17 @@ if __name__ == "__main__":
     recv_t.stop()
     recv_t.join()
     print('Program Terminated')
+=======
+    host.open_socket(data['src_ip'])
+    while True:
+        msg = input("Enter Message: ")
+        dest = input("Enter destination IP: ")
+        print("send to " + dest + ",msg: " + msg)
+        data_packet = make_packet(host.ip, dest, msg, 2)
+        host.send(data_packet)
+        if(msg[:-1] == 'exit'):
+            break
+    host.socket.close()
+    
+>>>>>>> e994336c1372ffacad019da08c733446d5e70b81
     

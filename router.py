@@ -2,10 +2,34 @@ import socket
 import pickle
 import threading
 from helper import *
+from _thread import start_new_thread
 
 broadcast = '255.255.255.255'
 inter1= '172.168.0.1'
 inter2= '192.168.1.1'
+
+def print_packet(packet):
+    print("-----packet info-----")
+    print("src_ip: " + packet["src_ip"])
+    print("dest_ip: " + packet["dest_ip"])
+    print("msg: " + packet['message'])
+    print("ttl: " + str(packet['ttl']))
+
+
+def multi_thread_client(conn):
+    conn.send(str.encode('server is connected'))
+    while True:
+        packet = conn.recv(4096)
+        data = pickle.loads(packet)
+        print_packet(data)
+        #print("received: " + data['message'])
+        
+        msg = "server received message: " + data['message']
+        if (data['message'] == 'exit'):
+            conn.send(msg.encode())
+            break
+        conn.sendall(msg.encode())
+        #conn.send(msg.encode())
 
 
 class Router():
@@ -22,8 +46,6 @@ class Router():
     def wait_for_broadcast(self):
         recv_data, addr = self.bc_sock.recvfrom(1024)
         data = pickle.loads(recv_data)
-        print(data['src_ip'])
-        print(addr)
         self.bc_sock.sendto(make_packet(self.ip,addr,'',0),addr)
     
     def open_server(self):
@@ -44,7 +66,6 @@ class Router():
             conn.close()
         conn.close()
         server.close()
-            
             
 class BroadCastThread(threading.Thread):
     
