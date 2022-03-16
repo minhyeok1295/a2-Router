@@ -1,6 +1,10 @@
+
 from router import *
 from rip_table import RIPTbable
 import time
+import ifaddr
+
+adaptors = []
 class RIPRouter(Router):
 
     def __init__(self,ip):
@@ -117,8 +121,16 @@ if __name__ == "__main__":
     broadcast_t.start()
     command_t.start()
     update_t.start()
+    # get a list of interfaces the router connects to 
+    addrs = ifaddr.get_adapters()
+    for addr in addrs:
+        slices = addr.name.split("-")
+        if slices[-1][:3] == "eth":
+            adaptors.append(slices[-1])
+    print(adaptors)
     try:
         time.sleep(1)
+        # broadcast message to all interfaces in the list
         router.advertise()
     except Exception:
         pass
