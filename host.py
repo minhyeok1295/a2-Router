@@ -57,11 +57,6 @@ class Host():
             data_packet = make_packet(self.ip, dest_ip, msg[:-1], 2)
             self.send_sock.send(data_packet)
             self.send_sock.close()
-    """def send(self, packet):
-        #msg = packet['message']
-        self.send_sock.send(packet)
-        from_server = self.send_sock.recv(4096)
-        print(from_server.decode())"""
 
     def init_recv_sock(self):
         self.recv_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -120,25 +115,3 @@ if __name__ == "__main__":
     recv_t.join()
     print('Program Terminated')
     
-    
-    """
-    if len(sys.argv) != 2:
-        print("Incorrect number of arguments: IP address needed")
-        raise
-    host = Host(sys.argv[1], 9999)
-    print("created host")
-    print("Start broadcasting")
-    data = host.broadcast()
-    
-    print("router ip: " + data['src_ip'])
-    host.open_socket(data['src_ip'])
-    while True:
-        print("Enter message: ")
-        msg = sys.stdin.readline()
-        print("msg is ", msg)
-        data_packet = make_packet(host.ip, "192.168.1.10", msg[:-1], 2)
-        host.send(data_packet)
-        if(msg[:-1] == 'exit'):
-            break
-    host.socket.close()
-    """
