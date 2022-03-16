@@ -2,11 +2,9 @@ import socket
 import pickle
 import threading
 from helper import *
-from _thread import start_new_thread
+from forward_table import ForwardTable
 
 broadcast = '255.255.255.255'
-inter1= '172.168.0.1'
-inter2= '192.168.1.1'
 
 def print_packet(packet):
     print("-----packet info-----")
@@ -21,6 +19,8 @@ class Router():
     def __init__(self, ip):
         self.ip = ip
         self.bc_sock = None
+        self.table = ForwardTable()
+        self.lock = threading.Lock()
 
     def init_bc_sock(self):
         self.bc_sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
@@ -30,6 +30,10 @@ class Router():
     def wait_for_broadcast(self):
         recv_data, addr = self.bc_sock.recvfrom(1024)
         data = pickle.loads(recv_data)
+        self.lock.acquire()
+        # set src ip as key, the ip where the message is coming from as value
+        self.table.create_entry(data['src_ip'],addr[0])
+        self.lock.release()
         self.bc_sock.sendto(make_packet(self.ip,addr,'',0),addr)
     
     def open_server(self):
@@ -47,29 +51,28 @@ class Router():
                 break
             
             dest = data['dest_ip']
-            if not self.forward(data):
-                self.print_error(data['src_ip'],data['dest_ip'])
+            self.lock.acquire()
+            if self.table.has_ip(dest):
+                next_hop = self.table.get_next_hop(dest)
+                try:
+                    self.forward(data,next_hop)
+                    print(f"Successfully sent message to {data['dest_ip']}")
+                except Exception:
+                    print("Error!!!!")
             else:
-                print(f"Successfully sent message to {data['dest_ip']}")
+                self.print_error(data['src_ip'],data['dest_ip'])
+            self.lock.release()
             conn.close()
         conn.close()
         server.close()
 
-    def forward(self,recv_data):
+    def forward(self,recv_data,next_hop):
         data =recv_data.copy()
         packet = make_packet(data['src_ip'],data['dest_ip'],data['message'],data['ttl'])
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        try : 
-            print("connect")
-            sock.connect((data['dest_ip'],8100))
-            print("send")
-            sock.send(packet)
-            print("close")
-            sock.close()
-        except Exception:
-            sock.close()
-            return False
-        return True
+        sock.connect((next_hop,8100))
+        sock.send(packet)
+        sock.close()
     
     def print_error(self,src_ip,dest_ip):
         print("========== Error ==========")
@@ -98,28 +101,43 @@ class BroadCastThread(threading.Thread):
         self.router.bc_sock.close()
 
       
-class ServerThread(threading.Thread):
-    """ We don't need this yet
-    """
-    
+class TableCommandThread(threading.Thread):
+
     def __init__(self,router):
         threading.Thread.__init__(self)
         self.router = router
-    
-    def run(self):
-        self.router.open_server()
+        self._stop_event = threading.Event()
 
+    def stop(self):
+        self._stop_event.set()
+
+    def stopped(self):
+        return self._stop_event.is_set()
+
+    def run(self):
+        print("Start Command Thread")
+        while not self.stopped():
+            command = input()
+            print("Command you entered is ",command)
+            if command == "print":
+                print("Executing print command")
+                print(self.router.table)
+        
 
 
 
 if __name__ == "__main__":
     router = Router("10.0.0.1")
     broadcast_t = BroadCastThread(router)
+    command_t = TableCommandThread(router)
     broadcast_t.start()
+    command_t.start()
     router.open_server()
     broadcast_t.stop()
+    command_t.stop()
     router.bc_sock.close()
     broadcast_t.join()
+    command_t.join()
     #1. receive broadcast message
     #2. send packet to host who sent broadcast message
     #3. forward the message packet received to the final destination

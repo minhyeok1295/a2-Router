@@ -49,12 +49,20 @@ class NetworkTopo(Topo):
                           ip='10.0.0.10/24',
                           defaultRoute='via 10.0.0.1')
         d2 = self.addHost(name='d2',
-                          ip='192.168.1.10/24',
+                          ip='10.0.1.10/24',
+                          defaultRoute='via 10.0.1.1')
+        d3 = self.addHost(name='d3',
+                          ip='10.0.0.11/24',
+                          defaultRoute='via 10.0.0.1')
+        d4 = self.addHost(name='d4',
+                          ip='10.0.1.11/24',
                           defaultRoute='via 10.0.1.1')
 
         # Add host-switch links
         self.addLink(d1, s1)
         self.addLink(d2, s2)
+        self.addLink(d3, s1)
+        self.addLink(d4, s2)
         
 def run():
     topo = NetworkTopo()
