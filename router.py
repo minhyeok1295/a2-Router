@@ -30,8 +30,8 @@ class Router():
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.bind((self.ip, 8000))
         server.listen(5)
-        conn, addr = server.accept()
         while True:
+            conn, addr = server.accept()
             packet = conn.recv(4096)
             data = pickle.loads(packet)
             print(data['message'])
@@ -41,7 +41,9 @@ class Router():
                 conn.send(msg.encode())
                 break
             conn.send(msg.encode())
+            conn.close()
         conn.close()
+        server.close()
             
             
 class BroadCastThread(threading.Thread):
