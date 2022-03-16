@@ -60,7 +60,7 @@ class RIPRouter(Router):
 
     def update(self,table,last_hop):
         print("======== Got Update Message ========")
-        table[last_hop] = [table[last_hop],1]
+        table[last_hop] = [table[last_hop][0],1]
         if len(self.table.get_table().keys()) == 0:
             self.set_forwarding_table(table)
             return
