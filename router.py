@@ -44,6 +44,9 @@ class Router():
             data = pickle.loads(packet)
             print_packet(data)
             
+            dest = data['dest_ip']
+            server.connect((dest,8100))
+            server.send(data)
             msg = "server received message: " + data['message']
             if (data['message'] == 'exit'):
                 conn.send(msg.encode())
@@ -52,7 +55,7 @@ class Router():
             conn.close()
         conn.close()
         server.close()
-            
+    
 class BroadCastThread(threading.Thread):
     
     def __init__(self,router):
