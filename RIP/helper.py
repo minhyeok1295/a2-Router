@@ -33,7 +33,10 @@ def make_packet(src_ip, dest_ip, message, ttl):
     }
     return pickle.dumps(data)
 
-
+def make_table(table):
+    return pickle.dumps({
+        "table": table
+    })
 
 def print_packet(packet):
     print("-----packet info-----")
@@ -43,13 +46,13 @@ def print_packet(packet):
     print("ttl: " + str(packet['ttl']))
     
 def print_error(src_ip,dest_ip):
-        print("========== Error ==========")
-        print(f"Bad request from {src_ip}")
-        print(f"Destination {dest_ip} is unreachable\n\n")
+    print("========== Error ==========")
+    print(f"Bad request from {src_ip}")
+    print(f"Destination {dest_ip} is unreachable\n\n")
 
 def print_ttl_expired(cur_ip,src_ip,dest_ip):
-        print("========== TTL Expired ==========")
-        print(f"At router {cur_ip} from {src_ip} to {dest_ip}\n\n")
+    print("========== TTL Expired ==========")
+    print(f"At router {cur_ip} from {src_ip} to {dest_ip}\n\n")
 
 #Validate format of ip address
 def validate_ip(ip):

@@ -44,7 +44,7 @@ class Router():
                 if (data['message'] == 'exit'):
                     break
                 data['ttl'] -= 1
-                if (data['ttl'] < 0):
+                if (data['ttl'] > 0):
                     dest = data['dest_ip']
                     self.lock.acquire()
                     if self.table.has_ip(dest):

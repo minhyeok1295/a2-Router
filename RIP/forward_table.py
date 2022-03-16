@@ -23,10 +23,16 @@ class ForwardTable:
     def _update_table(self,ip,ttl,addr):
         pass
     
+    def get_table(self):
+        return self.table
+
+    def set_table(self,table):
+        self.table = table
+
     def print2(self):
         print(self.table)
         print("=========")
-        print(list(set(self.table.values())))
+        print(self.table.values())
 
     def __str__(self):
         output = "======= Original Table =======\n"
