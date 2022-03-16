@@ -46,8 +46,6 @@ class Host():
     def send(self):
         while True:
             msg = input("Enter message: ")
-            if(msg[:-1] == 'exit'):
-                break
             dest_ip = input("Enter destination: ")
             print("msg is ", msg)
             print("dest is ", dest_ip)
@@ -55,6 +53,8 @@ class Host():
             data_packet = make_packet(self.ip, dest_ip, msg, 2)
             self.send_sock.send(data_packet)
             self.send_sock.close()
+            if(msg == 'exit'):
+                break
 
     def init_recv_sock(self):
         self.recv_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -66,9 +66,9 @@ class Host():
     '''
     def receive(self):
         recv_sock,addr = self.recv_sock.accept()
-        recv_data = self.recv_sock.recv(4096)
-        data = data.pickle.loads(recv_data)
-        print(data)
+        print(addr)
+        recv_data = recv_sock.recv(4096)
+        data = pickle.loads(recv_data)
         print(f"From {data['src_ip']}: {data['message']}")
         recv_sock.close()
         
@@ -110,6 +110,7 @@ if __name__ == "__main__":
     recv_t.start()
     host.send()
     recv_t.stop()
+    host.recv_sock.close()
     recv_t.join()
     print('Program Terminated')
     

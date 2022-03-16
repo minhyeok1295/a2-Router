@@ -43,19 +43,40 @@ class Router():
             packet = conn.recv(4096)
             data = pickle.loads(packet)
             print_packet(data)
+            if (data['message'] == 'exit'):
+                break
             
             dest = data['dest_ip']
-            server.connect((dest,8100))
-            server.send(data)
-            msg = "server received message: " + data['message']
-            if (data['message'] == 'exit'):
-                conn.send(msg.encode())
-                break
-            conn.send(msg.encode())
+            if not self.forward(data):
+                self.print_error(data['src_ip'],data['dest_ip'])
+            else:
+                print(f"Successfully sent message to {data['dest_ip']}")
             conn.close()
         conn.close()
         server.close()
+
+    def forward(self,recv_data):
+        data =recv_data.copy()
+        packet = make_packet(data['src_ip'],data['dest_ip'],data['message'],data['ttl'])
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try : 
+            print("connect")
+            sock.connect((data['dest_ip'],8100))
+            print("send")
+            sock.send(packet)
+            print("close")
+            sock.close()
+        except Exception:
+            sock.close()
+            return False
+        return True
     
+    def print_error(self,src_ip,dest_ip):
+        print("========== Error ==========")
+        print(f"Bad request from {src_ip}")
+        print(f"Destination {dest_ip} is unreachable\n\n")
+
+
 class BroadCastThread(threading.Thread):
     
     def __init__(self,router):
@@ -97,6 +118,7 @@ if __name__ == "__main__":
     broadcast_t.start()
     router.open_server()
     broadcast_t.stop()
+    router.bc_sock.close()
     broadcast_t.join()
     #1. receive broadcast message
     #2. send packet to host who sent broadcast message
