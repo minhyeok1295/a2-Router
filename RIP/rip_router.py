@@ -11,14 +11,17 @@ class RIPRouter(Router):
         self.table = RIPTable()
         self.init_update_sock()
         self.interfaces = self.init_interfaces()
-        self.interface_ip = [interface.ip for interface in self.interfaces]
-        self.interface_lock = self.init_locks()
-        self.table_lock = threading.Lock()
+        self.interface_ip = [interface.ip for interface in self.interfaces]     # a list of ip of this router
+        self.interface_lock = self.init_locks()     # resource lock, one lock for each ip
+        self.table_lock = threading.Lock()          # one lock for table
         self.init_table()
         self.update_table_timer = []
         self.advertise_table_timer = []
     
     def start(self):
+        """
+        start all the threads and router
+        """
         broadcast_t = ThreadSock(self)
         update_t = UpdateThread(self)
         threads = [broadcast_t,update_t]
@@ -38,8 +41,10 @@ class RIPRouter(Router):
         for thread in threads:
             thread.join()
 
-    # stores all the interface this router connects to in the interfaces
     def init_interfaces(self):
+        """
+        stores all the interface this router connects to in a list
+        """
         interfaces = []
         adapters = ifaddr.get_adapters()
         for adapter in adapters:
@@ -52,10 +57,15 @@ class RIPRouter(Router):
     # initialize one thread lock for every interface
     # used to sending messages
     def init_locks(self):
+        """
+        resource lock, one lock for each ip
+        """
         return [threading.Lock() for i in self.interfaces]
 
-    # add interfaces to table
     def init_table(self):
+        """
+        initialize table using all of the ip this router has 
+        """
         print("=========== Initializing Table ===========")
         for interface in self.interfaces:
             self.table.set_entry(interface.ip,[interface.ip,interface.interface,0])
@@ -64,6 +74,10 @@ class RIPRouter(Router):
 
     # overwrite original receive for broadcasr channel
     def receive(self): #wait for broadcast
+        """
+        used for receiving broadcast messages from host.
+        assign new table entry the interface it comes from 
+        """
         recv_data, addr = self.thread_sock.recvfrom(1024)
         data = pickle.loads(recv_data)
         self.table_lock.acquire()
@@ -79,23 +93,43 @@ class RIPRouter(Router):
         self.advertise()
     
     def init_advertise_sock(self,ip):
+        """
+        Initialize socket for advertise (sending table info)
+        """
         self.advertise_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.advertise_sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         self.advertise_sock.bind((ip,ADVERTISE_PORT))
 
     def init_update_sock(self):
+        """
+        Initialize socket for update (receiving table info)
+        """
         self.update_sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
         self.update_sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         self.update_sock.bind(('0.0.0.0',UPDATE_PORT))
 
-    # this is in requirement, but not sure why we need this.
+    def init_forward_sock(self,interface):
+        """
+        initialize a forward socket (forward host message) given the interface object
+        """
+        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server.bind((interface.ip,RECV_PORT))
+        server.listen(5)
+        return server
+
     def set_forwarding_table(self,table):
+        """
+        set this router's table to the parameter table if param table is valid
+        """
         if (self.is_valid_table(table)):
             self.table.set_table(table)
         else:
             print("got an invalid table for RIP")
     
     def is_valid_table(self,table):
+        """
+        check if the table is valid
+        """
         for k,v in table.items():
             if not validate_ip(k):
                 return False
@@ -106,6 +140,9 @@ class RIPRouter(Router):
         return True
     
     def advertise(self):
+        """
+        Broadcast table among routers through every interfaces this router belongs to
+        """
         print("======== Advertising ========")
         self.table_lock.acquire()
         start_time = time.time()
@@ -119,6 +156,11 @@ class RIPRouter(Router):
         print("======== Done Advertising ========")
 
     def update(self,table,last_hop,interface):
+        """
+        update the table entries by iterating over the table param.
+        the interface is the one that last_hop ip belongs to.
+        if the table is updated, send an advertise call immediately
+        """
         print("======== Got Update Message ========")
         table = table.copy()
         start_time = time.time()
@@ -143,14 +185,12 @@ class RIPRouter(Router):
         print("======== Done Update Message ========")
         if modified:
             self.advertise()
-    
-    def init_forward_sock(self,interface):
-        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server.bind((interface.ip,RECV_PORT))
-        server.listen(5)
-        return server
 
     def forward(self,sock):
+        """
+        forward host message.
+        listen incoming message from the given socket.
+        """
         conn, addr = sock.accept()
         print("Server connected to", addr)
         packet = conn.recv(4096)
@@ -175,6 +215,10 @@ class RIPRouter(Router):
             print("nothing received")
     
     def send(self,data,table_entry):
+        """
+        given the destination ip and table entry,
+        initialize a socket in the next hop interface and forward the message to next hop.
+        """
         packet = make_packet(data['src_ip'],data['dest_ip'],data['message'],data['ttl'])
         for i in range(len(self.interfaces)):
             self.interface_lock[i].acquire()
@@ -191,6 +235,9 @@ class RIPRouter(Router):
             self.interface_lock[i].release()
     
     def start_command(self):
+        """
+        start the command main thread
+        """
         print("Start Command")
         command = ''
         while command != 'exit':
@@ -217,7 +264,9 @@ class RIPRouter(Router):
 
 
 class UpdateThread(ThreadSock):
-    
+    """
+    calls update function of the RIP router
+    """
     def run(self):
         while not self.stopped():
             recv_data,addr = self.node.update_sock.recvfrom(4096)

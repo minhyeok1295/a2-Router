@@ -11,6 +11,9 @@ class Interface:
         self.interface = self.calc_interface(ip,prefix)     # interface
 
     def calc_interface(self,ip,prefix):
+        """
+        Calculate the interface bits given ip and interface prefix
+        """
         ip_bits = ip.split(".")
         assert(len(ip_bits)==4)
         if prefix == 8:

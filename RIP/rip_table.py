@@ -2,7 +2,7 @@ from forward_table import *
 class RIPTable(ForwardTable):
     
     def __init__(self):
-        # dest_ip : [next_hop, cost]
+        # dest_ip : [next_hop,interface_ip, cost]
         super().__init__()
     
     def set_entry(self,ip,value_pair):
