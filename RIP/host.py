@@ -26,8 +26,8 @@ class Host():
         self.broad_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.broad_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.broad_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        self.broad_socket.sendto(make_packet(self.ip, '255.255.255.255','', 0),
-                                    ('255.255.255.255', 9999))
+        self.broad_socket.sendto(make_packet(self.ip, BRAODCAST_ADDR,'', 0),
+                                    (BRAODCAST_ADDR, BRAODCAST_PORT))
         recv_data, addr = self.broad_socket.recvfrom(1024)
         data = pickle.loads(recv_data)
         if (data['message'] == 'NA'):
@@ -41,7 +41,7 @@ class Host():
     def connect(self):
         self.send_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.send_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.send_sock.connect((self.next_ip, 8000))
+        self.send_sock.connect((self.next_ip, RECV_PORT))
 
     '''Given a destination IP address, a text message and TTL,
     the end system will attempt to send the message through the network
@@ -74,12 +74,12 @@ class Host():
     #if it is on the same switch, send it directly.
     def send_to_host(self, dest_ip, packet):
         self.send_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.send_sock.connect((dest_ip, 8100))
+        self.send_sock.connect((dest_ip, RECV_PORT))
         self.send_sock.send(packet)
 
     def open_thread_sock(self):
         self.thread_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.thread_sock.bind((self.ip, 8100))
+        self.thread_sock.bind((self.ip, RECV_PORT))
         self.thread_sock.listen(5)
     
     def get_ttl(self):
