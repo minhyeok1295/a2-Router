@@ -126,7 +126,7 @@ class RIPRouter(Router):
         for k,v in table.items():
             val = int(v[2])
             if k in prev_table:
-                if val > 0 and val < prev_table[k][2] - 1:
+                if val < prev_table[k][2] - 1:
                     self.table.set_entry(k,[last_hop,interface.interface,val+1])
                     modified = True
             else:
@@ -148,6 +148,7 @@ class RIPRouter(Router):
         conn, addr = sock.accept()
         print("Server connected to", addr)
         packet = conn.recv(4096)
+        conn.close()
         if len(packet) != 0:
             data = pickle.loads(packet)
             print_packet(data)
@@ -157,11 +158,13 @@ class RIPRouter(Router):
                 self.table_lock.acquire()
                 if self.table.has_ip(dest):
                     table_entry = self.table.get_next_hop(dest)
-                    try:
+                    self.send(data,table_entry)
+                    print(f"Successfully sent message to {data['dest_ip']}")
+                    """try:
                         self.send(data,table_entry)
                         print(f"Successfully sent message to {data['dest_ip']}")
                     except Exception:
-                        print("Error!!!!")
+                        print("Error!!!!")"""
                 else:
                     print_error(data['src_ip'],data['dest_ip'])
                 self.table_lock.release()
@@ -177,10 +180,12 @@ class RIPRouter(Router):
             self.interface_lock[i].acquire()
             if self.interfaces[i].interface == table_entry[1]:
                 send_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                send_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
                 send_sock.bind((self.interfaces[i].ip,SEND_PORT))
                 send_sock.connect((table_entry[0],RECV_PORT))
                 send_sock.send(packet)
                 send_sock.close()
+                print("socket is closed")
                 self.interface_lock[i].release()
                 break
             self.interface_lock[i].release()

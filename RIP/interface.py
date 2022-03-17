@@ -7,13 +7,11 @@ class Interface:
 
     def __init__(self,ip,prefix):
         self.ip = ip    # the ip on the router side
-        assert(prefix in [8,16,24],"Got invalid interface prefix")
         self.prefix = prefix    # number of interface prefix bits
         self.interface = self.calc_interface(ip,prefix)     # interface
 
     def calc_interface(self,ip,prefix):
         ip_bits = ip.split(".")
-        print(ip_bits)
         assert(len(ip_bits)==4)
         if prefix == 8:
             return '.'.join(ip_bits[0])
