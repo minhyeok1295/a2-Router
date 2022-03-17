@@ -49,19 +49,17 @@ class NetworkTopo(Topo):
         self.addLink(s7, r7, intfName2='r7-eth0', params2={'ip': '10.7.0.1/24'})
         
         # Add router-router link in a new subnet for the router-router connection
-        self.addLink(r1, r2, intfName1='r1-eth2', intfName2='r2-eth2', params1={'ip': '10.11.0.1/24'}, params2={'ip': '10.11.0.2/24'})
+        self.addLink(r1, r2, intfName1='r1-eth1', intfName2='r2-eth1', params1={'ip': '10.11.0.1/24'}, params2={'ip': '10.11.0.2/24'})
         
+        self.addLink(r2, r3, intfName1='r2-eth2', intfName2='r3-eth1', params1={'ip': '10.17.0.1/24'}, params2={'ip': '10.17.0.2/24'})
         
-        self.addLink(r2, r3, intfName1='r2-eth3', intfName2='r3-eth3', params1={'ip': '10.17.0.1/24'}, params2={'ip': '10.17.0.2/24'})
+        self.addLink(r3, r4, intfName1='r3-eth2', intfName2='r4-eth1', params1={'ip': '10.22.0.1/24'}, params2={'ip': '10.22.0.2/24'})
        
+        self.addLink(r4, r5, intfName1='r4-eth2', intfName2='r5-eth1', params1={'ip': '10.26.0.1/24'}, params2={'ip': '10.26.0.2/24'})
         
-        self.addLink(r3, r4, intfName1='r3-eth4', intfName2='r4-eth4', params1={'ip': '10.22.0.1/24'}, params2={'ip': '10.22.0.2/24'})
-       
-        self.addLink(r4, r5, intfName1='r4-eth5', intfName2='r5-eth5', params1={'ip': '10.26.0.1/24'}, params2={'ip': '10.26.0.2/24'})
+        self.addLink(r5, r6, intfName1='r5-eth2', intfName2='r6-eth1', params1={'ip': '10.29.0.1/24'}, params2={'ip': '10.29.0.2/24'})
         
-        self.addLink(r5, r6, intfName1='r5-eth6', intfName2='r6-eth6', params1={'ip': '10.29.0.1/24'}, params2={'ip': '10.29.0.2/24'})
-        
-        self.addLink(r6, r7, intfName1='r6-eth7', intfName2='r7-eth7', params1={'ip': '10.31.0.1/24'}, params2={'ip': '10.31.0.2/24'})        
+        self.addLink(r6, r7, intfName1='r6-eth2', intfName2='r7-eth1', params1={'ip': '10.31.0.1/24'}, params2={'ip': '10.31.0.2/24'})        
         
         
         
@@ -84,26 +82,26 @@ def run():
 
     # type the following command in the mininet shell
    
-    info(net['r1'].cmd("ip route add 10.2.0.0/24 via 10.11.0.2 dev r1-eth2"))
+    info(net['r1'].cmd("ip route add 10.2.0.0/24 via 10.11.0.2 dev r1-eth1"))
     
-    info(net['r2'].cmd("ip route add 10.1.0.0/24 via 10.11.0.1 dev r2-eth2"))
-    info(net['r2'].cmd("ip route add 10.3.0.0/24 via 10.17.0.2 dev r2-eth3"))
+    info(net['r2'].cmd("ip route add 10.1.0.0/24 via 10.11.0.1 dev r2-eth1"))
+    info(net['r2'].cmd("ip route add 10.3.0.0/24 via 10.17.0.2 dev r2-eth2"))
     
-    info(net['r3'].cmd("ip route add 10.2.0.0/24 via 10.17.0.1 dev r3-eth3"))
-    info(net['r3'].cmd("ip route add 10.4.0.0/24 via 10.22.0.2 dev r3-eth4"))  
+    info(net['r3'].cmd("ip route add 10.2.0.0/24 via 10.17.0.1 dev r3-eth1"))
+    info(net['r3'].cmd("ip route add 10.4.0.0/24 via 10.22.0.2 dev r3-eth2"))  
     
-    info(net['r4'].cmd("ip route add 10.3.0.0/24 via 10.22.0.1 dev r4-eth4"))  
-    info(net['r4'].cmd("ip route add 10.5.0.0/24 via 10.26.0.2 dev r4-eth5"))
+    info(net['r4'].cmd("ip route add 10.3.0.0/24 via 10.22.0.1 dev r4-eth1"))  
+    info(net['r4'].cmd("ip route add 10.5.0.0/24 via 10.26.0.2 dev r4-eth2"))
     
     
-    info(net['r5'].cmd("ip route add 10.4.0.0/24 via 10.26.0.1 dev r5-eth5"))
-    info(net['r5'].cmd("ip route add 10.6.0.0/24 via 10.29.0.2 dev r5-eth6"))
+    info(net['r5'].cmd("ip route add 10.4.0.0/24 via 10.26.0.1 dev r5-eth1"))
+    info(net['r5'].cmd("ip route add 10.6.0.0/24 via 10.29.0.2 dev r5-eth2"))
     
-    info(net['r6'].cmd("ip route add 10.5.0.0/24 via 10.29.0.1 dev r6-eth6"))
-    info(net['r6'].cmd("ip route add 10.7.0.0/24 via 10.31.0.2 dev r6-eth7"))
+    info(net['r6'].cmd("ip route add 10.5.0.0/24 via 10.29.0.1 dev r6-eth1"))
+    info(net['r6'].cmd("ip route add 10.7.0.0/24 via 10.31.0.2 dev r6-eth2"))
 
 
-    info(net['r7'].cmd("ip route add 10.6.0.0/24 via 10.31.0.1 dev r7-eth7"))
+    info(net['r7'].cmd("ip route add 10.6.0.0/24 via 10.31.0.1 dev r7-eth1"))
 
     
     net.startTerms()

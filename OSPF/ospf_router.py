@@ -2,7 +2,7 @@ from router import *
 from helper import *
 from ospf_table import *
 import sys
-
+import time
 class OSPFRouter(Router):
     def __init__(self, ip):
         super().__init__(ip)
@@ -88,6 +88,7 @@ class OSPFRouter(Router):
         server.listen(5)
         while True:
             conn, addr = server.accept()
+            #start = time.time()
             packet = conn.recv(4096)
             if len(packet) != 0:
                 data = pickle.loads(packet)
@@ -102,6 +103,8 @@ class OSPFRouter(Router):
                     self.handle_message_packet(data)
             else:
                 print("nothing received")
+            #end = time.time()
+            #print("time: " + str(end - start))
             conn.close()
         conn.close()
         server.close()
