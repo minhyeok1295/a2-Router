@@ -166,7 +166,8 @@ class RIPRouter(Router):
                     print_error(data['src_ip'],data['dest_ip'])
                 self.table_lock.release()
             else:
-                print_ttl_expired(self.ip,data['src_ip'],data['dest_ip'])
+                print("========== TTL Expired ==========")
+                print(f"TTL expired from {data['src_ip']} to {data['dest_ip']}\n\n")
         else:
             print("nothing received")
     
