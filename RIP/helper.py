@@ -1,6 +1,12 @@
 import pickle
 import threading
 
+SEND_PORT = 8000
+RECV_PORT = 8100
+BRAODCAST_ADDR = '255.255.255.255'
+BRAODCAST_PORT = 9999
+UPDATE_PORT = 8200
+ADVERTISE_PORT = 8300
 
 class ThreadSock(threading.Thread):
     
@@ -67,7 +73,6 @@ def validate_ip(ip):
         if (num > 255 or num < 0):
             return False
     return True
-
 
 def check_on_same_switch(ip1, ip2):
     if(ip1.split(".")[:3] == ip2.split(".")[:3]):
