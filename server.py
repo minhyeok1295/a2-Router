@@ -9,7 +9,7 @@ if __name__ == "__main__":
     server.listen(5)
     
     while True:
-        c, addr = server.acecpt()
+        c, addr = server.accept()
         print("connection established")
         
         string = c.recv(1024)
