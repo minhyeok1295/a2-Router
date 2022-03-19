@@ -1,15 +1,19 @@
-
+import sys
 import socket
 
+#cmd line arg: python3 host.py ip
 
+def main(argv)
+    ip = sys.argv[1]
+    connection = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    connection.bind((ip,8000)) # host port 8000
+    
 
 
 
 
 
 if __name__ == "__main__":
-    print("Enter host name:")
-    host = input()
-    h1 = net.get(host)
-    h1.setIP("10.0.0.1",24)
+    main()
+    
     
