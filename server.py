@@ -1,13 +1,17 @@
 import socket
 
-s = socket.socket()
-host = socket.gethostname()
-port = 8000
-s.bind((host, port))
-
-s.listen(5)
-while True:
-    c, addr = s.accept()
-    print("Got connection from", addr)
-    c.send("thank you for connecting")
-    c.close()
+if __name__ == "__main__":
+    ip = "127.0.0.1"
+    port = 8000
+    
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind((ip, port))
+    server.listen(5)
+    
+    while True:
+        c, addr = server.acecpt()
+        print("connection established")
+        
+        string = c.recv(1024)
+        string = string.decode("utf-8")
+        print(string)
