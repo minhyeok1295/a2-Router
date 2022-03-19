@@ -2,6 +2,12 @@ from mininet.topo import Topo
 from mininet.node import Host, Node
 # Reference http://csie.nqu.edu.tw/smallko/sdn/mininet_simple_router.html
 
+
+class Host():
+
+    def __init__(self, ip)
+
+
 class SimpleTopo(Topo):
 
     def build(self):
