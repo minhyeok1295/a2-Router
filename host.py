@@ -5,3 +5,7 @@ if __name__ == "__main__":
     port = 8000
     
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    
+    server.connect((ip, port))
+    string = input("Enter string: ")
+    server.send(bytes(string, "utf-8"))
