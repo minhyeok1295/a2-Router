@@ -23,8 +23,8 @@ if __name__ == "__main__":
         print(data['src_ip'])
         print(addr)
         bc_sock.sendto(make_packet(inter1,addr,'',0),addr)
-        break
-    bc_sock.close()
+        #break
+    #bc_sock.close()
 
     """
     src_name = socket.gethostname()

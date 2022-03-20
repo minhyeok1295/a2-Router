@@ -27,6 +27,7 @@ class Host():
         }
         return pickle.dumps(data)
         
+    
     def broadcast(self):
         self.broad_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.broad_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -35,7 +36,6 @@ class Host():
             self.broad_socket.sendto(self.make_packet(self.ip, '255.255.255.255','', 0), ('255.255.255.255', 9999))
             recv_data, addr = self.broad_socket.recvfrom(1024)
             data = pickle.loads(recv_data)
-            print(data['src_ip'])
             break
         self.broad_socket.close()
         return data
