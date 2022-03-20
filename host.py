@@ -1,4 +1,5 @@
 import socket
+import sys
 
 
 class Host():
@@ -31,11 +32,21 @@ class Host():
 
 
 if __name__ == "__main__":
+    '''
     ip = "127.0.0.1"
     port = 8000
     
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     
-    server.connect((ip, port))
-    string = input("Enter string: ")
-    server.send(bytes(string, "utf-8"))
+    h = Host("192.168.1.1", "127.0.0.1")
+    host = h.socket
+    x = sys.stdin.readline()
+    msg = "my name is " + x
+    host.send(msg)
+    from_server = host.recv(4096)
+    host.close()
+    print(from_server)
+    '''
+    hostname = socket.gethostname()    
+    IPAddr = socket.gethostbyname(hostname)    
+    print("Your Computer Name is:" + hostname)    
+    print("Your Computer IP Address is:" + IPAddr) 
