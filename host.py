@@ -1,4 +1,5 @@
 import socket
+import pickle
 import sys
 
 
@@ -8,13 +9,37 @@ class Host():
     and send a simple message to the IP address 255.255.255.255 with TTL=0 in order to broadcast its existence
     '''
     
-    def __init__(self, ip, next_ip):
+    def __init__(self, ip, port):
         self.ip = ip
         self.ttl = 0
-        self.next_ip = next_ip
+        self.next_ip = ''
+        self.broad_socket = None
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.connect((self.next_ip, 8000))
+        self.socket.connect((self.next_ip, 9999))
+    
         
+    def make_packet(self, src_ip, dest_ip, message, ttl):
+        data = {
+            'src_ip' : src_ip,
+            'dest_ip' : dest_ip,
+            'message' : message,
+            'ttl' : ttl
+        }
+        return pickle.dumps(data)
+        
+    def broadcast(self):
+        self.broad_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.broad_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.broad_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        while True:
+            self.broad_socket.sendto(self.make_packet(self.ip, '255.255.255.255','', 0), ('255.255.255.255', 9999))
+            recv_data, addr = self.broad_socket.recvfrom(1024)
+            data = pickle.loads(recv_data)
+            print(data['src_ip'])
+            break
+        self.braod_socket.close()
+        return data
+            
         
     '''Given a destination IP address, a text message and TTL,
     the end system will attempt to send the message through the network
@@ -32,21 +57,9 @@ class Host():
 
 
 if __name__ == "__main__":
-    #ip = sys.argv[1]
-    next_ip = sys.argv[1]
-    print("next: " + next_ip)
-    #ttl = sys.argv[3]
+    host = Host(sys.argv[1], 9999)
     
-   # h = Host(ip, next_ip)
-    host = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    host.connect((next_ip, 8000))
-   # host = h.socket
-    msg = sys.stdin.readline()
-    host.send(msg)
-    from_server = host.recv(4096)
-    host.close()
-    
-    print(from_server)
-    
-    
+    data = host.broadcast()
+    print(data['src_ip'])
+    print(data['ttl'])
     

@@ -25,6 +25,8 @@ if __name__ == "__main__":
         print(data['src_ip'])
         break
     s.close()
+    
+    #TCP socket send/receive message
     """connection = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     connection.bind((src_ip,8000)) # host port 8000
     connection.connect(("10.0.0.2",8100))   # router broadcast port 8000
@@ -35,4 +37,8 @@ if __name__ == "__main__":
     router_ip = data['src_ip']
     print(router_ip)"""
     
-
+    
+    #1. send broadcast message 
+    #2. receive the packet from router which has next hop ip
+    #3. wait for message input and send it to next hop (TCP)
+    
