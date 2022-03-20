@@ -1,5 +1,9 @@
+
 from mininet.topo import Topo
-from mininet.node import Host, Node
+from mininet.net import Mininet
+from mininet.util import dumpNodeConnections
+from mininet.log import setLogLevel
+from mininet.util import irange
 # Reference http://csie.nqu.edu.tw/smallko/sdn/mininet_simple_router.html
 
 class SimpleTopo(Topo):
@@ -28,3 +32,14 @@ class SimpleTopo(Topo):
         self.addLink(s1,r1)
         
 topos  = {'mytopo':(lambda:SimpleTopo())}
+
+if __name__ == "__main__":
+    setLogLevel('info')
+    topo = SimpleTopo()
+    net = Mininet(topo)
+    net.start()
+    print("Dumping host connections")
+    dumpNodeConnections(net.hosts)
+    print("testing network connectivity")
+    net.pingAll()
+    net.stop()
