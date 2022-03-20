@@ -24,26 +24,27 @@ class NetworkTopo(Topo):
         # Add 2 switches
         s1 = self.addSwitch('s1')
         s2 = self.addSwitch('s2')
-
         # Add host-switch links in the same subnet
+
         self.addLink(s1,
                      r1,
-                     intfName2='r1-eth1',
-                     params2={'ip': '10.0.0.1/24'})
+                     intfName2='r1-eth2',
+                     params2={'ip': '172.168.0.1/24'})
 
         self.addLink(s2,
                      r1,
-                     intfName2='r1-eth2',
-                     params2={'ip': '10.1.0.1/24'})
+                     intfName2='r1-eth3',
+                     params2={'ip': '192.168.1.1/24'})
+        
 
 
         # Adding hosts specifying the default route
         d1 = self.addHost(name='d1',
-                          ip='10.0.0.251/24',
-                          defaultRoute='via 10.0.0.1')
+                          ip='172.168.0.10/24',
+                          defaultRoute='via 172.168.0.1')
         d2 = self.addHost(name='d2',
-                          ip='10.1.0.252/24',
-                          defaultRoute='via 10.1.0.1')
+                          ip='192.168.1.10/24',
+                          defaultRoute='via 192.168.1.1')
 
         # Add host-switch links
         self.addLink(d1, s1)
