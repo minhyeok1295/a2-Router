@@ -28,6 +28,10 @@ class Host():
         return pickle.dumps(data)
         
     
+    '''
+    send a simple message to the IP address 255.255.255.255 with TTL = 0
+    in order to broadcast its existence
+    '''
     def broadcast(self):
         self.broad_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.broad_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -61,6 +65,7 @@ if __name__ == "__main__":
     print("created host")
     print("Start broadcasting")
     data = host.broadcast()
-    print(data['src_ip'])
-    print(data['ttl'])
+    
+    
+    
     
