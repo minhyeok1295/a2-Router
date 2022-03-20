@@ -21,4 +21,9 @@ class SimpleTopo(Topo):
         self.addLink(s2,r1)
         self.addLink(s1,r1)
         
+        h1.setIP('192.168.1.1', 24)
+        h2.setIP('192.168.1.2', 24)
+        h3.setIP('192.168.1.3', 24)
+        h4.setIP('192.168.1.4', 24)
+        
 topos  = {'mytopo':(lambda:SimpleTopo())}
