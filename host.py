@@ -58,7 +58,8 @@ class Host():
 
 if __name__ == "__main__":
     host = Host(sys.argv[1], 9999)
-    
+    print("created host")
+    print("Start broadcasting")
     data = host.broadcast()
     print(data['src_ip'])
     print(data['ttl'])
