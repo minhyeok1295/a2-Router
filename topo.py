@@ -50,6 +50,7 @@ class NetworkTopo(Topo):
         
 def run():
     topo = NetworkTopo()
+
     net = Mininet(topo=topo)
 
     # Add routing for reaching networks that aren't directly connected
@@ -63,4 +64,5 @@ def run():
 
 if __name__ == '__main__':
     setLogLevel('info')
-    run()
+    topo = { 'mytopo': ( lambda: NetworkTopo() ) } 
+    
