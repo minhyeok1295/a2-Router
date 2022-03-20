@@ -8,10 +8,16 @@ class SimpleTopo(Topo):
         # Simple Hosts, Swtiches and Router
         s1 = self.addSwitch('s1')
         s2 = self.addSwitch('s2')
-        h1 = self.addHost('h1', ip='192.168.1.1')
-        h2 = self.addHost('h2', ip='192.168.1.2')
-        h3 = self.addHost('h3', ip='192.168.1.3')
-        h4 = self.addHost('h4', ip='192.168.1.4')
+        '''
+        h1 = self.addHost('h1', ip='192.168.1.1/24', mac="00:00:00:00:00:01")
+        h2 = self.addHost('h2', ip='192.168.1.2/24', mac="00:00:00:00:00:02")
+        h3 = self.addHost('h3', ip='192.168.1.3/24', mac="00:00:00:00:00:03")
+        h4 = self.addHost('h4', ip='192.168.1.4/24', mac="00:00:00:00:00:04")
+        '''
+        h1 = self.addHost('h1')
+        h2 = self.addHost('h2')
+        h3 = self.addHost('h3')
+        h4 = self.addHost('h4')
         r1 = self.addNode('r1')
         #Add Links
         self.addLink(h1,s1)

@@ -32,24 +32,15 @@ class Host():
 
 
 if __name__ == "__main__":
-    '''
-    ip = "127.0.0.1"
-    port = 8000
-    
-    
-    h = Host("192.168.1.1", "127.0.0.1")
+    ip = sys.argv[1]
+    next_ip = sys.argv[2]
+    ttl = sys.argv[3]
+    h = Host(ip, next_ip)
     host = h.socket
-    x = sys.stdin.readline()
-    msg = "my name is " + x
+    msg = sys.stdin.readline()
     host.send(msg)
-    from_server = host.recv(4096)
     host.close()
-    print(from_server)
-    '''
-    hostname = socket.gethostname()    
-    IPAddr = socket.gethostbyname(hostname)    
-    print("Your Computer Name is:" + hostname)    
-    print("Your Computer IP Address is:" + IPAddr) 
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.bind(("127.0.0.4", 8000))
-    print(sock.getsockname())
+    
+    
+    
+    
