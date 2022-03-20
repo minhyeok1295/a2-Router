@@ -50,3 +50,6 @@ if __name__ == "__main__":
     IPAddr = socket.gethostbyname(hostname)    
     print("Your Computer Name is:" + hostname)    
     print("Your Computer IP Address is:" + IPAddr) 
+    socket.bind(("127.0.0.4", 8000))
+    new_IP = socket.gethostbyname(hostname)
+    print("new IP is:" + new_IP)
