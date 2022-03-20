@@ -1,7 +1,7 @@
 import socket
 import pickle
 import sys
-
+from helper import *
 
 class Host():
     '''
@@ -17,7 +17,7 @@ class Host():
         #self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         #self.socket.connect((self.next_ip, 9999))
     
-        
+    '''   
     def make_packet(self, src_ip, dest_ip, message, ttl):
         data = {
             'src_ip' : src_ip,
@@ -26,7 +26,7 @@ class Host():
             'ttl' : ttl
         }
         return pickle.dumps(data)
-        
+     '''   
     
     '''
     send a simple message to the IP address 255.255.255.255 with TTL = 0
@@ -37,7 +37,7 @@ class Host():
         self.broad_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.broad_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         while True:
-            self.broad_socket.sendto(self.make_packet(self.ip, '255.255.255.255','', 0), ('255.255.255.255', 9999))
+            self.broad_socket.sendto(make_packet(self.ip, '255.255.255.255','', 0), ('255.255.255.255', 9999))
             recv_data, addr = self.broad_socket.recvfrom(1024)
             data = pickle.loads(recv_data)
             break

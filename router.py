@@ -1,23 +1,16 @@
 import socket
 import pickle
+from helper import *
 
 broadcast = '255.255.255.255'
 inter1= '172.168.0.1'
 inter2= '192.168.1.1'
-def make_packet(src_ip,dest_ip,message,ttl):
-    data = {
-        'src_ip' : src_ip,
-        'dest_ip' : dest_ip,
-        'message' : message,
-        'ttl' : ttl
-    }
-    return pickle.dumps(data)
 
 
 class Router():
     
-    def __init__(self):
-        pass
+    def __init__(self, ip):
+        self.ip = ip
     
     def wait_for_broadcast(self):
         bc_sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
@@ -28,7 +21,7 @@ class Router():
             data = pickle.loads(recv_data)
             print(data['src_ip'])
             print(addr)
-            bc_sock.sendto(make_packet(inter1,addr,'',0),addr)
+            bc_sock.sendto(make_packet(self.ip,addr,'',0),addr)
             #break
         #bc_sock.close()
 
@@ -38,7 +31,7 @@ class Router():
 
 
 if __name__ == "__main__":
-    router = Router()
+    router = Router("10.0.0.1")
     router.wait_for_broadcast()
 
     """
