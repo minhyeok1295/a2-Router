@@ -7,6 +7,7 @@ if __name__ == "__main__":
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((ip, 8000))
     s.listen(5)
+    print("listening....")
     while True:
         conn, addr = s.accept()
         from_client = ""

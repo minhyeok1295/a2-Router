@@ -32,16 +32,21 @@ class Host():
 
 
 if __name__ == "__main__":
-    ip = sys.argv[1]
-    next_ip = sys.argv[2]
+    #ip = sys.argv[1]
+    next_ip = sys.argv[1]
     print("next: " + next_ip)
-    ttl = sys.argv[3]
-    h = Host(ip, next_ip)
-    host = h.socket
+    #ttl = sys.argv[3]
+    
+   # h = Host(ip, next_ip)
+    host = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    host.connect((next_ip, 8000))
+   # host = h.socket
     msg = sys.stdin.readline()
     host.send(msg)
+    from_server = host.recv(4096)
     host.close()
     
+    print(from_server)
     
     
     
