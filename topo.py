@@ -32,7 +32,7 @@ class NetworkTopo(Topo):
 
         self.addLink(s2,
                      r1,
-                     intfName2=-'r1-eth2',
+                     intfName2='r1-eth2',
                      params2={'ip': '10.1.0.1/24'})
 
 
