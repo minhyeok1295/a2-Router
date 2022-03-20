@@ -66,6 +66,8 @@ if __name__ == "__main__":
     print("Start broadcasting")
     data = host.broadcast()
     
+    print(data['src_ip'])
+    print(data['dest_ip'])
     
     
     
