@@ -37,7 +37,7 @@ class Host():
             data = pickle.loads(recv_data)
             print(data['src_ip'])
             break
-        self.braod_socket.close()
+        self.broad_socket.close()
         return data
             
         
