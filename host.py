@@ -52,5 +52,5 @@ if __name__ == "__main__":
     print("Your Computer IP Address is:" + IPAddr) 
     con = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     con.bind(("127.0.0.4", 8000))
-    new_IP = con.gethostbyname(hostname)
+    data, (new_IP, port) = con.recvfrom(4096)
     print("new IP is:" + new_IP)
