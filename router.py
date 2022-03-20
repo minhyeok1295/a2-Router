@@ -19,7 +19,7 @@ class Router():
     def __init__(self):
         pass
     
-    def wait_for_broadcast():
+    def wait_for_broadcast(self):
         bc_sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
         bc_sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         bc_sock.bind(('0.0.0.0',9999))
