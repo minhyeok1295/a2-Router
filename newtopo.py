@@ -33,7 +33,7 @@ class NetworkTopo(Topo):
 
         self.addLink(s2,
                      r1,
-                     intfName2='r1-eth1',
+                     intfName2='r1-eth2',
                      params2={'ip': '10.0.0.1/24'})
 
         # Adding hosts specifying the default route
