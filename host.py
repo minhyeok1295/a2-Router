@@ -14,8 +14,8 @@ class Host():
         self.ttl = 0
         self.next_ip = ''
         self.broad_socket = None
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.connect((self.next_ip, 9999))
+        #self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        #self.socket.connect((self.next_ip, 9999))
     
         
     def make_packet(self, src_ip, dest_ip, message, ttl):
