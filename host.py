@@ -34,6 +34,7 @@ class Host():
 if __name__ == "__main__":
     ip = sys.argv[1]
     next_ip = sys.argv[2]
+    print("next: " + next_ip)
     ttl = sys.argv[3]
     h = Host(ip, next_ip)
     host = h.socket
