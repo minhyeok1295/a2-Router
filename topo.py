@@ -64,5 +64,6 @@ def run():
 
 if __name__ == '__main__':
     setLogLevel('info')
-    topo = { 'mytopo': ( lambda: NetworkTopo() ) } 
+    #topo = { 'mytopo': ( lambda: NetworkTopo() ) } 
+    run()
     
