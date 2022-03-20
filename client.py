@@ -11,13 +11,12 @@ if __name__ == "__main__":
 import sys
 import socket
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect(('127.0.0.1', 8080))
+client.connect(('10.0.0.4', 8080))
 
 print("here")
-x = input("Enter name: ")
-print("Hello, " + x)
-print("here2")
-client.send("here3")
+x = sys.stdin.readline()
+msg = "My name is " + x
+client.send(msg)
 from_server = client.recv(4096)
 client.close()
 print(from_server)
