@@ -62,7 +62,7 @@ class Host():
         self.recv_sock.bind((self.ip, 8100))
         self.recv_sock.listen(5)
     
-    def wait_for_message():
+    def wait_for_message(self):
         packet = self.recv_sock.recv(4096)
         data = pickle.loads(packet)
         print("msg: " + data['message'])
