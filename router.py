@@ -2,7 +2,7 @@ import socket
 import pickle
 import threading
 from helper import *
-from thread import start_new_thread
+from _thread import start_new_thread
 
 broadcast = '255.255.255.255'
 inter1= '172.168.0.1'
