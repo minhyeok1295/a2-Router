@@ -43,13 +43,8 @@ if __name__ == "__main__":
         while True:
             conn, addr = serv.accept()
             from_client = ''
-            while True:
-                data = conn.recv(4096)
-                if not data: break
-                from_client += data.decode()
-                print(from_client)
-                msg = "I am SERVER"
-                conn.send(msg.encode())
+            packet = conn.recv(4096)
+            print(packet['message'])
             conn.close()
             print('client disconnected')
             break

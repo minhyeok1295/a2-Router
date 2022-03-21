@@ -41,10 +41,9 @@ class Host():
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect((dest, 8000))
         #msg = packet['message']
-        msg = "hello world"
-        self.socket.send(msg.encode())
+        self.socket.send(packet)
         from_server = self.socket.recv(4096)
-        client_close()
+        self.socket.close()
         print(from_server.decode())
 
     '''
