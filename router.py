@@ -29,14 +29,19 @@ class Router():
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.bind((self.ip, 8000))
         server.listen(5)
+        conn, addr = server.accept()
         while True:
-            conn, addr = server.accept()
             packet = conn.recv(4096)
             data = pickle.loads(packet)
             print(data['message'])
+            
             msg = "server received message: " + data['message']
+            if (data['message'] == 'exit'):
+                conn.send(msg.encode())
+                break
             conn.send(msg.encode())
-            conn.close()
+        conn.close()
+            
             
             
 
@@ -49,11 +54,9 @@ class Router():
 
 if __name__ == "__main__":
     router = Router("10.0.0.1")
-    while True:
-        router.wait_for_broadcast()
-        #receive message
-        router.open_server()
-
+    router.wait_for_broadcast()
+    router.open_server()
+    
     """
     src_name = socket.gethostname()
     src_ip = "10.0.0.2"

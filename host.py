@@ -33,17 +33,17 @@ class Host():
         self.broad_socket.close()
         return data
             
+    def open_socket(self, dest):
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket.connect((dest, 8000))
         
     '''Given a destination IP address, a text message and TTL,
     the end system will attempt to send the message through the network
     '''
-    def send(self, dest, packet):
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.connect((dest, 8000))
+    def send(self, packet):
         #msg = packet['message']
         self.socket.send(packet)
         from_server = self.socket.recv(4096)
-        self.socket.close()
         print(from_server.decode())
 
     '''
@@ -62,12 +62,14 @@ if __name__ == "__main__":
     data = host.broadcast()
     
     print("router ip: " + data['src_ip'])
-    
-    msg = sys.stdin.readline()
-    print(len(msg))
-    data_packet = make_packet(host.ip, "192.168.1.10", msg[:-1], 2)
-    
-    host.send(data['src_ip'], data_packet)
-    
+    host.open_socket(data['src_ip'])
+    while True:
+        msg = sys.stdin.readline()
+        print(len(msg))
+        data_packet = make_packet(host.ip, "192.168.1.10", msg[:-1], 2)
+        host.send(data['src_ip'], data_packet)
+        if(msg[:-1] == 'exit'):
+            break
+    host.socket.close()
     
     
