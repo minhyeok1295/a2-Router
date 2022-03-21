@@ -2,10 +2,26 @@ import socket
 import pickle
 import threading
 from helper import *
+from thread import start_new_thread
 
 broadcast = '255.255.255.255'
 inter1= '172.168.0.1'
 inter2= '192.168.1.1'
+
+
+def multi_thread_client(conn):
+    conn.send(str.encode('server is connected'))
+    while True:
+        packet = conn.recv(4096)
+        data = pickle.loads(packet)
+        print("received: " + data['message'])
+        
+        msg = "server received message: " + data['message']
+        #if (data['message'] == 'exit'):
+        #    conn.send(msg.encode())
+        #    break
+        conn.sendall(msg)
+        #conn.send(msg.encode())
 
 
 class Router():
@@ -26,10 +42,13 @@ class Router():
         print(addr)
         self.bc_sock.sendto(make_packet(self.ip,addr,'',0),addr)
     
+    
+    '''
     def open_server(self):
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.bind((self.ip, 8000))
         server.listen(5)
+        print("listening...")
         conn, addr = server.accept()
         while True:
             packet = conn.recv(4096)
@@ -42,7 +61,23 @@ class Router():
                 break
             conn.send(msg.encode())
         conn.close()
+    '''
+    def open_server(self):
+        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server.bind((self.ip, 8000))
+        server.listen(5)
+        print("listening...")
+        while True:
+            conn, addr = server.accept()
             
+            start_new_thread(multi_thread_client, (conn,))
+        
+        
+            
+
+
+
+
             
 class BroadCastThread(threading.Thread):
     
