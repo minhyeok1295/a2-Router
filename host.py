@@ -64,8 +64,8 @@ if __name__ == "__main__":
     print("router ip: " + data['src_ip'])
     host.open_socket(data['src_ip'])
     while True:
+        print("Enter message: ")
         msg = sys.stdin.readline()
-        print(len(msg))
         data_packet = make_packet(host.ip, "192.168.1.10", msg[:-1], 2)
         host.send(data_packet)
         if(msg[:-1] == 'exit'):
