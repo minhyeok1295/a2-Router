@@ -45,10 +45,7 @@ class Router():
     def wait_for_broadcast(self):
         recv_data, addr = self.bc_sock.recvfrom(1024)
         data = pickle.loads(recv_data)
-        print(data['src_ip'])
-        print(addr)
         self.bc_sock.sendto(make_packet(self.ip,addr,'',0),addr)
-    
     
     '''
     def open_server(self):
