@@ -18,7 +18,7 @@ if __name__ == "__main__":
 '''
 import socket
 serv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-serv.bind(('127.0.0.200', 9999))
+serv.bind(('127.0.0.1', 8000))
 serv.listen(5)
 while True:
     conn, addr = serv.accept()
