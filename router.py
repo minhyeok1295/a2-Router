@@ -20,7 +20,8 @@ def multi_thread_client(conn):
     while True:
         packet = conn.recv(4096)
         data = pickle.loads(packet)
-        print("received: " + data['message'])
+        print_packet(data)
+        #print("received: " + data['message'])
         
         msg = "server received message: " + data['message']
         if (data['message'] == 'exit'):
