@@ -19,7 +19,7 @@ def print_packet(packet):
 def multi_thread_client(conn):
     conn.send(str.encode('server is connected'))
     while True:
-        packet = conn.recv(4096)
+        packet = conn.recv(8192)
         data = pickle.loads(packet)
         print_packet(data)
         #print("received: " + data['message'])
@@ -29,14 +29,13 @@ def multi_thread_client(conn):
             conn.send(msg.encode())
             break
         conn.sendall(msg.encode())
-        #conn.send(msg.encode())
-
 
 class Router():
     
     def __init__(self, ip):
         self.ip = ip
         self.bc_sock = None
+        self.forwarding_table = {}
 
     def init_bc_sock(self):
         self.bc_sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
