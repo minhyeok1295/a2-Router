@@ -16,17 +16,6 @@ class Host():
         self.broad_socket = None
         self.socket = None
     
-    '''   
-    def make_packet(self, src_ip, dest_ip, message, ttl):
-        data = {
-            'src_ip' : src_ip,
-            'dest_ip' : dest_ip,
-            'message' : message,
-            'ttl' : ttl
-        }
-        return pickle.dumps(data)
-     '''   
-    
     '''
     send a simple message to the IP address 255.255.255.255 with TTL = 0
     in order to broadcast its existence
@@ -48,9 +37,9 @@ class Host():
     '''Given a destination IP address, a text message and TTL,
     the end system will attempt to send the message through the network
     '''
-    def send(self, packet):
+    def send(self, dest, packet):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.connect(('172.0.0.200', 8000))
+        self.socket.connect((dest, 8000))
         msg = packet['message']
         self.socket.send(msg)
         from_server = client.recv(4096)
@@ -75,10 +64,10 @@ if __name__ == "__main__":
     print(data['src_ip'])
     print(data['dest_ip'])
     
-    msg = "hello, world" 
+    msg = sys.stdin.readline()
     data_packet = make_packet(host.ip, "192.168.1.10", msg, 2)
     
-    host.send(data_packet)
+    host.send(data['src_ip'], data_packet)
     
     
     
