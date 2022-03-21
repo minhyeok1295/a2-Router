@@ -65,7 +65,7 @@ if __name__ == "__main__":
     
     msg = sys.stdin.readline()
     print(len(msg))
-    data_packet = make_packet(host.ip, "192.168.1.10", msg, 2)
+    data_packet = make_packet(host.ip, "192.168.1.10", msg[:-1], 2)
     
     host.send(data['src_ip'], data_packet)
     
