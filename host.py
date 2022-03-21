@@ -109,7 +109,7 @@ if __name__ == "__main__":
     data = host.broadcast()
     
     print("router ip: " + data['src_ip'])
-    recv_sock = RecvSockTrhead(host)
+    recv_sock = RecvSockThread(host)
     recv_sock.start()
    #host.open_recv_sock()
     host.open_socket(data['src_ip'])
