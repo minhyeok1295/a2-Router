@@ -8,6 +8,11 @@ broadcast = '255.255.255.255'
 inter1= '172.168.0.1'
 inter2= '192.168.1.1'
 
+def print_packet(packet):
+    print("src_ip: " + packet["src_ip"])
+    print("dest_ip: " + packet["dest_ip"])
+    
+
 
 def multi_thread_client(conn):
     conn.send(str.encode('server is connected'))
@@ -17,9 +22,9 @@ def multi_thread_client(conn):
         print("received: " + data['message'])
         
         msg = "server received message: " + data['message']
-        #if (data['message'] == 'exit'):
-        #    conn.send(msg.encode())
-        #    break
+        if (data['message'] == 'exit'):
+            conn.send(msg.encode())
+            break
         conn.sendall(msg.encode())
         #conn.send(msg.encode())
 
@@ -69,7 +74,6 @@ class Router():
         print("listening...")
         while True:
             conn, addr = server.accept()
-            
             start_new_thread(multi_thread_client, (conn,))
         
         
