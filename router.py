@@ -20,7 +20,7 @@ def multi_thread_client(conn):
         #if (data['message'] == 'exit'):
         #    conn.send(msg.encode())
         #    break
-        conn.sendall(msg)
+        conn.sendall(msg.encode())
         #conn.send(msg.encode())
 
 
