@@ -16,22 +16,6 @@ def print_packet(packet):
     print("ttl: " + str(packet['ttl']))
 
 
-def multi_thread_client(conn):
-    conn.send(str.encode('server is connected'))
-    while True:
-        packet = conn.recv(4096)
-        data = pickle.loads(packet)
-        print_packet(data)
-        #print("received: " + data['message'])
-        
-        msg = "server received message: " + data['message']
-        if (data['message'] == 'exit'):
-            conn.send(msg.encode())
-            break
-        conn.sendall(msg.encode())
-        #conn.send(msg.encode())
-
-
 class Router():
     
     def __init__(self, ip):
@@ -104,7 +88,6 @@ class ServerThread(threading.Thread):
 
 if __name__ == "__main__":
     router = Router("10.0.0.1")
-
     broadcast_t = BroadCastThread(router)
     broadcast_t.start()
     router.open_server()

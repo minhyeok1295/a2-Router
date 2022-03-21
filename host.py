@@ -45,16 +45,15 @@ class Host():
     '''
     def send(self):
         while True:
-            print("Enter message: ")
-            msg = sys.stdin.readline()
+            msg = input("Enter message: ")
             if(msg[:-1] == 'exit'):
                 break
             print("Enter destination: ")
-            dest_ip = sys.stdin.readline()
+            dest_ip = input("Enter input destination: ")
             print("msg is ", msg)
             print("dest is ", dest_ip)
             self.connect()
-            data_packet = make_packet(self.ip, dest_ip, msg[:-1], 2)
+            data_packet = make_packet(self.ip, dest_ip, msg, 2)
             self.send_sock.send(data_packet)
             self.send_sock.close()
 
@@ -103,10 +102,10 @@ if __name__ == "__main__":
     host = Host(sys.argv[1], 9999)
     print("created host")
     print("Start broadcasting")
-    data = host.broadcast()
+    broadcast_data = host.broadcast()
     
-    print("router ip: " + data['src_ip'])
-    host.set_next_hop(data['src_ip'])
+    print("router ip: " + broadcast_data['src_ip'])
+    host.set_next_hop(broadcast_data['src_ip'])
 
     recv_t = ReceiveThread(host)
     recv_t.start()
