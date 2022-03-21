@@ -30,9 +30,19 @@ def multi_thread_client(conn):
                 conn.send(msg.encode())
                 break
             conn.sendall(msg.encode())
-            #conn.send(msg.encode())
         except EOFError:
             pass
+
+def send_message(packet):
+    dst = packet['dest_ip']
+    c = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    c.connect((dst, 8100))
+    print("sent msg: ", packet["message"])
+    print("dest_ip: ", dst)
+    c.send(packet)
+    c.close()
+    
+    
 
 
 class Router():
@@ -51,25 +61,6 @@ class Router():
         data = pickle.loads(recv_data)
         self.bc_sock.sendto(make_packet(self.ip,addr,'',0),addr)
     
-    '''
-    def open_server(self):
-        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server.bind((self.ip, 8000))
-        server.listen(5)
-        print("listening...")
-        conn, addr = server.accept()
-        while True:
-            packet = conn.recv(4096)
-            data = pickle.loads(packet)
-            print(data['message'])
-            
-            msg = "server received message: " + data['message']
-            if (data['message'] == 'exit'):
-                conn.send(msg.encode())
-                break
-            conn.send(msg.encode())
-        conn.close()
-    '''
     def open_server(self):
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.bind((self.ip, 8000))
@@ -80,14 +71,7 @@ class Router():
             print("-----Connected------")
             print(addr)
             start_new_thread(multi_thread_client, (conn,))
-        
-        
-            
-
-
-
-
-            
+          
 class BroadCastThread(threading.Thread):
     
     def __init__(self,router):
@@ -108,7 +92,7 @@ class BroadCastThread(threading.Thread):
             self.router.wait_for_broadcast()
         self.router.bc_sock.close()
 
-      
+'''
 class ServerThread(threading.Thread):
     """ We don't need this yet
     """
@@ -119,7 +103,7 @@ class ServerThread(threading.Thread):
     
     def run(self):
         self.router.open_server()
-
+'''
 
 
 

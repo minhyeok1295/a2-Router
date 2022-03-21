@@ -15,6 +15,7 @@ class Host():
         self.next_ip = ''
         self.broad_socket = None
         self.socket = None
+        self.recv_sock = None
     
     '''
     send a simple message to the IP address 255.255.255.255 with TTL = 0
@@ -34,6 +35,16 @@ class Host():
     def open_socket(self, dest):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect((dest, 8000))
+        while True:
+            msg = input("Enter Message: ")
+            dest = input("Enter destination IP: ")
+            print("send to " + dest + ",msg: " + msg)
+            data_packet = make_packet(self.ip, dest, msg, 2)
+            self.send(data_packet)
+            if(msg[:-1] == 'exit'):
+                break
+            self.socket.close()
+            
         
     '''Given a destination IP address, a text message and TTL,
     the end system will attempt to send the message through the network
@@ -44,6 +55,14 @@ class Host():
         from_server = self.socket.recv(4096)
         print(from_server.decode())
 
+    def open_recv_sock(self):
+        self.recv_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.recv_sock.bind((self.ip, 8100))
+        self.recv_sock.listen(5)
+    
+    def close_recv_sock(self):
+        self.recv_sock.close()
+        
     '''
     if an end system receives a message, it should display that message
     (and any other relevant information) to its output
@@ -63,16 +82,8 @@ if __name__ == "__main__":
     data = host.broadcast()
     
     print("router ip: " + data['src_ip'])
-    #host.open_socket(data['src_ip'])
-    while True:
-        host.open_socket(data['src_ip'])
-        msg = input("Enter Message: ")
-        dest = input("Enter destination IP: ")
-        print("send to " + dest + ",msg: " + msg)
-        data_packet = make_packet(host.ip, dest, msg, 2)
-        host.send(data_packet)
-        if(msg[:-1] == 'exit'):
-            break
-        host.socket.close()
+    host.open_recv_sock()
+    host.open_socket(data['src_ip'])
+    host.close_recv_sock()
     
     
