@@ -48,7 +48,8 @@ if __name__ == "__main__":
                 if not data: break
                 from_client += data.decode()
                 print(from_client)
-                conn.send("I am SERVER")
+                msg = "I am SERVER"
+                conn.send(msg.encode())
             conn.close()
             print('client disconnected')
             break

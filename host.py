@@ -43,9 +43,9 @@ class Host():
         #msg = packet['message']
         msg = "hello world"
         self.socket.send(msg.encode())
-        from_server = client.recv(4096)
+        from_server = self.socket.recv(4096)
         client_close()
-        print(from_server)
+        print(from_server.decode())
 
     '''
     if an end system receives a message, it should display that message
