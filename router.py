@@ -74,6 +74,7 @@ class Router():
         print("listening...")
         while True:
             conn, addr = server.accept()
+            print("addr: " + addr)
             start_new_thread(multi_thread_client, (conn,))
         
         
