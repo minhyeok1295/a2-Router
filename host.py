@@ -66,8 +66,9 @@ if __name__ == "__main__":
     host.open_socket(data['src_ip'])
     while True:
         msg = input("Enter Message: ")
-        print("msg is ", msg)
-        data_packet = make_packet(host.ip, "192.168.1.10", msg, 2)
+        dest = input("Enter destination IP: ")
+        print("send to " + dest + ",msg: " + msg)
+        data_packet = make_packet(host.ip, dest, msg, 2)
         host.send(data_packet)
         if(msg[:-1] == 'exit'):
             break

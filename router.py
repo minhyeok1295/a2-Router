@@ -9,10 +9,11 @@ inter1= '172.168.0.1'
 inter2= '192.168.1.1'
 
 def print_packet(packet):
-    print("-----packet received-----")
+    print("-----packet info-----")
     print("src_ip: " + packet["src_ip"])
     print("dest_ip: " + packet["dest_ip"])
     print("msg: " + packet['message'])
+    print("ttl: " + str(packet['ttl']))
 
 
 def multi_thread_client(conn):
