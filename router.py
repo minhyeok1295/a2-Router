@@ -44,7 +44,7 @@ if __name__ == "__main__":
             conn, addr = serv.accept()
             from_client = ''
             packet = conn.recv(4096)
-            data = picle.loads(packet)
+            data = pickle.loads(packet)
             
             print(data['message'])
             conn.close()
