@@ -42,7 +42,7 @@ class Host():
         self.socket.connect((dest, 8000))
         #msg = packet['message']
         msg = "hello world"
-        self.socket.send(msg)
+        self.socket.send(msg.encode())
         from_server = client.recv(4096)
         client_close()
         print(from_server)
