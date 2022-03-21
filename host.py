@@ -48,8 +48,7 @@ class Host():
             msg = input("Enter message: ")
             if(msg[:-1] == 'exit'):
                 break
-            print("Enter destination: ")
-            dest_ip = input("Enter input destination: ")
+            dest_ip = input("Enter destination: ")
             print("msg is ", msg)
             print("dest is ", dest_ip)
             self.connect()
