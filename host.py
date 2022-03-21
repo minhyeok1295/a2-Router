@@ -67,7 +67,7 @@ if __name__ == "__main__":
     while True:
         print("Enter message: ")
         msg = sys.stdin.readline()
-        print("msg is ", msg)
+        print("msg is ", msg[:-1])
         data_packet = make_packet(host.ip, "192.168.1.10", msg[:-1], 2)
         host.send(data_packet)
         if(msg[:-1] == 'exit'):
