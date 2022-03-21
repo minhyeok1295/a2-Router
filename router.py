@@ -44,7 +44,9 @@ if __name__ == "__main__":
             conn, addr = serv.accept()
             from_client = ''
             packet = conn.recv(4096)
-            print(packet['message'])
+            data = picle.loads(packet)
+            
+            print(data['message'])
             conn.close()
             print('client disconnected')
             break
