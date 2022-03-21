@@ -24,6 +24,21 @@ class Router():
             bc_sock.sendto(make_packet(self.ip,addr,'',0),addr)
             break
         bc_sock.close()
+    
+    def open_server(self):
+        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server.bind((self.ip, 8000))
+        server.listen(5)
+        while True:
+            conn, addr = server.accept()
+            pacekt = conn.recv(4096)
+            data = pickle.loads(packet)
+            print(data['message'])
+            msg = "server received message: " + data['message']
+            conn.send(msg.encode())
+            conn.close()
+            
+            
 
         
 
@@ -37,20 +52,7 @@ if __name__ == "__main__":
     while True:
         router.wait_for_broadcast()
         #receive message
-        serv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        serv.bind(('10.0.0.1', 8000))
-        serv.listen(5)
-        while True:
-            conn, addr = serv.accept()
-            from_client = ''
-            packet = conn.recv(4096)
-            data = pickle.loads(packet)
-            
-            print(data['message'])
-            conn.close()
-            print('client disconnected')
-            break
-    
+        router.open_server()
 
     """
     src_name = socket.gethostname()
