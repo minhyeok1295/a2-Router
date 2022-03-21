@@ -63,15 +63,16 @@ if __name__ == "__main__":
     data = host.broadcast()
     
     print("router ip: " + data['src_ip'])
-    host.open_socket(data['src_ip'])
+    #host.open_socket(data['src_ip'])
     while True:
         msg = input("Enter Message: ")
         dest = input("Enter destination IP: ")
+        host.open_socket(data['src_ip'])
         print("send to " + dest + ",msg: " + msg)
         data_packet = make_packet(host.ip, dest, msg, 2)
         host.send(data_packet)
         if(msg[:-1] == 'exit'):
             break
-    host.socket.close()
+        host.socket.close()
     
     
