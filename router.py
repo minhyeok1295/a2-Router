@@ -19,16 +19,17 @@ def print_packet(packet):
 def multi_thread_client(conn):
     conn.send(str.encode('server is connected'))
     while True:
-        packet = conn.recv(8192)
-        data = pickle.loads(packet)
-        print_packet(data)
-        #print("received: " + data['message'])
-        
-        msg = "server received message: " + data['message']
-        if (data['message'] == 'exit'):
-            conn.send(msg.encode())
-            break
-        conn.sendall(msg.encode())
+        packet = conn.recv(4096)
+        if packet != None:
+            data = pickle.loads(packet)
+            print_packet(data)
+            #print("received: " + data['message'])
+            
+            msg = "server received message: " + data['message']
+            if (data['message'] == 'exit'):
+                conn.send(msg.encode())
+                break
+            conn.sendall(msg.encode())
 
 class Router():
     
