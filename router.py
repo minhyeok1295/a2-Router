@@ -42,7 +42,7 @@ class Router():
             print(addr)
             packet = conn.recv(4096)
             data = pickle.loads(packet)
-            print_pacekt(data)
+            print_packet(data)
             
             msg = "server received message: " + data['message']
             if (data['message'] == 'exit'):
