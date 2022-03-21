@@ -63,8 +63,6 @@ if __name__ == "__main__":
     
     print("router ip: " + data['src_ip'])
     
-    while True:
-        
     msg = sys.stdin.readline()
     print(len(msg))
     data_packet = make_packet(host.ip, "192.168.1.10", msg, 2)
