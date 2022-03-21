@@ -48,25 +48,6 @@ class Router():
         data = pickle.loads(recv_data)
         self.bc_sock.sendto(make_packet(self.ip,addr,'',0),addr)
     
-    '''
-    def open_server(self):
-        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server.bind((self.ip, 8000))
-        server.listen(5)
-        print("listening...")
-        conn, addr = server.accept()
-        while True:
-            packet = conn.recv(4096)
-            data = pickle.loads(packet)
-            print(data['message'])
-            
-            msg = "server received message: " + data['message']
-            if (data['message'] == 'exit'):
-                conn.send(msg.encode())
-                break
-            conn.send(msg.encode())
-        conn.close()
-    '''
     def open_server(self):
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.bind((self.ip, 8000))

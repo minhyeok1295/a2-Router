@@ -65,9 +65,9 @@ if __name__ == "__main__":
     print("router ip: " + data['src_ip'])
     #host.open_socket(data['src_ip'])
     while True:
+        host.open_socket(data['src_ip'])
         msg = input("Enter Message: ")
         dest = input("Enter destination IP: ")
-        host.open_socket(data['src_ip'])
         print("send to " + dest + ",msg: " + msg)
         data_packet = make_packet(host.ip, dest, msg, 2)
         host.send(data_packet)
