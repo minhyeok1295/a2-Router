@@ -24,7 +24,7 @@ def multi_thread_client(conn):
             data = pickle.loads(packet)
             print_packet(data)
             #print("received: " + data['message'])
-            
+            send_message(data)
             msg = "server received message: " + data['message']
             if (data['message'] == 'exit'):
                 conn.send(msg.encode())
