@@ -38,7 +38,7 @@ if __name__ == "__main__":
         router.wait_for_broadcast()
         #receive message
         serv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        serv.bind(('127.0.0.200', 8080))
+        serv.bind(('127.0.0.200', 8000))
         serv.listen(5)
         while True:
             conn, addr = serv.accept()
