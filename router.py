@@ -24,9 +24,7 @@ class Router():
             bc_sock.sendto(make_packet(self.ip,addr,'',0),addr)
             break
         bc_sock.close()
-    
-    def receive(self):
-        
+
         
 
 
