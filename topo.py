@@ -27,15 +27,15 @@ class NetworkTopo(Topo):
 
         # Add host-switch links in the same subnet
 
-        self.addLink(s1,
-                     r1,
-                     intfName2='r1-eth1',
-                     params2={'ip': '192.168.1.1/24'})
+        self.addLink(r1,
+                     s1,
+                     intfName1='r1-eth0',
+                     params1={'ip': '192.168.1.1/24'})
 
-        self.addLink(s2,
-                     r1,
-                     intfName2='r1-eth2',
-                     params2={'ip': '192.168.2.1/24'})
+        self.addLink(r1,
+                     s2,
+                     intfName1='r1-eth1',
+                     params1={'ip': '192.168.2.1/24'})
         
 
 
