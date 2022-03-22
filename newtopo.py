@@ -77,8 +77,8 @@ def run():
     #net.stop()
 
 
-if __name__ == '__main__':
-    setLogLevel('info')
+#if __name__ == '__main__':
+    #setLogLevel('info')
     #topo = { 'mytopo': ( lambda: NetworkTopo() ) } 
-    run()
+    #run()
     
