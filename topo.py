@@ -29,12 +29,12 @@ class NetworkTopo(Topo):
 
         self.addLink(s1,
                      r1,
-                     intfName2='r1-eth0',
+                     intfName2='r1-eth1',
                      params2={'ip': '192.168.1.1/24'})
 
         self.addLink(s2,
                      r1,
-                     intfName2='r1-eth1',
+                     intfName2='r1-eth2',
                      params2={'ip': '192.168.2.1/24'})
         
 
