@@ -18,6 +18,7 @@ def print_packet(packet):
 
 def multi_thread_client(conn, clients):
     conn.send(str.encode('server is connected'))
+    print(clients)
     while True:
         packet = conn.recv(4096)
         try:
@@ -58,6 +59,7 @@ class Router():
         recv_data, addr = self.bc_sock.recvfrom(1024)
         print("broadcast")
         data = pickle.loads(recv_data)
+        self.clients[data['src_ip']] = None
         
         self.bc_sock.sendto(make_packet(self.ip,addr,'',0),addr)
     
