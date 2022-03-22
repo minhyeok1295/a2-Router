@@ -72,7 +72,7 @@ class Router():
             conn, addr = server.accept()
             print("-----Connected------")
             print(addr)
-            start_new_thread(multi_thread_client, (conn, self.client))
+            start_new_thread(multi_thread_client, (conn, self.clients))
           
 class BroadCastThread(threading.Thread):
     
