@@ -19,7 +19,7 @@ class ThreadSock(threading.Thread):
     def run(self):
         self.node.open_thread_sock()
         while not self.stopped():
-            self.router.receive()
+            self.node.receive()
         self.node.thread_sock.close()
 
 
