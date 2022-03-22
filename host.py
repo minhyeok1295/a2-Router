@@ -85,6 +85,8 @@ class RecvSockThread(threading.Thread):
         self.host = host
         # https://stackoverflow.com/questions/323972/is-there-any-way-to-kill-a-thread
         self._stop_event = threading.Event()
+        
+        self.host.open_recv_sock()
     
     def stop(self):
         self._stop_event.set()
@@ -93,7 +95,6 @@ class RecvSockThread(threading.Thread):
         return self._stop_event.is_set()
 
     def run(self):
-        self.host.open_recv_sock()
         while not self.stopped():
             self.host.wait_for_message()
         self.host.close_recv_sock()
@@ -106,9 +107,10 @@ if __name__ == "__main__":
     host = Host(sys.argv[1], 9999)
     print("created host")
     recv_sock = RecvSockThread(host)
+    
+    data = host.broadcast()
     recv_sock.start()
     print("Start broadcasting")
-    data = host.broadcast()
     
     print("router ip: " + data['src_ip'])
     host.open_socket(data['src_ip'])
