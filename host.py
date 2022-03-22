@@ -35,9 +35,10 @@ class Host():
         return data
             
     def open_socket(self, dest):
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.connect((dest, 8000))
+       
         while True:
+            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.socket.connect((dest, 8000))
             msg = input("Enter Message: ")
             dest = input("Enter destination IP: ")
             ttl = input("Enter ttl: ")
