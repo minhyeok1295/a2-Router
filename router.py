@@ -62,7 +62,7 @@ class Router():
         recv_data, addr = self.bc_sock.recvfrom(1024)
         data = pickle.loads(recv_data)
         self.clients[data['src_ip']] = None
-        
+        print(addr)
         self.bc_sock.sendto(make_packet(self.ip,addr,'',0),addr)
     
     def open_server(self):
