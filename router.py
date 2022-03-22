@@ -16,7 +16,7 @@ def print_packet(packet):
     print("ttl: " + str(packet['ttl']))
 
 
-def multi_thread_client(conn, router):
+def multi_thread_client(conn, clients):
     conn.send(str.encode('server is connected'))
     while True:
         packet = conn.recv(4096)
@@ -25,7 +25,7 @@ def multi_thread_client(conn, router):
             print_packet(data)
             print("======")
             #print("received: " + data['message'])
-            send_message(router['src_ip'], data)
+            send_message(clients['src_ip'], data)
             msg = "server received message: " + data['message']
             if (data['message'] == 'exit'):
                 conn.send(msg.encode())
@@ -74,7 +74,7 @@ class Router():
             conn, addr = server.accept()
             print("-----Connected------")
             print(addr)
-            start_new_thread(multi_thread_client, (conn, self))
+            start_new_thread(multi_thread_client, (conn, self.client))
           
 class BroadCastThread(threading.Thread):
     
