@@ -20,7 +20,7 @@ class NetworkTopo(Topo):
     def build(self, **_opts):
         # Add 2 routers in two different subnets
         r1 = self.addHost('r1', cls=LinuxRouter, ip='10.0.0.1/24')
-
+        
         # Add 2 switches
         s1 = self.addSwitch('s1')
         s2 = self.addSwitch('s2')
@@ -35,12 +35,12 @@ class NetworkTopo(Topo):
         self.addLink(s1,
                      r1,
                      intfName2='r1-eth0',
-                     params2={'ip': '172.168.0.1/24'})
+                     params2={'ip': '10.0.0.1/24'})
 
         self.addLink(s2,
                      r1,
                      intfName2='r1-eth1',
-                     params2={'ip': '192.168.1.1/24'})
+                     params2={'ip': '10.0.1.1/24'})
         
 
 
