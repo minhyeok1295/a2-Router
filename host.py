@@ -35,6 +35,7 @@ class Host():
         return data
             
     def open_socket(self, dest):
+        
         while True:
             print("dst: " + dest)
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -116,8 +117,9 @@ if __name__ == "__main__":
     data = host.broadcast()
     
     recv_sock.start()
-    print("router ip: " + data['src_ip'])
-    host.open_socket(data['src_ip'])
+    r_ip = data['src_ip']
+    print("router ip: " + r_ip)
+    host.open_socket(r_ip)
     recv_sock.stop()
     recv_sock.join()
     
