@@ -35,8 +35,8 @@ class Host():
         return data
             
     def open_socket(self, dest):
-       
         while True:
+            print("dst: " + dest)
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.socket.connect((dest, 8000))
             msg = input("Enter Message: ")
