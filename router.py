@@ -17,21 +17,24 @@ def print_packet(packet):
 
 
 def multi_thread_client(conn, clients):
-    conn.send(str.encode('server is connected'))
     print(clients)
     while True:
         packet = conn.recv(4096)
         try:
             data = pickle.loads(packet)
-            print_packet(data)
-            
+            if (data['dest_ip'] not in clients):
+                print("destination is not reachable")
+                conn.send(str.encode("destination is not reachable"))
+                break
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.connect((data['dest_ip'], 8100))
             print("connected to " + data['dest_ip'])
             clients[data['dest_ip']] = sock
             sock.send(packet)
             sock.close()
+            print_packet(data)
             
+            print("======sent=====")
             
             msg = "sent msg to: " + data['dest_ip']
             if (data['message'] == 'exit'):
@@ -57,7 +60,6 @@ class Router():
 
     def wait_for_broadcast(self):
         recv_data, addr = self.bc_sock.recvfrom(1024)
-        print("broadcast")
         data = pickle.loads(recv_data)
         self.clients[data['src_ip']] = None
         
@@ -93,19 +95,6 @@ class BroadCastThread(threading.Thread):
         while not self.stopped():
             self.router.wait_for_broadcast()
         self.router.bc_sock.close()
-
-'''
-class ServerThread(threading.Thread):
-    """ We don't need this yet
-    """
-    
-    def __init__(self,router):
-        threading.Thread.__init__(self)
-        self.router = router
-    
-    def run(self):
-        self.router.open_server()
-'''
 
 
 

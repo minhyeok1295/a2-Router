@@ -40,8 +40,10 @@ class Host():
         while True:
             msg = input("Enter Message: ")
             dest = input("Enter destination IP: ")
-            print("send to " + dest + ",msg: " + msg)
-            data_packet = make_packet(self.ip, dest, msg, 2)
+            ttl = input("Enter ttl: ")
+            
+            print("send to " + dest + ",msg: " + msg + ", ttl: " + ttl)
+            data_packet = make_packet(self.ip, dest, msg, int(ttl))
             self.send(data_packet)
             if(msg[:-1] == 'exit'):
                 break
