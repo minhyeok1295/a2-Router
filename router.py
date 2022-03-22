@@ -23,7 +23,6 @@ def multi_thread_client(conn, router):
         try:
             data = pickle.loads(packet)
             print_packet(data)
-            
             print("======")
             #print("received: " + data['message'])
             send_message(router['src_ip'], data)
