@@ -19,7 +19,7 @@ class LinuxRouter(Node):
 class NetworkTopo(Topo):
     def build(self, **_opts):
         # Add 2 routers in two different subnets
-        r1 = self.addHost('r1')
+        r1 = self.addHost('r1',cls=Node, ip='0.0.0.0')
         
         # Add 2 switches
         s1 = self.addSwitch('s1')
