@@ -5,6 +5,15 @@ from helper import *
 
 import threading
 
+
+
+def print_packet(packet):
+    print("-----packet info-----")
+    print("src_ip: " + packet["src_ip"])
+    print("dest_ip: " + packet["dest_ip"])
+    print("msg: " + packet['message'])
+    print("ttl: " + str(packet['ttl']))
+
 class Host():
     '''
     given the end system's IP addr ess, the end system will become active, open socke to its next hop connection
@@ -115,6 +124,7 @@ if __name__ == "__main__":
     recv_sock = RecvSockThread(host)
     print("Start broadcasting")
     data = host.broadcast()
+    print_packet(data)
     
     recv_sock.start()
     r_ip = data['src_ip']
