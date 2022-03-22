@@ -17,16 +17,16 @@ def print_packet(packet):
 
 
 def multi_thread_client(conn, router):
-    print("here----")
-    print(router.ip)
     conn.send(str.encode('server is connected'))
     while True:
         packet = conn.recv(4096)
         try:
             data = pickle.loads(packet)
-            #print_packet(data)
+            print_packet(data)
+            
+            print("======")
             #print("received: " + data['message'])
-            send_message(data)
+            send_message(router['src_ip'], data)
             msg = "server received message: " + data['message']
             if (data['message'] == 'exit'):
                 conn.send(msg.encode())
@@ -35,7 +35,7 @@ def multi_thread_client(conn, router):
         except EOFError:
             pass
 
-def send_message(packet):
+def send_message(c, packet):
     print_packet(packet)
     c.send(packet)
     c.close()
@@ -63,6 +63,7 @@ class Router():
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.connect((data['src_ip'], 8100))
         print("connected")
+        client[data['src_ip']] = sock
         self.bc_sock.sendto(make_packet(self.ip,addr,'',0),addr)
     
     def open_server(self):
