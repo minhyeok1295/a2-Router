@@ -1,9 +1,8 @@
 import pickle
-
 import threading
 
 
-class ThreadSock(threading.thread):
+class ThreadSock(threading.Thread):
     
     def __init__(self,node):
         threading.Thread.__init__(self)
