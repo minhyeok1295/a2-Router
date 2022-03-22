@@ -72,27 +72,6 @@ class Router():
             conn, addr = server.accept()
             start_new_thread(multi_thread_client, (conn, self.clients))
           
-class BroadCastThread(threading.Thread):
-    
-    def __init__(self,router):
-        threading.Thread.__init__(self)
-        self.router = router
-        # https://stackoverflow.com/questions/323972/is-there-any-way-to-kill-a-thread
-        self._stop_event = threading.Event()
-
-    def stop(self):
-        self._stop_event.set()
-
-    def stopped(self):
-        return self._stop_event.is_set()
-
-    def run(self):
-        self.router.init_bc_sock()
-        while not self.stopped():
-            self.router.wait_for_broadcast()
-        self.router.thread_sock.close()
-
-
 
 if __name__ == "__main__":
     router = Router("10.0.0.1")

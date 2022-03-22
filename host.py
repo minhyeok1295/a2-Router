@@ -90,28 +90,6 @@ class Host():
             print("from: " + data['src_ip'] + ", msg: " + data['message'])
             print("Enter Message: ")
 
-class RecvSockThread(threading.Thread):
-    
-    def __init__(self,host):
-        threading.Thread.__init__(self)
-        self.host = host
-        # https://stackoverflow.com/questions/323972/is-there-any-way-to-kill-a-thread
-        self._stop_event = threading.Event()
-        
-        #self.host.open_recv_sock()
-    
-    def stop(self):
-        self._stop_event.set()
-
-    def stopped(self):
-        return self._stop_event.is_set()
-
-    def run(self):
-        
-        self.host.open_recv_sock()
-        while not self.stopped():
-            self.host.receive()
-        self.host.close_recv_sock()
 
 
 if __name__ == "__main__":
