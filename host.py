@@ -48,6 +48,7 @@ class Host():
         while True:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.socket.connect((router_ip, 8000))
+            print("=============================")
             msg = input("Enter Message: ")
             dest = input("Enter destination IP: ")
             ttl = input("Enter ttl: ")
@@ -81,7 +82,7 @@ class Host():
             packet = c.recv(4096)
             data = pickle.loads(packet)
             print("from: " + data['src_ip'] + ", msg: " + data['message'])
-            print("Enter Message")
+            print("Enter Message: ")
     
     def close_recv_sock(self):
         self.recv_sock.close()
@@ -101,7 +102,7 @@ class RecvSockThread(threading.Thread):
         # https://stackoverflow.com/questions/323972/is-there-any-way-to-kill-a-thread
         self._stop_event = threading.Event()
         
-        self.host.open_recv_sock()
+        #self.host.open_recv_sock()
     
     def stop(self):
         self._stop_event.set()
@@ -110,6 +111,8 @@ class RecvSockThread(threading.Thread):
         return self._stop_event.is_set()
 
     def run(self):
+        
+        self.host.open_recv_sock()
         while not self.stopped():
             self.host.wait_for_message()
         self.host.close_recv_sock()
