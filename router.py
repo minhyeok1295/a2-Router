@@ -25,7 +25,7 @@ def multi_thread_client(conn, clients):
             print_packet(data)
             print("======")
             #print("received: " + data['message'])
-            send_message(clients['src_ip'], data)
+            send_message(clients[data['src_ip']], data)
             msg = "server received message: " + data['message']
             if (data['message'] == 'exit'):
                 conn.send(msg.encode())
