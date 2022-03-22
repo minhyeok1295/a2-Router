@@ -62,7 +62,7 @@ class Router():
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.connect((data['src_ip'], 8100))
         print("connected")
-        client[data['src_ip']] = sock
+        self.client[data['src_ip']] = sock
         self.bc_sock.sendto(make_packet(self.ip,addr,'',0),addr)
     
     def open_server(self):
