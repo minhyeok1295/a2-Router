@@ -81,7 +81,6 @@ class Host():
     (and any other relevant information) to its output
     '''
     def receive(self):
-        
         while True:
             c, a = self.thread_sock.accept()
             print("\n")
