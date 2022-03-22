@@ -63,6 +63,7 @@ class Host():
         self.recv_sock.listen(5)
     
     def wait_for_message(self):
+        print("waiting...")
         while True:
             c, a = self.recv_sock.accept()
             print("accepted")

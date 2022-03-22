@@ -24,7 +24,7 @@ def multi_thread_client(conn, clients):
             data = pickle.loads(packet)
             print_packet(data)
             print("======")
-            #print("received: " + data['message'])
+            print(data['src_ip'])
             send_message(clients[data['src_ip']], packet)
             msg = "server received message: " + data['message']
             if (data['message'] == 'exit'):
