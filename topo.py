@@ -40,4 +40,4 @@ h4.cmd("ip route add default via 10.0.2.1")
 
 
 
-topos = { 'mytopo': ( lambda: net.topos) } 
+topos = { 'mytopo': ( lambda: net.topo) } 
