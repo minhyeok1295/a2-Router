@@ -40,7 +40,7 @@ class Host():
                                     ('255.255.255.255', 9999))
         recv_data, addr = self.broad_socket.recvfrom(1024)
         data = pickle.loads(recv_data)
-        print_packet(recv_data)
+        print_packet(data)
         print(addr)
         print("================")
         self.broad_socket.close()
