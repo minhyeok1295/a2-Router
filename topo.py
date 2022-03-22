@@ -19,51 +19,45 @@ class LinuxRouter(Node):
 class NetworkTopo(Topo):
     def build(self, **_opts):
         # Add 2 routers in two different subnets
-        r1 = self.addHost('r1', cls=LinuxRouter)
+        r1 = self.addHost('r1')
         
         # Add 2 switches
         s1 = self.addSwitch('s1')
         s2 = self.addSwitch('s2')
-        #s3 = self.addSwitch('s3')
 
         # Add host-switch links in the same subnet
-        '''
-        self.addLink(s3,
-                     r1,
-                     intfName2='r1-eth0',
-                     params2={'ip': '10.0.0.1/24'})
-'''
+
         self.addLink(s1,
                      r1,
                      intfName2='r1-eth0',
-                     params2={'ip': '10.0.1.1/24'})
+                     params2={'ip': '192.168.1.1/24'})
 
         self.addLink(s2,
                      r1,
                      intfName2='r1-eth1',
-                     params2={'ip': '10.0.2.1/24'})
+                     params2={'ip': '192.168.2.1/24'})
         
 
 
         # Adding hosts specifying the default route
-        h1 = self.addHost(name='h1',
-                          ip='10.0.1.10/24',
-                          defaultRoute='via 10.0.1.1')
-        h2 = self.addHost(name='h2',
-                          ip='10.0.2.10/24',
-                          defaultRoute='via 10.0.2.1')
-        h3 = self.addHost(name='h3',
-                          ip='10.0.1.20/24',
-                          defaultRoute='via 10.0.1.1')
+        d1 = self.addHost(name='d1',
+                          ip='172.168.1.10/24',
+                          defaultRoute='via 192.168.1.1')
+        d2 = self.addHost(name='d2',
+                          ip='192.168.2.10/24',
+                          defaultRoute='via 192.168.2.1')
+        d3 = self.addHost(name='d3',
+                          ip='172.168.1.20/24',
+                          defaultRoute='via 172.168.1.1')
         
-        h4 = self.addHost(name='h4',
-                          ip='10.0.2.20/24',
-                          defaultRoute='via 10.0.2.1')
+        d4 = self.addHost(name='d4',
+                          ip='192.168.2.20/24',
+                          defaultRoute='via 192.168.2.1')
         # Add host-switch links
-        self.addLink(h1, s1)
-        self.addLink(h3, s1)
-        self.addLink(h2, s2)
-        self.addLink(h4, s2)
+        self.addLink(d1, s1)
+        self.addLink(d3, s1)
+        self.addLink(d2, s2)
+        self.addLink(d4, s2)
         
 def run():
     topo = NetworkTopo()
