@@ -16,13 +16,14 @@ def print_packet(packet):
     print("ttl: " + str(packet['ttl']))
 
 
-def multi_thread_client(conn):
+def multi_thread_client(conn, router):
+    print(router.ip)
     conn.send(str.encode('server is connected'))
     while True:
         packet = conn.recv(4096)
         try:
             data = pickle.loads(packet)
-            print_packet(data)
+            #print_packet(data)
             #print("received: " + data['message'])
             send_message(data)
             msg = "server received message: " + data['message']
@@ -61,7 +62,6 @@ class Router():
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.connect((data['src_ip'], 8100))
         print("connected")
-        
         self.bc_sock.sendto(make_packet(self.ip,addr,'',0),addr)
     
     def open_server(self):
@@ -73,7 +73,7 @@ class Router():
             conn, addr = server.accept()
             print("-----Connected------")
             print(addr)
-            start_new_thread(multi_thread_client, (conn,))
+            start_new_thread(multi_thread_client, (conn, self))
           
 class BroadCastThread(threading.Thread):
     
