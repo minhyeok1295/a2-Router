@@ -26,7 +26,7 @@ class Host():
         self.next_ip = ''
         self.broad_socket = None
         self.socket = None
-        self.recv_sock = None
+        self.thread_sock = None
     
     '''
     send a simple message to the IP address 255.255.255.255 with TTL = 0
@@ -70,29 +70,25 @@ class Host():
         from_server = self.socket.recv(4096)
         print(from_server.decode())
 
-    def open_recv_sock(self):
-        self.recv_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.recv_sock.bind((self.ip, 8100))
-        self.recv_sock.listen(5)
+    def open_thread_sock(self):
+        self.thread_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.thread_sock.bind((self.ip, 8100))
+        self.thread_sock.listen(5)
     
-    def wait_for_message(self):
-        while True:
-            c, a = self.recv_sock.accept()
-            print("\n")
-            packet = c.recv(4096)
-            data = pickle.loads(packet)
-            print("from: " + data['src_ip'] + ", msg: " + data['message'])
-            print("Enter Message: ")
-    
-    def close_recv_sock(self):
-        self.recv_sock.close()
         
     '''
     if an end system receives a message, it should display that message
     (and any other relevant information) to its output
     '''
     def receive(self):
-        pass
+        
+        while True:
+            c, a = self.thread_sock.accept()
+            print("\n")
+            packet = c.recv(4096)
+            data = pickle.loads(packet)
+            print("from: " + data['src_ip'] + ", msg: " + data['message'])
+            print("Enter Message: ")
 
 class RecvSockThread(threading.Thread):
     
@@ -114,7 +110,7 @@ class RecvSockThread(threading.Thread):
         
         self.host.open_recv_sock()
         while not self.stopped():
-            self.host.wait_for_message()
+            self.host.receive()
         self.host.close_recv_sock()
 
 
@@ -124,7 +120,7 @@ if __name__ == "__main__":
         raise
     host = Host(sys.argv[1], 9999)
     print("created host")
-    recv_sock = RecvSockThread(host)
+    recv_sock = ThreadSock(host)
     print("Start broadcasting")
     data = host.broadcast()
     

@@ -48,21 +48,20 @@ class Router():
     
     def __init__(self, ip):
         self.ip = ip
-        self.bc_sock = None
+        self.thread_sock = None
         self.clients = {}
         
+    def open_thread_sock(self):
+        self.thread_sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+        self.thread_sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        self.thread_sock.bind(('0.0.0.0',9999))
 
-    def init_bc_sock(self):
-        self.bc_sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-        self.bc_sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        self.bc_sock.bind(('0.0.0.0',9999))
-
-    def wait_for_broadcast(self):
-        recv_data, addr = self.bc_sock.recvfrom(1024)
+    def receive(self):
+        recv_data, addr = self.thread_sock.recvfrom(1024)
         data = pickle.loads(recv_data)
         self.clients[data['src_ip']] = None
         print("addr: " + str(addr))
-        self.bc_sock.sendto(make_packet(self.ip,self.ip,'',0),addr)
+        self.thread_sock.sendto(make_packet(self.ip,self.ip,'',0),addr)
     
     def open_server(self):
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -91,14 +90,14 @@ class BroadCastThread(threading.Thread):
         self.router.init_bc_sock()
         while not self.stopped():
             self.router.wait_for_broadcast()
-        self.router.bc_sock.close()
+        self.router.thread_sock.close()
 
 
 
 if __name__ == "__main__":
     router = Router("10.0.0.1")
 
-    broadcast_t = BroadCastThread(router)
+    broadcast_t = ThreadSock(router)
     broadcast_t.start()
     router.open_server()
     broadcast_t.stop()
