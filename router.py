@@ -50,6 +50,8 @@ class Router():
     def __init__(self, ip):
         self.ip = ip
         self.bc_sock = None
+        self.client = []
+        
 
     def init_bc_sock(self):
         self.bc_sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
@@ -59,6 +61,7 @@ class Router():
     def wait_for_broadcast(self):
         recv_data, addr = self.bc_sock.recvfrom(1024)
         data = pickle.loads(recv_data)
+        print_packet(data)
         self.bc_sock.sendto(make_packet(self.ip,addr,'',0),addr)
     
     def open_server(self):

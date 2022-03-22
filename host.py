@@ -105,16 +105,15 @@ if __name__ == "__main__":
         raise
     host = Host(sys.argv[1], 9999)
     print("created host")
+    recv_sock = RecvSockThread(host)
+    recv_sock.start()
     print("Start broadcasting")
     data = host.broadcast()
     
     print("router ip: " + data['src_ip'])
-    recv_sock = RecvSockThread(host)
-    recv_sock.start()
-   #host.open_recv_sock()
     host.open_socket(data['src_ip'])
+    while not recv_sock.stopped():
+        recv_sock.host.wait_for_message()
     recv_sock.stop()
     recv_sock.join()
-   #host.close_recv_sock()
-    
     
