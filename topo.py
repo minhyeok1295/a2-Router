@@ -51,10 +51,18 @@ class NetworkTopo(Topo):
         d2 = self.addHost(name='d2',
                           ip='192.168.1.10/24',
                           defaultRoute='via 192.168.1.1')
-
+        d3 = self.addHost(name='d3',
+                          ip='152.168.2.10/24',
+                          defaultRoute='via 152.168.2.1')
+        
+        d4 = self.addHost(name='d4',
+                          ip='132.168.3.10/24',
+                          defaultRoute='via 132.168.3.1')
         # Add host-switch links
         self.addLink(d1, s1)
+        self.addLink(d3, s1)
         self.addLink(d2, s2)
+        self.addLink(d4, s2)
         
 def run():
     topo = NetworkTopo()
