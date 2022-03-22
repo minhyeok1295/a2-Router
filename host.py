@@ -44,10 +44,9 @@ class Host():
         return data
             
     def open_socket(self, router_ip):
-        
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket.connect((router_ip, 8000)) 
         while True:
-            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.socket.connect((router_ip, 8000))
             print("=============================")
             msg = input("Enter Message: ")
             dest = input("Enter destination IP: ")
@@ -58,7 +57,7 @@ class Host():
                 self.send(data_packet)
                 if(msg[:-1] == 'exit'):
                     break
-            self.socket.close()
+        self.socket.close()
             
         
     '''Given a destination IP address, a text message and TTL,
