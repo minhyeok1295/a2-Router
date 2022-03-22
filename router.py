@@ -25,28 +25,20 @@ def multi_thread_client(conn, clients):
             print_packet(data)
             
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            print(data["dest_ip"])
             sock.connect((data['dest_ip'], 8100))
             print("connected to " + data['dest_ip'])
             clients[data['dest_ip']] = sock
+            sock.send(packet)
+            sock.close()
             
-            print("======")
-            print(data['dest_ip'])
-            send_message(sock, packet)
-            msg = "server received message: " + data['message']
+            
+            msg = "sent msg to: " + data['dest_ip']
             if (data['message'] == 'exit'):
                 conn.send(msg.encode())
                 break
             conn.sendall(msg.encode())
         except EOFError:
             pass
-
-def send_message(c, packet):
-    #print_packet(packet)
-    c.send(packet)
-    c.close()
-    
-    
 
 
 class Router():
