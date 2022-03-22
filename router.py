@@ -60,6 +60,7 @@ class Router():
         print("broadcast")
         data = pickle.loads(recv_data)
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        print(data["dest_ip"])
         sock.connect((data['dest_ip'], 8100))
         print("connected to " + data['dest_ip'])
         self.client[data['dest_ip']] = sock
