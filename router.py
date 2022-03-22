@@ -17,13 +17,11 @@ def print_packet(packet):
 
 
 def multi_thread_client(conn, clients):
-    print(clients)
     while True:
         packet = conn.recv(4096)
         try:
             data = pickle.loads(packet)
             if (data['dest_ip'] not in clients):
-                print("destination is not reachable")
                 conn.send(str.encode("destination is not reachable"))
                 break
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -32,9 +30,10 @@ def multi_thread_client(conn, clients):
             clients[data['dest_ip']] = sock
             sock.send(packet)
             sock.close()
-            print_packet(data)
             
             print("======sent=====")
+            print_packet(data)
+            print("===============")
             
             msg = "sent msg to: " + data['dest_ip']
             if (data['message'] == 'exit'):
@@ -72,8 +71,6 @@ class Router():
         print("listening...")
         while True:
             conn, addr = server.accept()
-            print("-----Connected------")
-            print(addr)
             start_new_thread(multi_thread_client, (conn, self.clients))
           
 class BroadCastThread(threading.Thread):

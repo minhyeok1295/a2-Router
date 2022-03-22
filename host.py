@@ -49,7 +49,6 @@ class Host():
     def open_socket(self, router_ip):
         
         while True:
-            print("router: " + router_ip)
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.socket.connect((router_ip, 8000))
             msg = input("Enter Message: ")
@@ -81,10 +80,11 @@ class Host():
     def wait_for_message(self):
         while True:
             c, a = self.recv_sock.accept()
-            print("accepted")
+            print("\n")
             packet = c.recv(4096)
             data = pickle.loads(packet)
             print("from: " + data['src_ip'] + ", msg: " + data['message'])
+            print("Enter Message")
     
     def close_recv_sock(self):
         self.recv_sock.close()
