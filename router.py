@@ -23,9 +23,16 @@ def multi_thread_client(conn, clients):
         try:
             data = pickle.loads(packet)
             print_packet(data)
+            
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            print(data["dest_ip"])
+            sock.connect((data['dest_ip'], 8100))
+            print("connected to " + data['dest_ip'])
+            clients[data['dest_ip']] = sock
+            
             print("======")
             print(data['dest_ip'])
-            send_message(clients[data['dest_ip']], packet)
+            send_message(sock, packet)
             msg = "server received message: " + data['message']
             if (data['message'] == 'exit'):
                 conn.send(msg.encode())
@@ -59,11 +66,7 @@ class Router():
         recv_data, addr = self.bc_sock.recvfrom(1024)
         print("broadcast")
         data = pickle.loads(recv_data)
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        print(data["dest_ip"])
-        sock.connect((data['dest_ip'], 8100))
-        print("connected to " + data['dest_ip'])
-        self.client[data['dest_ip']] = sock
+        
         self.bc_sock.sendto(make_packet(self.ip,addr,'',0),addr)
     
     def open_server(self):
