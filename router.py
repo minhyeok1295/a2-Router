@@ -59,9 +59,9 @@ class Router():
         recv_data, addr = self.bc_sock.recvfrom(1024)
         print("broadcast")
         data = pickle.loads(recv_data)
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((data['src_ip'], 8100))
-        print("connected")
+        print("connected to" + data['src_ip'])
         self.client[data['src_ip']] = sock
         self.bc_sock.sendto(make_packet(self.ip,addr,'',0),addr)
     
