@@ -1,7 +1,7 @@
 import socket
 import pickle
 import threading
-from helper import *
+from helper import ThreadSock, make_packet
 from _thread import start_new_thread
 
 broadcast = '255.255.255.255'

@@ -1,7 +1,7 @@
 import socket
 import pickle
 import sys
-from helper import *
+from helper import ThreadSock, make_packet
 
 import threading
 
