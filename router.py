@@ -17,6 +17,7 @@ def print_packet(packet):
 
 
 def multi_thread_client(conn, router):
+    print("here----")
     print(router.ip)
     conn.send(str.encode('server is connected'))
     while True:
