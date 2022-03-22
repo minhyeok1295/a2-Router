@@ -34,9 +34,6 @@ def multi_thread_client(conn):
             pass
 
 def send_message(packet):
-    dst = packet['dest_ip']
-    c = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    c.connect((dst, 8100))
     print("sent msg: ", packet["message"])
     print("dest_ip: ", dst)
     c.send(packet)
@@ -50,7 +47,7 @@ class Router():
     def __init__(self, ip):
         self.ip = ip
         self.bc_sock = None
-        self.client = []
+        self.client = {}
         
 
     def init_bc_sock(self):
@@ -61,7 +58,9 @@ class Router():
     def wait_for_broadcast(self):
         recv_data, addr = self.bc_sock.recvfrom(1024)
         data = pickle.loads(recv_data)
-        print_packet(data)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.connect((data['src_ip'], 8100))
+        
         self.bc_sock.sendto(make_packet(self.ip,addr,'',0),addr)
     
     def open_server(self):
