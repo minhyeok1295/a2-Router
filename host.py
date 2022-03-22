@@ -46,12 +46,12 @@ class Host():
         self.broad_socket.close()
         return data
             
-    def open_socket(self, dest):
+    def open_socket(self, router_ip):
         
         while True:
-            print("dst: " + dest)
+            print("router: " + router_ip)
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.socket.connect((dest, 8000))
+            self.socket.connect((router_ip, 8000))
             msg = input("Enter Message: ")
             dest = input("Enter destination IP: ")
             ttl = input("Enter ttl: ")
