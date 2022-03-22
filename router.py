@@ -47,7 +47,7 @@ class Router():
     def __init__(self, ip):
         self.ip = ip
         self.bc_sock = None
-        self.client = {}
+        self.clients = {}
         
 
     def init_bc_sock(self):
