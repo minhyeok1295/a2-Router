@@ -65,6 +65,7 @@ class Host():
     def wait_for_message(self):
         while True:
             c, a = self.recv_sock.accept()
+            print("accepted")
             packet = c.recv(4096)
             data = pickle.loads(packet)
             print("msg: " + data['message'])

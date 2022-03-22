@@ -34,8 +34,7 @@ def multi_thread_client(conn):
             pass
 
 def send_message(packet):
-    print("sent msg: ", packet["message"])
-    print("dest_ip: ", dst)
+    print_packet(packet)
     c.send(packet)
     c.close()
     
