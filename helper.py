@@ -53,6 +53,7 @@ def validate_ip(ip):
             num = int(nums[i])
         except:
             return False
+        print(num)
         if (num > 255 and num < 0):
             return False
     return True
