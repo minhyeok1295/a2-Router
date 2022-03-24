@@ -51,13 +51,14 @@ class Host():
                 exit_packet = make_packet("", "", msg, 0)
                 self.send_sock.send(exit_packet)
                 self.send_sock.close()
-                return 0
+                break
             else:
                 dest_ip = input("Enter destination: ")
                 print("send msg: " + msg + ", to dest: ", dest_ip)
                 data_packet = make_packet(self.ip, dest_ip, msg, 2)
                 self.send_sock.send(data_packet)
                 self.send_sock.close()
+        return 0
 
 
     def open_thread_sock(self):
