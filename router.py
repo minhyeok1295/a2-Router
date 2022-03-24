@@ -27,7 +27,7 @@ class Router():
         self.thread_sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         self.thread_sock.bind(('0.0.0.0',9999))
 
-    def wait_for_broadcast(self):
+    def receive(self): #wait for broadcast
         recv_data, addr = self.thread_sock.recvfrom(1024)
         data = pickle.loads(recv_data)
         self.lock.acquire()
