@@ -54,12 +54,11 @@ class Host():
                 break
             else:
                 dest_ip = input("Enter destination: ")
-                try:
-                    socket.inet_aton(dest_ip)
+                if (validate_ip(dest_ip)):
                     print("send msg: " + msg + ", to dest: ", dest_ip)
                     data_packet = make_packet(self.ip, dest_ip, msg, 2)
                     self.send_sock.send(data_packet)
-                except socket.error:
+                else:
                     print("invalid ip address format")
                 self.send_sock.close()
         return 0

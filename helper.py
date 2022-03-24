@@ -43,4 +43,17 @@ def print_packet(packet):
     print("ttl: " + str(packet['ttl']))
     
     
-    
+#Validate format of ip address
+def validate_ip(ip):
+    nums = ip.split(".")
+    if len(nums) != 4:
+        return False
+    for i in range(len(nums)):
+        try:
+            num = int(nums[i])
+            if (num > 255 and num < 0):
+                return False
+        except:
+            return False
+    return True
+        
