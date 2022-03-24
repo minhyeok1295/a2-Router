@@ -46,6 +46,8 @@ class Host():
     def send(self):
         while True:
             msg = input("Enter message: ")
+            if(msg == 'exit'):
+                break
             dest_ip = input("Enter destination: ")
             print("msg is ", msg)
             print("dest is ", dest_ip)
@@ -53,8 +55,6 @@ class Host():
             data_packet = make_packet(self.ip, dest_ip, msg, 2)
             self.send_sock.send(data_packet)
             self.send_sock.close()
-            if(msg == 'exit'):
-                break
 
 
     def open_thread_sock(self):
@@ -91,7 +91,7 @@ if __name__ == "__main__":
     recv_t.start()
     host.send()
     recv_t.stop()
-    host.recv_sock.close()
+    host.thread_sock.close()
     recv_t.join()
     print('Program Terminated')
     
