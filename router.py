@@ -91,8 +91,7 @@ class TableCommandThread(ThreadSock):
                 print("Executing print command")
                 print(self.router.table)
         
-
-      '''
+'''     
 class TableCommandThread(threading.Thread):
 
     def __init__(self,router):
@@ -114,7 +113,7 @@ class TableCommandThread(threading.Thread):
             if command == "print":
                 print("Executing print command")
                 print(self.router.table)
-''''
+'''
 
 
 if __name__ == "__main__":
