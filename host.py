@@ -59,7 +59,7 @@ class Host():
                     
                     data_packet = make_packet(self.ip, dest_ip, msg, 2)
                     if (check_on_same_switch(self.ip, dest_ip)):
-                        self.send_to_host(dest_ip, packet)
+                        self.send_to_host(dest_ip, data_packet)
                     else:
                         self.send_sock.send(data_packet)
                 else:
