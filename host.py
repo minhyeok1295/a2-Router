@@ -100,4 +100,4 @@ if __name__ == "__main__":
     host.thread_sock.close()
     #recv_t.join()
     print('Program Terminated')
-    
+    raise SystemExit
