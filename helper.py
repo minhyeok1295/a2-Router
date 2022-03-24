@@ -41,3 +41,6 @@ def print_packet(packet):
     print("dest_ip: " + packet["dest_ip"])
     print("msg: " + packet['message'])
     print("ttl: " + str(packet['ttl']))
+    
+    
+    
