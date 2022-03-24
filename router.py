@@ -34,7 +34,7 @@ class Router():
         # set src ip as key, the ip where the message is coming from as value
         self.table.create_entry(data['src_ip'],addr[0])
         self.lock.release()
-        self.bc_sock.sendto(make_packet(self.ip,addr,'',0),addr)
+        self.thread_sock.sendto(make_packet(self.ip,addr,'',0),addr)
     
     def open_server(self):
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
