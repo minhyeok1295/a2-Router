@@ -59,6 +59,6 @@ def validate_ip(ip):
 
 
 def check_on_same_switch(ip1, ip2):
-    if(ip1.split(".")[:2] == ip2.split(".")[:2]):
+    if(ip1.split(".")[:3] == ip2.split(".")[:3]):
         return True
     return False
