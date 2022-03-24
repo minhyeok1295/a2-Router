@@ -38,24 +38,24 @@ class Router():
             print("Server connected to")
             print(addr)
             packet = conn.recv(4096)
-            print(len(packet))
-            data = pickle.loads(packet)
-            print_packet(data)
-            if (data['message'] == 'exit'):
-                break
-            
-            dest = data['dest_ip']
-            self.lock.acquire()
-            if self.table.has_ip(dest):
-                next_hop = self.table.get_next_hop(dest)
-                try:
-                    self.forward(data,next_hop)
-                    print(f"Successfully sent message to {data['dest_ip']}")
-                except Exception:
-                    print("Error!!!!")
-            else:
-                self.print_error(data['src_ip'],data['dest_ip'])
-            self.lock.release()
+            if len(packet != 0):
+                data = pickle.loads(packet)
+                print_packet(data)
+                if (data['message'] == 'exit'):
+                    break
+                
+                dest = data['dest_ip']
+                self.lock.acquire()
+                if self.table.has_ip(dest):
+                    next_hop = self.table.get_next_hop(dest)
+                    try:
+                        self.forward(data,next_hop)
+                        print(f"Successfully sent message to {data['dest_ip']}")
+                    except Exception:
+                        print("Error!!!!")
+                else:
+                    self.print_error(data['src_ip'],data['dest_ip'])
+                self.lock.release()
             conn.close()
         conn.close()
         server.close()
