@@ -56,6 +56,8 @@ class Router():
                 else:
                     self.print_error(data['src_ip'],data['dest_ip'])
                 self.lock.release()
+            else:
+                print("nothing received")
             conn.close()
         conn.close()
         server.close()

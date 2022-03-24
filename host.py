@@ -56,13 +56,21 @@ class Host():
                 dest_ip = input("Enter destination: ")
                 if (validate_ip(dest_ip)):
                     print("send msg: " + msg + ", to dest: ", dest_ip)
+                    
                     data_packet = make_packet(self.ip, dest_ip, msg, 2)
-                    self.send_sock.send(data_packet)
+                    if (check_on_same_switch(self.ip, dest_ip)):
+                        self.send_to_host(dest_ip, packet)
+                    else:
+                        self.send_sock.send(data_packet)
                 else:
                     print("invalid ip address format")
                 self.send_sock.close()
         return 0
 
+    def send_to_host(self, dest_ip, packet):
+        self.send_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.send_sock.connect((dest_ip, 8100))
+        self.send_sock.send(packet)
 
     def open_thread_sock(self):
         self.thread_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
