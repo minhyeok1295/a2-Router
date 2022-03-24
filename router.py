@@ -48,6 +48,7 @@ class Router():
                 self.lock.acquire()
                 if self.table.has_ip(dest):
                     next_hop = self.table.get_next_hop(dest)
+                    print(next_hop)
                     try:
                         self.forward(data,next_hop)
                         print(f"Successfully sent message to {data['dest_ip']}")
