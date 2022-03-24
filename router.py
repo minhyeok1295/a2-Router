@@ -91,29 +91,6 @@ class TableCommandThread(ThreadSock):
                 print("Executing print command")
                 print(self.node.table)
         
-'''     
-class TableCommandThread(threading.Thread):
-
-    def __init__(self,router):
-        threading.Thread.__init__(self)
-        self.router = router
-        self._stop_event = threading.Event()
-
-    def stop(self):
-        self._stop_event.set()
-
-    def stopped(self):
-        return self._stop_event.is_set()
-
-    def run(self):
-        print("Start Command Thread")
-        while not self.stopped():
-            command = input()
-            print("Command you entered is ",command)
-            if command == "print":
-                print("Executing print command")
-                print(self.router.table)
-'''
 
 
 if __name__ == "__main__":
@@ -125,7 +102,7 @@ if __name__ == "__main__":
     router.open_server()
     broadcast_t.stop()
     command_t.stop()
-    router.bc_sock.close()
+    router.thread_sock.close()
     broadcast_t.join()
     command_t.join()
     #1. receive broadcast message
