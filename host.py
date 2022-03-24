@@ -98,6 +98,6 @@ if __name__ == "__main__":
     recv_t.stop()
     print("end")
     host.thread_sock.close()
-    recv_t.join()
+    #recv_t.join()
     print('Program Terminated')
     
