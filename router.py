@@ -18,17 +18,17 @@ class Router():
     
     def __init__(self, ip):
         self.ip = ip
-        self.bc_sock = None
+        self.thread_sock = None
         self.table = ForwardTable()
         self.lock = threading.Lock()
 
-    def init_bc_sock(self):
-        self.bc_sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-        self.bc_sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        self.bc_sock.bind(('0.0.0.0',9999))
+    def open_thread_sock(self):
+        self.thread_sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+        self.thread_sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        self.thread_sock.bind(('0.0.0.0',9999))
 
     def wait_for_broadcast(self):
-        recv_data, addr = self.bc_sock.recvfrom(1024)
+        recv_data, addr = self.thread_sock.recvfrom(1024)
         data = pickle.loads(recv_data)
         self.lock.acquire()
         # set src ip as key, the ip where the message is coming from as value
@@ -80,27 +80,19 @@ class Router():
         print(f"Destination {dest_ip} is unreachable\n\n")
 
 
-class BroadCastThread(threading.Thread):
-    
-    def __init__(self,router):
-        threading.Thread.__init__(self)
-        self.router = router
-        # https://stackoverflow.com/questions/323972/is-there-any-way-to-kill-a-thread
-        self._stop_event = threading.Event()
 
-    def stop(self):
-        self._stop_event.set()
-
-    def stopped(self):
-        return self._stop_event.is_set()
-
+class TableCommandThread(ThreadSock):
     def run(self):
-        self.router.init_bc_sock()
+        print("Start Command Thread")
         while not self.stopped():
-            self.router.wait_for_broadcast()
-        self.router.bc_sock.close()
+            command = input()
+            print("Command you entered is ",command)
+            if command == "print":
+                print("Executing print command")
+                print(self.router.table)
+        
 
-      
+      '''
 class TableCommandThread(threading.Thread):
 
     def __init__(self,router):
@@ -122,13 +114,12 @@ class TableCommandThread(threading.Thread):
             if command == "print":
                 print("Executing print command")
                 print(self.router.table)
-        
-
+''''
 
 
 if __name__ == "__main__":
     router = Router("10.0.0.1")
-    broadcast_t = BroadCastThread(router)
+    broadcast_t = ThreadSock(router)
     command_t = TableCommandThread(router)
     broadcast_t.start()
     command_t.start()
