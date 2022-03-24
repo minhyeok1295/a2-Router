@@ -89,7 +89,7 @@ class TableCommandThread(ThreadSock):
             print("Command you entered is ",command)
             if command == "print":
                 print("Executing print command")
-                print(self.router.table)
+                print(self.node.table)
         
 '''     
 class TableCommandThread(threading.Thread):
