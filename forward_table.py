@@ -22,6 +22,9 @@ class ForwardTable:
     
     def _update_table(self,ip,ttl,addr):
         pass
+    
+    def print2(self):
+        print(self.table)
 
     def __str__(self):
         output = "======= Original Table =======\n"

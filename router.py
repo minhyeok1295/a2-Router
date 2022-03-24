@@ -86,6 +86,8 @@ class TableCommandThread(ThreadSock):
             if command == "print":
                 print("Executing print command")
                 print(self.node.table)
+            if command == "print2":
+                self.node.table.print2()
         
 
 

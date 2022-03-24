@@ -56,7 +56,6 @@ class Host():
                 dest_ip = input("Enter destination: ")
                 if (validate_ip(dest_ip)):
                     print("send msg: " + msg + ", to dest: ", dest_ip)
-                    
                     data_packet = make_packet(self.ip, dest_ip, msg, 2)
                     if (check_on_same_switch(self.ip, dest_ip)):
                         self.send_to_host(dest_ip, data_packet)
