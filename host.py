@@ -51,7 +51,7 @@ class Host():
                 exit_packet = make_packet("", "", msg, 0)
                 self.send_sock.send(exit_packet)
                 self.send_sock.close()
-                break
+                return 0
             else:
                 dest_ip = input("Enter destination: ")
                 print("send msg: " + msg + ", to dest: ", dest_ip)
