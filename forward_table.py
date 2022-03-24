@@ -25,6 +25,8 @@ class ForwardTable:
     
     def print2(self):
         print(self.table)
+        print("=========")
+        print(list(set(self.table.values())))
 
     def __str__(self):
         output = "======= Original Table =======\n"
