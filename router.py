@@ -6,13 +6,6 @@ from forward_table import ForwardTable
 
 broadcast = '255.255.255.255'
 
-def print_packet(packet):
-    print("-----packet info-----")
-    print("src_ip: " + packet["src_ip"])
-    print("dest_ip: " + packet["dest_ip"])
-    print("msg: " + packet['message'])
-    print("ttl: " + str(packet['ttl']))
-
 
 class Router():
     

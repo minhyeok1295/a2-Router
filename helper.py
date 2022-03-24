@@ -32,3 +32,12 @@ def make_packet(src_ip, dest_ip, message, ttl):
         'ttl' : ttl
     }
     return pickle.dumps(data)
+
+
+
+def print_packet(packet):
+    print("-----packet info-----")
+    print("src_ip: " + packet["src_ip"])
+    print("dest_ip: " + packet["dest_ip"])
+    print("msg: " + packet['message'])
+    print("ttl: " + str(packet['ttl']))

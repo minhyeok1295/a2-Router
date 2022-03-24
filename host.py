@@ -54,9 +54,13 @@ class Host():
                 break
             else:
                 dest_ip = input("Enter destination: ")
-                print("send msg: " + msg + ", to dest: ", dest_ip)
-                data_packet = make_packet(self.ip, dest_ip, msg, 2)
-                self.send_sock.send(data_packet)
+                try:
+                    socket.inet_aton(dest_ip)
+                    print("send msg: " + msg + ", to dest: ", dest_ip)
+                    data_packet = make_packet(self.ip, dest_ip, msg, 2)
+                    self.send_sock.send(data_packet)
+                except socket.error:
+                    print("invalid ip address format")
                 self.send_sock.close()
         return 0
 
@@ -98,6 +102,5 @@ if __name__ == "__main__":
     recv_t.stop()
     print("end")
     host.thread_sock.close()
-    #recv_t.join()
+    recv_t.join()
     print('Program Terminated')
-    raise SystemExit
