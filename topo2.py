@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Mar 24 06:09:51 2022
+
+@author: MinHyeok
+"""
+
 from mininet.topo import Topo
 from mininet.net import Mininet
 from mininet.node import Node
@@ -45,18 +52,18 @@ class NetworkTopo(Topo):
         d2 = self.addHost(name='d2',
                           ip='10.0.1.10/24',
                           defaultRoute='via 10.0.1.1')
-        d3 = self.addHost(name='d3',
-                          ip='10.0.0.11/24',
-                          defaultRoute='via 10.0.0.1')
-        d4 = self.addHost(name='d4',
-                          ip='10.0.1.11/24',
-                          defaultRoute='via 10.0.1.1')
+        #d3 = self.addHost(name='d3',
+        #                  ip='10.0.0.11/24',
+        #                  defaultRoute='via 10.0.0.1')
+        #d4 = self.addHost(name='d4',
+        #                  ip='10.0.1.11/24',
+        #                  defaultRoute='via 10.0.1.1')
 
         # Add host-switch links
         self.addLink(d1, s1)
         self.addLink(d2, s2)
-        self.addLink(d3, s1)
-        self.addLink(d4, s2)
+        #self.addLink(d3, s1)
+        #self.addLink(d4, s2)
         
 def run():
     topo = NetworkTopo()

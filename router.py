@@ -6,35 +6,28 @@ from forward_table import ForwardTable
 
 broadcast = '255.255.255.255'
 
-def print_packet(packet):
-    print("-----packet info-----")
-    print("src_ip: " + packet["src_ip"])
-    print("dest_ip: " + packet["dest_ip"])
-    print("msg: " + packet['message'])
-    print("ttl: " + str(packet['ttl']))
-
 
 class Router():
     
     def __init__(self, ip):
         self.ip = ip
-        self.bc_sock = None
+        self.thread_sock = None
         self.table = ForwardTable()
         self.lock = threading.Lock()
 
-    def init_bc_sock(self):
-        self.bc_sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-        self.bc_sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        self.bc_sock.bind(('0.0.0.0',9999))
+    def open_thread_sock(self):
+        self.thread_sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+        self.thread_sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        self.thread_sock.bind(('0.0.0.0',9999))
 
-    def wait_for_broadcast(self):
-        recv_data, addr = self.bc_sock.recvfrom(1024)
+    def receive(self): #wait for broadcast
+        recv_data, addr = self.thread_sock.recvfrom(1024)
         data = pickle.loads(recv_data)
         self.lock.acquire()
         # set src ip as key, the ip where the message is coming from as value
         self.table.create_entry(data['src_ip'],addr[0])
         self.lock.release()
-        self.bc_sock.sendto(make_packet(self.ip,addr,'',0),addr)
+        self.thread_sock.sendto(make_packet(self.ip,addr,'',0),addr)
     
     def open_server(self):
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -45,23 +38,27 @@ class Router():
             print("Server connected to")
             print(addr)
             packet = conn.recv(4096)
-            data = pickle.loads(packet)
-            print_packet(data)
-            if (data['message'] == 'exit'):
-                break
-            
-            dest = data['dest_ip']
-            self.lock.acquire()
-            if self.table.has_ip(dest):
-                next_hop = self.table.get_next_hop(dest)
-                try:
-                    self.forward(data,next_hop)
-                    print(f"Successfully sent message to {data['dest_ip']}")
-                except Exception:
-                    print("Error!!!!")
+            if len(packet) != 0:
+                data = pickle.loads(packet)
+                print_packet(data)
+                if (data['message'] == 'exit'):
+                    break
+                
+                dest = data['dest_ip']
+                self.lock.acquire()
+                if self.table.has_ip(dest):
+                    next_hop = self.table.get_next_hop(dest)
+                    print(next_hop)
+                    try:
+                        self.forward(data,next_hop)
+                        print(f"Successfully sent message to {data['dest_ip']}")
+                    except Exception:
+                        print("Error!!!!")
+                else:
+                    self.print_error(data['src_ip'],data['dest_ip'])
+                self.lock.release()
             else:
-                self.print_error(data['src_ip'],data['dest_ip'])
-            self.lock.release()
+                print("nothing received")
             conn.close()
         conn.close()
         server.close()
@@ -80,40 +77,8 @@ class Router():
         print(f"Destination {dest_ip} is unreachable\n\n")
 
 
-class BroadCastThread(threading.Thread):
-    
-    def __init__(self,router):
-        threading.Thread.__init__(self)
-        self.router = router
-        # https://stackoverflow.com/questions/323972/is-there-any-way-to-kill-a-thread
-        self._stop_event = threading.Event()
 
-    def stop(self):
-        self._stop_event.set()
-
-    def stopped(self):
-        return self._stop_event.is_set()
-
-    def run(self):
-        self.router.init_bc_sock()
-        while not self.stopped():
-            self.router.wait_for_broadcast()
-        self.router.bc_sock.close()
-
-      
-class TableCommandThread(threading.Thread):
-
-    def __init__(self,router):
-        threading.Thread.__init__(self)
-        self.router = router
-        self._stop_event = threading.Event()
-
-    def stop(self):
-        self._stop_event.set()
-
-    def stopped(self):
-        return self._stop_event.is_set()
-
+class TableCommandThread(ThreadSock):
     def run(self):
         print("Start Command Thread")
         while not self.stopped():
@@ -121,21 +86,22 @@ class TableCommandThread(threading.Thread):
             print("Command you entered is ",command)
             if command == "print":
                 print("Executing print command")
-                print(self.router.table)
+                print(self.node.table)
+            if command == "print2":
+                self.node.table.print2()
         
-
 
 
 if __name__ == "__main__":
     router = Router("10.0.0.1")
-    broadcast_t = BroadCastThread(router)
+    broadcast_t = ThreadSock(router)
     command_t = TableCommandThread(router)
     broadcast_t.start()
     command_t.start()
     router.open_server()
     broadcast_t.stop()
     command_t.stop()
-    router.bc_sock.close()
+    router.thread_sock.close()
     broadcast_t.join()
     command_t.join()
     #1. receive broadcast message

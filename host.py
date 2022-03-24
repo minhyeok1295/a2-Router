@@ -16,7 +16,7 @@ class Host():
         self.next_ip = ''
         self.broad_socket = None
         self.send_sock = None
-        self.recv_sock = None
+        self.thread_sock = None #listening socket: receives message from other
     
     '''
     send a simple message to the IP address 255.255.255.255 with TTL = 0
@@ -46,53 +46,48 @@ class Host():
     def send(self):
         while True:
             msg = input("Enter message: ")
-            dest_ip = input("Enter destination: ")
-            print("msg is ", msg)
-            print("dest is ", dest_ip)
             self.connect()
-            data_packet = make_packet(self.ip, dest_ip, msg, 2)
-            self.send_sock.send(data_packet)
-            self.send_sock.close()
             if(msg == 'exit'):
+                exit_packet = make_packet("", "", msg, 0)
+                self.send_sock.send(exit_packet)
+                self.send_sock.close()
                 break
+            else:
+                dest_ip = input("Enter destination: ")
+                if (validate_ip(dest_ip)):
+                    print("send msg: " + msg + ", to dest: ", dest_ip)
+                    data_packet = make_packet(self.ip, dest_ip, msg, 2)
+                    if (check_on_same_switch(self.ip, dest_ip)):
+                        self.send_to_host(dest_ip, data_packet)
+                    else:
+                        self.send_sock.send(data_packet)
+                else:
+                    print("invalid ip address format")
+                self.send_sock.close()
+        return 0
 
-    def init_recv_sock(self):
-        self.recv_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.recv_sock.bind((self.ip, 8100))
-        self.recv_sock.listen(5)
+    def send_to_host(self, dest_ip, packet):
+        self.send_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.send_sock.connect((dest_ip, 8100))
+        self.send_sock.send(packet)
+
+    def open_thread_sock(self):
+        self.thread_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.thread_sock.bind((self.ip, 8100))
+        self.thread_sock.listen(5)
+    
     '''
     if an end system receives a message, it should display that message
     (and any other relevant information) to its output
     '''
     def receive(self):
-        recv_sock,addr = self.recv_sock.accept()
+        recv_sock,addr = self.thread_sock.accept()
         print(addr)
         recv_data = recv_sock.recv(4096)
         data = pickle.loads(recv_data)
         print(f"From {data['src_ip']}: {data['message']}")
         recv_sock.close()
         
-
-class ReceiveThread(threading.Thread):
-    
-    def __init__(self,host):
-        threading.Thread.__init__(self)
-        self.host=host
-        self._stop_event = threading.Event()
-
-    def stop(self):
-        self._stop_event.set()
-
-    def stopped(self):
-        return self._stop_event.is_set()
-
-    def run(self):
-        self.host.init_recv_sock()
-        while not self.stopped():
-            self.host.receive()
-        self.host.recv_sock.close()
-
-
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -106,11 +101,12 @@ if __name__ == "__main__":
     print("router ip: " + broadcast_data['src_ip'])
     host.set_next_hop(broadcast_data['src_ip'])
 
-    recv_t = ReceiveThread(host)
+    recv_t = ThreadSock(host)
     recv_t.start()
     host.send()
+    print("send terminated")
     recv_t.stop()
-    host.recv_sock.close()
+    print("end")
+    host.thread_sock.close()
     recv_t.join()
     print('Program Terminated')
-    
