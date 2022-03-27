@@ -1,6 +1,7 @@
 import socket
 import pickle
 import threading
+import sys
 from helper import *
 from forward_table import ForwardTable
 
@@ -9,7 +10,7 @@ broadcast = '255.255.255.255'
 
 class Router():
     
-    def __init__(self, ip):
+    def __init__(self, ip, port):
         self.ip = ip
         self.thread_sock = None
         self.table = ForwardTable()
@@ -52,7 +53,7 @@ class Router():
                         print(next_hop)
                         try:
                             self.forward(data,next_hop)
-                            print(f"Successfully sent message to {data['dest_ip']}")
+                            print("Successfully sent message to {data['dest_ip']}")
                         except Exception:
                             print("Error!!!!")
                     else:
@@ -90,7 +91,9 @@ class TableCommandThread(ThreadSock):
 
 
 if __name__ == "__main__":
-    router = Router("10.0.0.1")
+    if len(sys.argv) != 2:
+        print("Incorrect number of arguments, IP address needed")
+    router = Router(sys.argv[1], 8000)
     broadcast_t = ThreadSock(router)
     command_t = TableCommandThread(router)
     broadcast_t.start()
