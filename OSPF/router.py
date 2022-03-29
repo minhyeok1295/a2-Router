@@ -66,7 +66,7 @@ class Router():
         conn.close()
         server.close()
 
-    def forward(self,recv_data,next_hop):
+    def forward(self,recv_data, next_hop):
         data =recv_data.copy()
         packet = make_packet(data['src_ip'],data['dest_ip'],data['message'],data['ttl'])
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
