@@ -47,12 +47,12 @@ class NetworkTopo(Topo):
                      params2={'ip': '10.2.0.1/24'})
 '''
         # Add router-router link in a new subnet for the router-router connection
-        self.addLink(r1,
-                     r2,
-                     intfName1='r1-eth1',
-                     intfName2='r2-eth1',
-                     params1={'ip': '10.100.0.1/24'},
-                     params2={'ip': '10.100.0.2/24'})
+        #self.addLink(r1,
+        #             r2,
+        #             intfName1='r1-eth1',
+        #             intfName2='r2-eth1',
+        #             params1={'ip': '10.100.0.1/24'},
+        #             params2={'ip': '10.100.0.2/24'})
         '''
         self.addLink(r1,
                      r3,
