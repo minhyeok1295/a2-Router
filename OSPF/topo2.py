@@ -55,9 +55,6 @@ class NetworkTopo(Topo):
                      params1={'ip': '10.100.0.1/24'},
                      params2={'ip': '10.100.0.2/24'})
         
-        self.addLink(r1,
-                     r3,
-                     intfName='r1-eth')
         
         # Adding hosts specifying the default route
         d1 = self.addHost(name='d1',
