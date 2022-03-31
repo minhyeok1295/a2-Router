@@ -74,18 +74,37 @@ class NetworkTopo(Topo):
         h1 = self.addHost(name='h1',
                           ip='10.0.0.10/24',
                           defaultRoute='via 10.0.0.1')
+        
         h2 = self.addHost(name='h2',
+                          ip='10.0.0.20/24',
+                          defaultRoute='via 10.0.0.1')
+        
+        h3 = self.addHost(name='h3',
                           ip='10.1.0.10/24',
                           defaultRoute='via 10.1.0.1')
         
-        h3 = self.addHost(name='h3',
+        h4 = self.addHost(name='h4',
+                          ip='10.1.0.20/24',
+                          defaultRoute='via 10.1.0.1')
+        
+        h5 = self.addHost(name='h5',
                           ip='10.2.0.10/24',
+                          defaultRoute='via 10.2.0.1')
+        
+        
+        h6 = self.addHost(name='h6',
+                          ip='10.2.0.20/24',
                           defaultRoute='via 10.2.0.1')
         
         # Add host-switch links
         self.addLink(h1, s1)
-        self.addLink(h2, s2)
-        self.addLink(h3, s3)
+        self.addLink(h2, s1)
+        
+        self.addLink(h3, s2)
+        self.addLink(h4, s2)
+        
+        self.addLink(h5, s3)
+        self.addLink(h6, s3)
 
 def run():
     c = RemoteController('c', '0.0.0.0', 6633)
