@@ -71,21 +71,21 @@ class NetworkTopo(Topo):
                      params2={'ip': '10.102.0.2/24'})
         
         # Adding hosts specifying the default route
-        d1 = self.addHost(name='d1',
+        h1 = self.addHost(name='h1',
                           ip='10.0.0.10/24',
                           defaultRoute='via 10.0.0.1')
-        d2 = self.addHost(name='d2',
+        h2 = self.addHost(name='h2',
                           ip='10.1.0.10/24',
                           defaultRoute='via 10.1.0.1')
         
-        d3 = self.addHost(name='d3',
+        h3 = self.addHost(name='h3',
                           ip='10.2.0.10/24',
                           defaultRoute='via 10.2.0.1')
         
         # Add host-switch links
-        self.addLink(d1, s1)
-        self.addLink(d2, s2)
-        self.addLink(d3, s3)
+        self.addLink(h1, s1)
+        self.addLink(h2, s2)
+        self.addLink(h3, s3)
 
 def run():
     c = RemoteController('c', '0.0.0.0', 6633)
@@ -98,8 +98,6 @@ def run():
     
 
     # type the following command in the mininet shell
-    # r1 ip route add 10.1.0.0/24 via 10.100.0.2 dev r1-eth2
-    # r2 ip route add 10.0.0.0/24 via 10.100.0.1 dev r2-eth2
     info(net['r1'].cmd("ip route add 10.1.0.0/24 via 10.100.0.2 dev r1-eth1"))
     info(net['r1'].cmd("ip route add 10.2.0.0/24 via 10.101.0.2 dev r1-eth2"))
     
@@ -108,7 +106,7 @@ def run():
     
     info(net['r3'].cmd("ip route add 10.0.0.0/24 via 10.101.0.1 dev r3-eth1"))
     info(net['r3'].cmd("ip route add 10.1.0.0/24 via 10.102.0.1 dev r3-eth2"))
-    #net.start()
+    info(net.cmd("xterm r1 r2 r3 h1 h2 h3"))
     CLI(net)
     net.stop()
 
