@@ -3,7 +3,7 @@ import pickle
 import threading
 from helper import *
 from forward_table import ForwardTable
-
+import sys
 broadcast = '255.255.255.255'
 
 
@@ -90,6 +90,11 @@ class TableCommandThread(ThreadSock):
 
 
 if __name__ == "__main__":
+    if (len(sys.argv) != 3):
+        print("error occured")
+        exit(1)
+    print(sys.argv[2])
+    
     router = Router("10.0.0.1")
     broadcast_t = ThreadSock(router)
     command_t = TableCommandThread(router)
