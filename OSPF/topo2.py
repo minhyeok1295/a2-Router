@@ -104,8 +104,8 @@ def run():
     #info(net['r2'].cmd("ip route add 10.0.0.0/24 via 10.100.0.1 dev r2-eth2"))
 
     #net.start()
-    #CLI(net)
-    #net.stop()
+    CLI(net)
+    net.stop()
 
 
 if __name__ == '__main__':
