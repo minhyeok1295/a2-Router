@@ -93,9 +93,7 @@ if __name__ == "__main__":
     if (len(sys.argv) != 2):
         print("error occured")
         exit(1)
-    print(sys.argv[1])
-    
-    router = Router("10.0.0.1")
+    router = Router(sys.argv[1])
     broadcast_t = ThreadSock(router)
     command_t = TableCommandThread(router)
     broadcast_t.start()
