@@ -31,9 +31,10 @@ class Router():
             self.thread_sock.sendto(make_packet(self.ip,addr,'',0),addr)
         else: #it is router
             self.thread_sock.sendto(make_packet(self.ip,addr,'NA',0),addr)
+            
     def notify_monitor(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s = s.connect(("10.2.0.1", 8888))
+        s.connect(("10.2.0.1", 8888))
         s.send(make_packet(self.ip, "10.2.0.1", "router", 0))
         s.close()
     
