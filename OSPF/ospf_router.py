@@ -39,7 +39,7 @@ class OSPFRouter(Router):
         s.close()
         self.lock.acquire()
         dip = ip.rpartition(".")[0]
-        self.table.create_entry(dip, ip)
+        self.table.create_entry(dip + ".0", ip)
         self.table.add_neighbors(ip, "router")
         self.lock.release()
         
@@ -88,7 +88,16 @@ class OSPFRouter(Router):
         conn.close()
         server.close()
         
-    
+    def forward(self,recv_data, next_hop, tp):
+        data = recv_data.copy()
+        packet = make_packet(data['src_ip'],data['dest_ip'],data['message'],data['ttl']) 
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        if (tp == "host"):
+            sock.connect((next_hop,8100))
+        else:
+            sock.connect((next_hop,8000))
+        sock.send(packet)
+        sock.close()
         
 
 if __name__ == "__main__":

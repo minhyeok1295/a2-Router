@@ -74,10 +74,7 @@ class Router():
         data = recv_data.copy()
         packet = make_packet(data['src_ip'],data['dest_ip'],data['message'],data['ttl']) 
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        if (tp == "host"):
-            sock.connect((next_hop,8100))
-        else:
-            sock.connect((next_hop,8000))
+        sock.connect((next_hop,8100))
         sock.send(packet)
         sock.close()
         
