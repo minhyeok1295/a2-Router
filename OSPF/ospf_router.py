@@ -35,6 +35,8 @@ class OSPFRouter(Router):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((ip, 8000))
         s.send(make_packet(self.ip, ip, "cr", -1))
+        
+        self.table.create_entry(ip, ip, "router")
         s.close()
         
     def open_server(self):
