@@ -29,14 +29,14 @@ class NetworkTopo(Topo):
         # Add 2 switches
         s1 = self.addSwitch('s1')
         s2 = self.addSwitch('s2')
-        s3 = self.addSwitch('s3')
+        sm = self.addSwitch('s3')
 
         # Add host-switch links in the same subnet
+        
+        self.addLink(sm, m, intfName2='m-eth0', params2={'ip': '10.0.0.1/24'})
         self.addLink(s1, r1, intfName2='r1-eth0', params2={'ip': '10.1.0.1/24'})
 
         self.addLink(s2, r2, intfName2='r2-eth0', params2={'ip': '10.2.0.1/24'})
-        
-        self.addLink(s3, m, intfName2='m-eth0', params2={'ip': '10.0.0.1/24'})
         
         # Add router-router link in a new subnet for the router-router connection
         self.addLink(r1, r2, intfName1='r1-eth1', intfName2='r2-eth1', params1={'ip': '10.10.0.1/24'}, params2={'ip': '10.10.0.2/24'})
