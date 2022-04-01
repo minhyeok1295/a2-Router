@@ -69,8 +69,9 @@ def run():
 
     net = Mininet(topo=topo)
     # Add routing for reaching networks that aren't directly connected
-    net.startTerm()
     net.start()
+    
+    net.startTerm()
     CLI(net)
     net.stop()
 
