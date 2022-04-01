@@ -45,7 +45,7 @@ class Router():
         s.close()
     
     def open_server(self):
-        self.notify_monitor()
+        self.notify_monitor_new_router()
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.bind((self.ip, 8000))
         server.listen(5)
@@ -53,6 +53,7 @@ class Router():
             conn, addr = server.accept()
             print("Server connected to")
             print(addr)
+            self.notify_monitor_new_host()
             packet = conn.recv(4096)
             if len(packet) != 0:
                 data = pickle.loads(packet)
