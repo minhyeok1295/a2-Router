@@ -4,7 +4,7 @@ class OSPFTable():
         self.neighbors = {}
         self.table = {}
     
-    def add_neighbors(ip, t):
+    def add_neighbors(self, ip, t):
         self.neighbors[ip] = t
         
     def create_entry(self, ip, addr):
