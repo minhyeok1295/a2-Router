@@ -26,7 +26,7 @@ class Router():
         self.broad_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.broad_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         self.broad_socket.sendto(make_packet(self.ip, '255.255.255.255','router', 0),
-                                    ('255.255.255.255', 9999))
+                                    ('255.255.255.255', 9998))
         recv_data, addr = self.broad_socket.recvfrom(1024)
         data = pickle.loads(recv_data)
         if (data['message'] == 'NA'):
