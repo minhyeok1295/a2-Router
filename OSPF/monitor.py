@@ -35,7 +35,7 @@ class Monitor(Router):
         
     def print_network(self):
         output = "=================="
-        for k,v  in self.network:
+        for k,v  in self.network.items():
             output += f"{k}\t: {v}\n"
         output += "=================="
         print(output)
