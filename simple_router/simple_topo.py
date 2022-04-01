@@ -68,7 +68,6 @@ def run():
     topo = NetworkTopo()
 
     net = Mininet(topo=topo)
-    net.pingAll()
     # Add routing for reaching networks that aren't directly connected
     
     net.start()
