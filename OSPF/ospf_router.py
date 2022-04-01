@@ -86,7 +86,7 @@ class OSPFRouter(Router):
                         else:
                             print_error(data['src_ip'],data['dest_ip'])
                         '''
-                        next_hop = self.table.check_ip(ip)
+                        next_hop = self.table.check_ip(dest)
                         if next_hop != None:    
                             print(next_hop)
                             try:
