@@ -31,3 +31,6 @@ if __name__ == "__main__":
     broadcast_t = ThreadSock(monitor)
     broadcast_t.start()
     
+    print("broadcast listening")
+    
+    
