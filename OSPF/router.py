@@ -43,8 +43,14 @@ class Router():
             self.thread_sock.sendto(make_packet(self.ip,addr,'',0),addr)
         else: #it is router
             self.thread_sock.sendto(make_packet(self.ip,addr,'NA',0),addr)
+    def notify_monitor(self):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s = s.connect(("10.2.0.1", 8888))
+        s.send(make_packet(self.ip, "10.2.0.1", "router", 0))
+        s.close()
     
     def open_server(self):
+        notify_monitor()
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.bind((self.ip, 8000))
         server.listen(5)
@@ -111,11 +117,13 @@ if __name__ == "__main__":
     router = Router(sys.argv[1])
     broadcast_t = ThreadSock(router)
     command_t = TableCommandThread(router)
-    
     broadcast_t.start()
     command_t.start()
-    router.broadcast()
+    
+    k = router.broadcast()
     router.open_server()
+    
+    
     broadcast_t.stop()
     command_t.stop()
     router.thread_sock.close()
