@@ -51,7 +51,7 @@ class Host():
             if(msg == 'exit'):
                 exit_packet = make_packet("", "", msg, 0)
                 self.connect()
-                self.send_sock.send(exit_packet)
+                self.send_sock.send(exit_packet)        
                 self.send_sock.close()
                 break
             else:
