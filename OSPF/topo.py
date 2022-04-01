@@ -39,7 +39,7 @@ class NetworkTopo(Topo):
         self.addLink(s3, m, intfName2='m-eth0', params2={'ip': '10.0.0.1/24'})
         
         # Add router-router link in a new subnet for the router-router connection
-        self.addLink(r1, r2, intfName1='r1-eth1', intfName2='r2-eth1', params1={'ip': '10.100.0.1/24'}, params2={'ip': '10.100.0.2/24'})
+        self.addLink(r1, r2, intfName1='r1-eth1', intfName2='r2-eth1', params1={'ip': '10.10.0.1/24'}, params2={'ip': '10.10.0.2/24'})
         
         
         
@@ -86,11 +86,10 @@ def run():
     
 
     # type the following command in the mininet shell
-    info(net['r1'].cmd("ip route add 10.2.0.0/24 via 10.100.0.2 dev r1-eth1"))
-    
+    info(net['r1'].cmd("ip route add 10.2.0.0/24 via 10.10.0.2 dev r1-eth1"))
     info(net['r1'].cmd("ip route add 10.0.0.0/24 via 10.101.0.2 dev r1-eth2"))
     
-    info(net['r2'].cmd("ip route add 10.1.0.0/24 via 10.100.0.1 dev r2-eth1"))
+    info(net['r2'].cmd("ip route add 10.1.0.0/24 via 10.10.0.1 dev r2-eth1"))
     info(net['r2'].cmd("ip route add 10.0.0.0/24 via 10.102.0.2 dev r2-eth2"))
     
     info(net['m'].cmd("ip route add 10.1.0.0/24 via 10.101.0.1 dev m-eth1"))
