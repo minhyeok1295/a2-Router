@@ -53,9 +53,10 @@ class NetworkTopo(Topo):
         #h4 = self.addHost(name='h4',ip='10.2.0.20/24',defaultRoute='via 10.2.0.1')
         #h5 = self.addHost(name='h5',ip='10.3.0.10/24',defaultRoute='via 10.3.0.1')
         #h6 = self.addHost(name='h6',ip='10.3.0.20/24',defaultRoute='via 10.3.0.1')
+        
         # Add host-switch links
         self.addLink(h1, s1)
-       # self.addLink(h2, s1)
+        #self.addLink(h2, s1)
         
         self.addLink(h3, s2)
         #self.addLink(h4, s2)
@@ -80,6 +81,7 @@ def run():
     info(net['r1'].cmd("ip route add 10.2.0.0/24 via 10.100.0.2 dev r1-eth2"))
     #info(net['r1'].cmd("ip route add 10.3.0.0/24 via 10.101.0.2 dev r1-eth3"))
     
+    info(net['r2'].cmd("ip route add 10.0.0.0/24 via 10.10.0.1 dev r2-eth1"))
     info(net['r2'].cmd("ip route add 10.1.0.0/24 via 10.100.0.1 dev r2-eth2"))
     #info(net['r2'].cmd("ip route add 10.3.0.0/24 via 10.102.0.2 dev r2-eth3"))
     
