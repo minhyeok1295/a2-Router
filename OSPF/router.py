@@ -39,10 +39,10 @@ class Router():
         server.listen(5)
         while True:
             conn, addr = server.accept()
-            print("Server connected to")
-            print(addr)
             packet = conn.recv(4096)
             if len(packet) != 0:
+                print("Server connected to")
+                print(addr)
                 data = pickle.loads(packet)
                 print_packet(data)
                 if (data['message'] == 'exit'):

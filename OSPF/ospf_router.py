@@ -25,7 +25,6 @@ class OSPFRouter(Router):
         if (check_on_same_switch(self.ip, data['src_ip'])):
             self.lock.acquire()
             # set src ip as key, the ip where the message is coming from as value 
-            #dip = data['src_ip'].rpartition(".")[0]
             self.table.create_entry( data['src_ip'], addr[0])
             self.table.add_neighbors(data['src_ip'], "host")
             self.lock.release()
@@ -60,8 +59,7 @@ class OSPFRouter(Router):
                     self.lock.acquire()
                     # set src ip as key, the ip where the message is coming from as value 
                     dip = data['src_ip'].rpartition(".")[0]
-                    print("dip:" + str(dip))
-                    self.table.create_entry(dip, data['src_ip'])
+                    self.table.create_entry(dip + ".0", data['src_ip'])
                     self.table.add_neighbors(data['src_ip'], "router")
                     self.lock.release()
                 
