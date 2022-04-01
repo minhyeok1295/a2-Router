@@ -40,8 +40,8 @@ class NetworkTopo(Topo):
 
         #add router-monitor link
         self.addLink(m, r1, intfName1='m-eth1', intfName2='r1-eth1', params1={'ip': '10.10.0.1/24'}, params2={'ip': '10.10.0.2/24'}) 
-        self.addLink(m, r2, intfName1='m-eth1', intfName2='r2-eth1', params1={'ip': '10.10.0.3/24'}, params2={'ip': '10.10.0.4/24'})       
-        self.addLink(m, r3, intfName1='m-eth1', intfName2='r3-eth1', params1={'p': '10.10.0.5/24'}, params2={'ip': '10.10.0.6/24'})        
+        self.addLink(m, r2, intfName1='m-eth1', intfName2='r2-eth1', params1={'ip': '10.11.0.1/24'}, params2={'ip': '10.11.0.2/24'})       
+        self.addLink(m, r3, intfName1='m-eth1', intfName2='r3-eth1', params1={'p': '10.12.0.1/24'}, params2={'ip': '10.12.0.2/24'})        
         
         # Add router-router link in a new subnet for the router-router connection
         #self.addLink(r1, r2, intfName1='r1-eth2', intfName2='r2-eth2', params1={'ip': '10.100.0.1/24'}, params2={'ip': '10.100.0.2/24'})
