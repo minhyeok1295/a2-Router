@@ -58,6 +58,7 @@ class Host():
                 dest_ip = input("Enter destination: ")
                 ttl = self.get_ttl()
                 if (validate_ip(dest_ip)):
+                    print(self.next_ip)
                     self.connect()
                     print("send msg: " + msg + ", to dest: ", dest_ip)
                     data_packet = make_packet(self.ip, dest_ip, msg, ttl)
