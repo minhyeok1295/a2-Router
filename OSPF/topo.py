@@ -37,7 +37,7 @@ class NetworkTopo(Topo):
         self.addLink(s3, r3, intfName2='r3-eth0', params2={'ip': '10.3.0.1/24'})
 
         #add router-monitor link
-        #self.addLink(m, r1, intfName1='m-eth1', intfName2='r1-eth1', params1={'ip': '10.10.0.1/24'}, params2={'ip': '10.10.0.2/24'}) 
+        self.addLink(m, r1, intfName1='m-eth1', intfName2='r1-eth1', params1={'ip': '10.10.0.1/24'}, params2={'ip': '10.10.0.2/24'}) 
         #self.addLink(m, r2, intfName1='m-eth1', intfName2='r2-eth1', params1={'ip': '10.11.0.1/24'}, params2={'ip': '10.11.0.2/24'})       
         #self.addLink(m, r3, intfName1='m-eth1', intfName2='r3-eth1', params1={'p': '10.12.0.1/24'}, params2={'ip': '10.12.0.2/24'})        
         
