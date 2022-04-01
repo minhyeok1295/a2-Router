@@ -22,14 +22,18 @@ class Monitor(Router):
         while True:
             conn, addr = monitor.accept()
             packet = conn.recv(4096)
-            data = pickle.loads(packet)
-            
+            data = pickle.loads(packet) 
             src_ip = data['src_ip']
             dst_ip = data['dest_ip']
-            if (data['message'] == 'router'): #router added
-                self.network[src_ip] = {}
-            elif (data['message'] == 'host'): #host added
-                self.network[dst_ip][src_ip] = ("host", 1)
+            if (len(data) == 3): #table packet
+                self.network[src_ip][dst_ip] = ('router', 1)
+                self.network[dst_ip][src_ip] = ('router', 1)
+                
+            else:
+                if (data['message'] == 'router'): #router added
+                    self.network[src_ip] = {}
+                elif (data['message'] == 'host'): #host added
+                    self.network[dst_ip][src_ip] = ("host", 1)
             conn.close()
         monitor.close()
         

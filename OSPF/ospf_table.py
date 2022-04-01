@@ -10,6 +10,13 @@ class OSPFTable():
     def create_entry(self, ip, addr):
         self.table[ip] = addr
     
+    def get_table():
+        return self.table
+    
+    def get_neighbors():
+        return self.neighbors
+    
+    
     def has_ip(self,ip):
         """
         check if table has src_ip as key
