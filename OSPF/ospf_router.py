@@ -25,7 +25,7 @@ class OSPFRouter(Router):
         if (check_on_same_switch(self.ip, data['src_ip'])):
             self.lock.acquire()
             # set src ip as key, the ip where the message is coming from as value 
-            self.table.add_neighbors(data['src_ip'], "host")
+            self.table.create_entry(data['src_ip'], addr[0], "host")
             self.lock.release()
             self.thread_sock.sendto(make_packet(self.ip,addr,'',0),addr)
         else: #it is router
