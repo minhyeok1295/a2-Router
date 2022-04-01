@@ -75,10 +75,10 @@ def run():
     
     info(net['r1'].cmd("ip route add 10.0.0.0/24 via 10.10.0.1 dev r1-eth1"))
     info(net['r1'].cmd("ip route add 10.2.0.0/24 via 10.100.0.2 dev r1-eth2"))
-    info(net['r1'].cmd("ip route add 10.3.0.0/24 via 10.101.0.2 dev r1-eth3"))
+    #info(net['r1'].cmd("ip route add 10.3.0.0/24 via 10.101.0.2 dev r1-eth3"))
     
     info(net['r2'].cmd("ip route add 10.1.0.0/24 via 10.100.0.1 dev r2-eth2"))
-    info(net['r2'].cmd("ip route add 10.3.0.0/24 via 10.102.0.2 dev r2-eth3"))
+    #info(net['r2'].cmd("ip route add 10.3.0.0/24 via 10.102.0.2 dev r2-eth3"))
     
     #info(net['r3'].cmd("ip route add 10.1.0.0/24 via 10.101.0.1 dev r3-eth2"))
     #info(net['r3'].cmd("ip route add 10.2.0.0/24 via 10.102.0.1 dev r3-eth3"))
