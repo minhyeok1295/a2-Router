@@ -94,7 +94,6 @@ def run():
     #info(net['r3'].cmd("ip route add 10.1.0.0/24 via 10.12.0.1 dev r3-eth2"))  
     #info(net['r3'].cmd("ip route add 10.2.0.0/24 via 10.13.0.1 dev r3-eth3"))      
 
-
     info(net['m'].cmd("ip route add 10.1.0.0/24 via 10.101.0.1 dev m-eth1"))
     info(net['m'].cmd("ip route add 10.2.0.0/24 via 10.102.0.1 dev m-eth2"))
     #info(net['m'].cmd("ip route add 10.3.0.0/24 via 10.103.0.1 dev m-eth3"))
