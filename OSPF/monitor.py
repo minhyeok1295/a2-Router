@@ -11,7 +11,7 @@ class Monitor(Router):
         monitor.bind((self.ip, 8888))
         monitor.listen(5)
         while True:
-            conn, addr = server.accept()
+            conn, addr = monitor.accept()
             print(addr)
             packet = conn.recv(4096)
             data = pickle.loads(packet)

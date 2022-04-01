@@ -50,7 +50,7 @@ class Router():
         s.close()
     
     def open_server(self):
-        notify_monitor()
+        self.notify_monitor()
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.bind((self.ip, 8000))
         server.listen(5)
