@@ -25,8 +25,8 @@ class OSPFRouter(Router):
         if (check_on_same_switch(self.ip, data['src_ip'])):
             self.lock.acquire()
             # set src ip as key, the ip where the message is coming from as value 
-            dip = data['src_ip'].rpartition(".")[0]
-            self.table.create_entry(dip, addr[0])
+            #dip = data['src_ip'].rpartition(".")[0]
+            self.table.create_entry( data['src_ip'], addr[0])
             self.table.add_neighbors(data['src_ip'], "host")
             self.lock.release()
             self.thread_sock.sendto(make_packet(self.ip,addr,'',0),addr)
@@ -37,8 +37,6 @@ class OSPFRouter(Router):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((ip, 8000))
         s.send(make_packet(self.ip, ip, "cr", -1))
-        
-        self.table.create_entry(ip, ip, "router")
         s.close()
         
     def open_server(self):
