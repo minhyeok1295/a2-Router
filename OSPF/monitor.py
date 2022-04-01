@@ -7,6 +7,11 @@ class Monitor(Router):
         super().__init__(ip)
     
     
+    def open_thread_sock(self):
+        self.thread_sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+        self.thread_sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        self.thread_sock.bind(('0.0.0.0',9999))
+    
     def receive(self): #wait for broadcast
         recv_data, addr = self.thread_sock.recvfrom(1024)
         data = pickle.loads(recv_data)
