@@ -50,7 +50,6 @@ def make_table_packet(src_ip, dest_ip, table):
         'src_ip': src_ip,
         'dest_ip': dest_ip,
         'table': table
-        'type': 'table'
     }
     return pickle.dumps(data)
 
