@@ -30,6 +30,7 @@ class Host():
                                     ('255.255.255.255', 9999))
         recv_data, addr = self.broad_socket.recvfrom(1024)
         data = pickle.loads(recv_data)
+        print("msg: " + data['message'])
         self.broad_socket.close()
         return data
         
@@ -108,15 +109,14 @@ if __name__ == "__main__":
         print("Incorrect number of arguments: IP address needed")
         raise
     host = Host(sys.argv[1], 9999)
-    
-    recv_t = ThreadSock(host)
-    recv_t.start()
     print("created host")
     print("Start broadcasting")
     broadcast_data = host.broadcast()
     
     print("router ip: " + broadcast_data['src_ip'])
     host.set_next_hop(broadcast_data['src_ip'])
+    recv_t = ThreadSock(host)
+    recv_t.start()
     host.send()
     print("send terminated")
     recv_t.stop()
