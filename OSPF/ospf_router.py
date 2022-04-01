@@ -51,6 +51,7 @@ class OSPFRouter(Router):
                 data = pickle.loads(packet)
                 if (data['message'] == 'cr' and data['ttl'] == -1): #connecting router
                     self.table.create_entry(data['src_ip'], data['src_ip'], "router")
+                    break
                 print_packet(data)
                 if (data['message'] == 'exit'):
                     break
