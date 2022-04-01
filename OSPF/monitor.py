@@ -12,7 +12,8 @@ class Node:
 class Monitor(Router):
     def __init__(self, ip):
         super().__init__(ip)
-        self.routers = {}
+        self.network = {}
+        
     
     def open_server(self):
         monitor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -23,10 +24,13 @@ class Monitor(Router):
             packet = conn.recv(4096)
             data = pickle.loads(packet)
             
+            src_ip = data['src_ip']
+            dst_ip = data['dst_ip']
             if (data['message'] == 'router'): #router added
-                self.routers[data['src_ip']] = Node(data['src_ip'])
+                self.network[src_ip] = {}
             elif (data['message'] == 'host'): #host added
-                self.routers[data['dst_ip']].hosts.append(data['src_ip'])
+                self.network[dst_ip][src_ip] = ("host", 1)
+            
             conn.close()
         monitor.close()
         
@@ -39,7 +43,7 @@ class TableCommandThread(ThreadSock):
             print("Command you entered is ",command)
             if command == "print":
                 print("Executing print command")
-                print(self.node.routers)
+                print(self.node.network)
         
         
 if __name__ == "__main__":
