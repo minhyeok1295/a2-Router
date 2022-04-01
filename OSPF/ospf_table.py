@@ -3,10 +3,18 @@ class OSPFTable():
     def __init__(self):
         self.neighbors = {}
         self.table = {}
-        
-    def create_entry(self, ip, addr, t):
+    
+    def add_neighbors(ip, t):
         self.neighbors[ip] = t
+        
+    def create_entry(self, ip, addr):
         self.table[ip] = addr
+    
+    def has_ip(self,ip):
+        """
+        check if table has src_ip as key
+        """
+        return ip in self.table
    
     def __str__(self):
         output = "======= Neighbors =======\n" 

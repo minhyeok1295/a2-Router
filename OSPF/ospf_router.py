@@ -25,7 +25,9 @@ class OSPFRouter(Router):
         if (check_on_same_switch(self.ip, data['src_ip'])):
             self.lock.acquire()
             # set src ip as key, the ip where the message is coming from as value 
-            self.table.create_entry(data['src_ip'], addr[0], "host")
+            dip = data['src_ip'].rpartition(".")[0]
+            self.table.create_entry(dip, addr[0])
+            self.table.add_neighbors(data['src_ip'], "host")
             self.lock.release()
             self.thread_sock.sendto(make_packet(self.ip,addr,'',0),addr)
         else: #it is router
@@ -52,11 +54,19 @@ class OSPFRouter(Router):
             if len(packet) != 0:
                 data = pickle.loads(packet)
                 if (data['message'] == 'cr' and data['ttl'] == -1): #connecting router
-                    self.table.create_entry(data['src_ip'], data['src_ip'], "router")
-                print_packet(data)
+                    
+                    self.lock.acquire()
+                    # set src ip as key, the ip where the message is coming from as value 
+                    dip = data['src_ip'].rpartition(".")[0]
+                    self.table.create_entry(dip, addr[0])
+                    self.table.add_neighbors(data['src_ip'], "router")
+                    self.lock.release()
+                
                 if (data['message'] == 'exit'):
                     break
+                
                 data['ttl'] -= 1
+                
                 if (data['ttl'] > 0):
                     dest = data['dest_ip']
                     self.lock.acquire()
