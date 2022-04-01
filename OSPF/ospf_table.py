@@ -17,7 +17,7 @@ class OSPFTable():
         return ip in self.table
     
     def check_ip(self, ip):
-        mip = ip.rpartition(".")[0]
+        mip = ip.rpartition(".")[0] + ".0"
         print(ip)
         print(mip)
         if ip in self.neighbors:
