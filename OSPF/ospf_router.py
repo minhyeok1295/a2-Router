@@ -66,27 +66,27 @@ class OSPFRouter(Router):
                     self.table.add_neighbors(data['src_ip'], "router")
                     self.lock.release()
                 
-                if (data['message'] == 'exit'):
+                elif (data['message'] == 'exit'):
                     break
-                
-                data['ttl'] -= 1
-                
-                if (data['ttl'] > 0):
-                    dest = data['dest_ip']
-                    self.lock.acquire()
-                    if self.table.has_ip(dest):
-                        next_hop = self.table.get_next_hop(dest)
-                        print(next_hop)
-                        try:
-                            self.forward(data,next_hop)
-                            print(f"Successfully sent message to {data['dest_ip']}")
-                        except Exception:
-                            print("Error!!!!")
-                    else:
-                        print_error(data['src_ip'],data['dest_ip'])
-                    self.lock.release()
                 else:
-                    print_ttl_expired(self.ip,data['src_ip'],data['dest_ip'])
+                    data['ttl'] -= 1
+                    if (data['ttl'] > 0):
+                        print_packet(data)
+                        dest = data['dest_ip']
+                        self.lock.acquire()
+                        if self.table.has_ip(dest):
+                            next_hop = self.table.get_next_hop(dest)
+                            print(next_hop)
+                            try:
+                                self.forward(data,next_hop)
+                                print(f"Successfully sent message to {data['dest_ip']}")
+                            except Exception:
+                                print("Error!!!!")
+                        else:
+                            print_error(data['src_ip'],data['dest_ip'])
+                        self.lock.release()
+                    else:
+                        print_ttl_expired(self.ip,data['src_ip'],data['dest_ip'])
             else:
                 print("nothing received")
             conn.close()
