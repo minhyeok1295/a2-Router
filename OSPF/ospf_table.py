@@ -6,6 +6,7 @@ class OSPFTable():
         
     def create_entry(self, ip, addr, t):
         self.neighbors[ip] = t
+        print(self.neighbors)
         self.table[ip] = addr
    
     def __str__(self):
