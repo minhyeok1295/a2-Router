@@ -29,8 +29,6 @@ class Router():
                                     ('255.255.255.255', 8888))
         recv_data, addr = self.broad_socket.recvfrom(1024)
         data = pickle.loads(recv_data)
-        if (data['message'] == 'NA'):
-            print("provided ip can't connect to the router")
         self.broad_socket.close()
         return data
     
