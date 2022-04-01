@@ -25,9 +25,9 @@ class Monitor(Router):
             data = pickle.loads(packet)
             
             if (data['message'] == 'router'): #router added
-                self.routers['src_ip'] = Node(data['src_ip'])
+                self.routers[data['src_ip']] = Node(data['src_ip'])
             elif (data['message'] == 'host'): #host added
-                self.routers['dst_ip'].hosts.append(data['src_ip'])
+                self.routers[data['dst_ip']].hosts.append(data['src_ip'])
             conn.close()
         monitor.close()
         
