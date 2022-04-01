@@ -15,7 +15,15 @@ class OSPFTable():
         check if table has src_ip as key
         """
         return ip in self.table
-   
+    
+    def check_ip(self, ip):
+        mip = ip.rpartition
+        if ip in self.neighbors:
+            return self.neighbors[ip]
+        elif mip in self.table:
+            return self.table[mip]
+        return None
+    
     def __str__(self):
         output = "======= Neighbors =======\n" 
         for k,v in self.neighbors.items():
