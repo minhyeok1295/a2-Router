@@ -2,7 +2,7 @@ from router import *
 
 class OSPFRouter(Router):
     def __init__(self, ip):
-        super.__init__(ip)
+        super().__init__(ip)
         
     def notify_monitor_new_router(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
