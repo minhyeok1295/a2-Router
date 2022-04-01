@@ -33,7 +33,10 @@ class OSPFRouter(Router):
     
     def send_attach(self, ip):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((ip, 8000))
+        s.send(make_packet(self.ip, ip, "cr", -1))
         s.close()
+        
     def open_server(self):
         self.notify_monitor_new_router()
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -43,10 +46,11 @@ class OSPFRouter(Router):
             conn, addr = server.accept()
             print("Server connected to")
             print(addr)
-            self.notify_monitor_new_host()
             packet = conn.recv(4096)
             if len(packet) != 0:
                 data = pickle.loads(packet)
+                if (data['message'] == 'cr' and data['ttl'] == -1): #connecting router
+                    self.table.create_entry(data['src_ip'], data['src_ip'], "router")
                 print_packet(data)
                 if (data['message'] == 'exit'):
                     break
