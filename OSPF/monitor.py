@@ -30,10 +30,15 @@ class Monitor(Router):
                 self.network[src_ip] = {}
             elif (data['message'] == 'host'): #host added
                 self.network[dst_ip][src_ip] = ("host", 1)
-            
             conn.close()
         monitor.close()
         
+    def print_network(self):
+        output = "=================="
+        for k,v  in self.network{}:
+            output += f"{k}\t: {v}\n"
+        output += "=================="
+        print(output)
 
 class TableCommandThread(ThreadSock):
     def run(self):
@@ -43,7 +48,7 @@ class TableCommandThread(ThreadSock):
             print("Command you entered is ",command)
             if command == "print":
                 print("Executing print command")
-                print(self.node.network)
+                self.node.print_network()
         
         
 if __name__ == "__main__":
