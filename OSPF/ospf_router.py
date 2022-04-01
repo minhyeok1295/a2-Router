@@ -62,7 +62,7 @@ class OSPFRouter(Router):
                     # set src ip as key, the ip where the message is coming from as value 
                     dip = data['src_ip'].rpartition(".")[0]
                     print("dip:" + str(dip))
-                    self.table.create_entry(dip, addr[0])
+                    self.table.create_entry(dip, data['src_ip'])
                     self.table.add_neighbors(data['src_ip'], "router")
                     self.lock.release()
                 
