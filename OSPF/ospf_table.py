@@ -2,7 +2,7 @@
 from forward_table import *
 
 class OSPFTable(ForwardTable):
-    def __init__(self, ip):
+    def __init__(self):
         super().__init__()
         self.neighbors = {}
         self.table = {}
