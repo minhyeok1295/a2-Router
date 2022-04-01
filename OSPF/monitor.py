@@ -32,7 +32,15 @@ class Monitor(Router):
         monitor.close()
         
 
-        
+class TableCommandThread(ThreadSock):
+    def run(self):
+        print("Start Command Thread")
+        while not self.stopped():
+            command = input()
+            print("Command you entered is ",command)
+            if command == "print":
+                print("Executing print command")
+                print(self.routers)
         
         
 if __name__ == "__main__":
@@ -40,7 +48,12 @@ if __name__ == "__main__":
         print("error occured")
         exit(1)
     monitor = Monitor(sys.argv[1])
+    
+    command_t = TableCommandThread(monitor)
+    command_t.start()
     monitor.open_server()
+    
+    command_t.stop()
     print("broadcast listening")
     
     
