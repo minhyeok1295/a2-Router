@@ -29,7 +29,7 @@ class NetworkTopo(Topo):
         #r3 = self.addHost('r3', cls=LinuxRouter, ip='10.3.0.1/24')
 
         # Add 2 switches
-        sm = self.addSwitch('sm')
+        sm = self.addSwitch('s0')
         s1 = self.addSwitch('s1')
         s2 = self.addSwitch('s2')
         #s3 = self.addSwitch('s3')
