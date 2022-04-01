@@ -18,21 +18,8 @@ class Router():
     def open_thread_sock(self):
         self.thread_sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
         self.thread_sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        self.thread_sock.bind(('0.0.0.0',9999))
+        self.thread_sock.bind(('255.255.255.255',9999))
 
-    
-    def broadcast(self):
-        self.broad_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.broad_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.broad_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        self.broad_socket.sendto(make_packet(self.ip, '255.255.255.255','', 0),
-                                    ('255.255.255.255', 9999))
-        recv_data, addr = self.broad_socket.recvfrom(1024)
-        data = pickle.loads(recv_data)
-        print_packet(data)
-        self.broad_socket.close()
-        return data
-    
     
     def receive(self): #wait for broadcast
         recv_data, addr = self.thread_sock.recvfrom(1024)
@@ -47,7 +34,6 @@ class Router():
             self.thread_sock.sendto(make_packet(self.ip,addr,'NA',0),addr)
     
     def open_server(self):
-        self.broadcast()
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.bind((self.ip, 8000))
         server.listen(5)
