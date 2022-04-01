@@ -71,7 +71,7 @@ def run():
     # Add routing for reaching networks that aren't directly connected
     net.start()
     
-    net.startTerm()
+    net.startTerms()
     CLI(net)
     net.stop()
 
