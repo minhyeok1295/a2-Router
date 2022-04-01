@@ -116,6 +116,7 @@ if __name__ == "__main__":
     
     broadcast_t.start()
     command_t.start()
+    router.broadcast()
     router.open_server()
     broadcast_t.stop()
     command_t.stop()
