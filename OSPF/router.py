@@ -23,7 +23,6 @@ class Router():
     def receive(self): #wait for broadcast
         recv_data, addr = self.thread_sock.recvfrom(1024)
         data = pickle.loads(recv_data)
-        print_packet(data)
         if (check_on_same_switch(self.ip, data['src_ip'])):
             self.lock.acquire()
             # set src ip as key, the ip where the message is coming from as value
