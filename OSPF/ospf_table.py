@@ -10,8 +10,8 @@ class OSPFTable():
    
     def __str__(self):
         output = "======= Neighbors =======\n" 
-        for n in self.neighbors:
-            output += f"{n}\n"
+        for k,v in self.neighbors:
+            output += f"{v}\t: {k}\n"
         output = "======= Original Table =======\n" 
         output += "Source IP\t: Next Hop IP\n"
         for k,v in self.table.items():
