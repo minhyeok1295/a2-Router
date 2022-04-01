@@ -24,10 +24,11 @@ class Router():
         recv_data, addr = self.thread_sock.recvfrom(1024)
         data = pickle.loads(recv_data)
         print_packet(data)
-        self.lock.acquire()
-        # set src ip as key, the ip where the message is coming from as value
-        self.table.create_entry(data['src_ip'],addr[0])
-        self.lock.release()
+        if (check_on_same_switch(self.ip, data['src_ip'])):
+            self.lock.acquire()
+            # set src ip as key, the ip where the message is coming from as value
+            self.table.create_entry(data['src_ip'],addr[0])
+            self.lock.release()
         self.thread_sock.sendto(make_packet(self.ip,addr,'',0),addr)
     
     def open_server(self):
