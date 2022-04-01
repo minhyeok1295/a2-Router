@@ -120,7 +120,6 @@ if __name__ == "__main__":
     broadcast_t.start()
     command_t.start()
     
-    k = router.broadcast()
     router.open_server()
     
     
