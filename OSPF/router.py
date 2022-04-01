@@ -34,13 +34,13 @@ class Router():
             
     def notify_monitor_new_router(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect(("10.2.0.1", 8888))
-        s.send(make_packet(self.ip, "10.2.0.1", "router", 0))
+        s.connect(("10.0.0.1", 8888))
+        s.send(make_packet(self.ip, "10.0.0.1", "router", 0))
         s.close()
         
     def notify_monitor_new_host(self, ip):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect(("10.2.0.1", 8888))
+        s.connect(("10.0.0.1", 8888))
         s.send(make_packet(ip, self.ip, "host", 0))
         s.close()
     
