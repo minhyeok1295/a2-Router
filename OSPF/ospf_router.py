@@ -41,8 +41,7 @@ class OSPFRouter(Router):
         self.lock.acquire()
         dip = ip.rpartition(".")[0]
         self.table.create_entry(dip, ip)
-        self.table.add_neighbors(ip, "router"
-        
+        self.table.add_neighbors(ip, "router")
         self.lock.release()
         
     def open_server(self):
