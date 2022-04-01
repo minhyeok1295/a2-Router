@@ -14,3 +14,4 @@ class OSPFTable(ForwardTable):
         output = "======= Neighbors =======\n" 
         for n in self.neighbors:
             output += f"{n}\n"
+        return output
