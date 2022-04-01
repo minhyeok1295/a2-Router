@@ -40,7 +40,7 @@ class TableCommandThread(ThreadSock):
             print("Command you entered is ",command)
             if command == "print":
                 print("Executing print command")
-                print(self.routers)
+                print(self.node.routers)
         
         
 if __name__ == "__main__":
