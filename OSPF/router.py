@@ -47,6 +47,7 @@ class Router():
             self.thread_sock.sendto(make_packet(self.ip,addr,'NA',0),addr)
     
     def open_server(self):
+        self.broadcast()
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.bind((self.ip, 8000))
         server.listen(5)
@@ -116,7 +117,6 @@ if __name__ == "__main__":
     
     broadcast_t.start()
     command_t.start()
-    router.broadcast()
     router.open_server()
     broadcast_t.stop()
     command_t.stop()
