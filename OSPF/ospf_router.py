@@ -51,8 +51,7 @@ class OSPFRouter(Router):
         server.listen(5)
         while True:
             conn, addr = server.accept()
-            print("Server connected to")
-            print(addr)
+            print("Server connected")
             packet = conn.recv(4096)
             if len(packet) != 0:
                 data = pickle.loads(packet)
@@ -72,7 +71,6 @@ class OSPFRouter(Router):
                     data['ttl'] -= 1
                     if (data['ttl'] > 0):
                         dest = data['dest_ip']
-                        print("Dest: " + str(dest))
                         self.lock.acquire()
                         next_hop, t = self.table.check_ip(dest)
                         if next_hop != None:
@@ -85,7 +83,7 @@ class OSPFRouter(Router):
                             print_error(data['src_ip'],data['dest_ip'])
                         self.lock.release()
                     else:
-                        print_ttl_expired(self.ip,data['src_ip'],data['dest_ip'])
+                        print_ttl_expired(self.ip,data)
             else:
                 print("nothing received")
             conn.close()
