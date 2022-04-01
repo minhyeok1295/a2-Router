@@ -19,7 +19,20 @@ class Router():
         self.thread_sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
         self.thread_sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         self.thread_sock.bind(('255.255.255.255',9999))
-
+    
+    
+    def broadcast(self):
+        self.broad_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.broad_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.broad_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        self.broad_socket.sendto(make_packet(self.ip, '255.255.255.255','router', 0),
+                                    ('255.255.255.255', 9999))
+        recv_data, addr = self.broad_socket.recvfrom(1024)
+        data = pickle.loads(recv_data)
+        if (data['message'] == 'NA'):
+            print("provided ip can't connect to the router")
+        self.broad_socket.close()
+        return data
     
     def receive(self): #wait for broadcast
         recv_data, addr = self.thread_sock.recvfrom(1024)

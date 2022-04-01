@@ -55,12 +55,12 @@ class NetworkTopo(Topo):
                      params1={'ip': '10.100.0.1/24'},
                      params2={'ip': '10.100.0.2/24'})
         
-       # self.addLink(r1,
-       #              r3,
-       #              intfName1='r1-eth2',
-        #             intfName2='r3-eth1',
-       #              params1={'ip': '10.101.0.1/24'},
-       #              params2={'ip': '10.101.0.2/24'})
+        self.addLink(r1,
+                     r3,
+                     intfName1='r1-eth2',
+                     intfName2='r3-eth1',
+                     params1={'ip': '10.101.0.1/24'},
+                     params2={'ip': '10.101.0.2/24'})
         
         
         self.addLink(r2,
@@ -86,7 +86,7 @@ class NetworkTopo(Topo):
         h4 = self.addHost(name='h4',
                           ip='10.1.0.20/24',
                           defaultRoute='via 10.1.0.1')
-        
+        '''
         h5 = self.addHost(name='h5',
                           ip='10.2.0.10/24',
                           defaultRoute='via 10.2.0.1')
@@ -95,7 +95,7 @@ class NetworkTopo(Topo):
         h6 = self.addHost(name='h6',
                           ip='10.2.0.20/24',
                           defaultRoute='via 10.2.0.1')
-        
+        '''
         # Add host-switch links
         self.addLink(h1, s1)
         self.addLink(h2, s1)
@@ -103,8 +103,8 @@ class NetworkTopo(Topo):
         self.addLink(h3, s2)
         self.addLink(h4, s2)
         
-        self.addLink(h5, s3)
-        self.addLink(h6, s3)
+        #self.addLink(h5, s3)
+        #self.addLink(h6, s3)
 
 def run():
     topo = NetworkTopo()
@@ -116,12 +116,12 @@ def run():
 
     # type the following command in the mininet shell
     info(net['r1'].cmd("ip route add 10.1.0.0/24 via 10.100.0.2 dev r1-eth1"))
-    #info(net['r1'].cmd("ip route add 10.2.0.0/24 via 10.101.0.2 dev r1-eth2"))
+    info(net['r1'].cmd("ip route add 10.2.0.0/24 via 10.101.0.2 dev r1-eth2"))
     
     info(net['r2'].cmd("ip route add 10.0.0.0/24 via 10.100.0.1 dev r2-eth1"))
     info(net['r2'].cmd("ip route add 10.2.0.0/24 via 10.102.0.2 dev r2-eth2"))
     
-    #info(net['r3'].cmd("ip route add 10.0.0.0/24 via 10.101.0.1 dev r3-eth1"))
+    info(net['r3'].cmd("ip route add 10.0.0.0/24 via 10.101.0.1 dev r3-eth1"))
     info(net['r3'].cmd("ip route add 10.1.0.0/24 via 10.102.0.1 dev r3-eth2"))
     CLI(net)
     net.stop()
