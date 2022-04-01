@@ -17,11 +17,13 @@ class OSPFTable():
         return ip in self.table
     
     def check_ip(self, ip):
-        
         mip = ip.rpartition(".")[0]
         if ip in self.neighbors:
             return ip, self.neighbors[ip]
+        elif ip in self.table:
+            return self.table[ip], self.neighbors[self.table[ip]]
         elif mip in self.table:
+            self.create_entry(ip, self.table[mip])
             return self.table[mip], "router"
         return None, None
     
