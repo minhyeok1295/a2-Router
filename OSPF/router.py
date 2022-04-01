@@ -60,7 +60,7 @@ class Router():
                         except Exception:
                             print("Error!!!!")
                     else:
-                        print_error(data['src_ip'],data['dest_ip'])
+                        print_error(data['src_ip'],data['dest_ip'])4
                     self.lock.release()
                 else:
                     print_ttl_expired(self.ip,data['src_ip'],data['dest_ip'])

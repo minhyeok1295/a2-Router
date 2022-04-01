@@ -10,7 +10,7 @@ class Host():
     and send a simple message to the IP address 255.255.255.255 with TTL=0 in order to broadcast its existence
     '''
     
-    def __init__(self, ip, port):
+    def __init__(self, ip):
         self.ip = ip
         self.ttl = 0
         self.next_ip = ''
@@ -30,6 +30,8 @@ class Host():
                                     ('255.255.255.255', 9999))
         recv_data, addr = self.broad_socket.recvfrom(1024)
         data = pickle.loads(recv_data)
+        if (data['message'] == 'NA'):
+            print("provided ip can't connect to the router")
         self.broad_socket.close()
         return data
         
@@ -56,6 +58,7 @@ class Host():
                 dest_ip = input("Enter destination: ")
                 ttl = self.get_ttl()
                 if (validate_ip(dest_ip)):
+                    print(self.next_ip)
                     self.connect()
                     print("send msg: " + msg + ", to dest: ", dest_ip)
                     data_packet = make_packet(self.ip, dest_ip, msg, ttl)
@@ -96,10 +99,9 @@ class Host():
     '''
     def receive(self):
         recv_sock,addr = self.thread_sock.accept()
-        print(addr)
         recv_data = recv_sock.recv(4096)
         data = pickle.loads(recv_data)
-        print(f"From {data['src_ip']}: {data['message']}")
+        print(f"\nFrom {data['src_ip']}: {data['message']}")
         recv_sock.close()
         
 
@@ -107,20 +109,19 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Incorrect number of arguments: IP address needed")
         raise
-    host = Host(sys.argv[1], 9999)
+    host = Host(sys.argv[1])
     print("created host")
     print("Start broadcasting")
     broadcast_data = host.broadcast()
-    
-    print("router ip: " + broadcast_data['src_ip'])
-    host.set_next_hop(broadcast_data['src_ip'])
-
-    recv_t = ThreadSock(host)
-    recv_t.start()
-    host.send()
-    print("send terminated")
-    recv_t.stop()
-    print("end")
-    host.thread_sock.close()
-    recv_t.join()
-    print('Program Terminated')
+    if (broadcast_data['message'] != "NA"):
+        print("router ip: " + broadcast_data['src_ip'])
+        host.set_next_hop(broadcast_data['src_ip'])
+        recv_t = ThreadSock(host)
+        recv_t.start()
+        host.send()
+        print("send terminated")
+        recv_t.stop()
+        print("end")
+        host.thread_sock.close()
+        recv_t.join()
+        print('Program Terminated')
