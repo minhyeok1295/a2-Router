@@ -99,10 +99,9 @@ class Host():
     '''
     def receive(self):
         recv_sock,addr = self.thread_sock.accept()
-        print(addr)
         recv_data = recv_sock.recv(4096)
         data = pickle.loads(recv_data)
-        print(f"From {data['src_ip']}: {data['message']}")
+        print(f"\nFrom {data['src_ip']}: {data['message']}")
         recv_sock.close()
         
 

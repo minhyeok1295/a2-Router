@@ -64,7 +64,7 @@ def print_error(src_ip,dest_ip):
 def print_ttl_expired(cur_ip, data):
         print("========== TTL Expired ==========")
         print_packet(data)
-        print(f"At router {cur_ip} from {data['src_ip']} to {data['dest_ip']}\n\n")
+        print(f"Package dropped At router {cur_ip} from {data['src_ip']} to {data['dest_ip']}\n\n")
 
 #Validate format of ip address
 def validate_ip(ip):

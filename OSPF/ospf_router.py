@@ -76,7 +76,7 @@ class OSPFRouter(Router):
                         if next_hop != None:
                             try:
                                 self.forward(data,next_hop, t)
-                                print(f"Successfully sent message to {next_hop}, {t}")
+                                print(f"Successfully sent message to {t}, {next_hop}")
                             except Exception:
                                 print("Error!!!!")
                         else:
