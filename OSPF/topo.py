@@ -123,7 +123,7 @@ def run():
     
     info(net['r3'].cmd("ip route add 10.0.0.0/24 via 10.101.0.1 dev r3-eth1"))
     info(net['r3'].cmd("ip route add 10.1.0.0/24 via 10.102.0.1 dev r3-eth2"))
-    info(net['xterm'].cmd('r1 r3'))
+    net.startTerms()
     CLI(net)
     net.stop()
 
