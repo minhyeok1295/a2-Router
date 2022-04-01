@@ -20,10 +20,10 @@ class OSPFTable():
         
         mip = ip.rpartition(".")[0]
         if ip in self.neighbors:
-            return self.neighbors[ip]
+            return ip, self.neighbors[ip]
         elif mip in self.table:
-            return self.table[mip]
-        return None
+            return self.table[mip], "router"
+        return None, None
     
     def __str__(self):
         output = "======= Neighbors =======\n" 
@@ -33,4 +33,5 @@ class OSPFTable():
         output += "Source IP\t: Next Hop IP\n"
         for k,v in self.table.items():
             output += f"{k}\t: {v}\n"
+        output += "=========================="
         return output

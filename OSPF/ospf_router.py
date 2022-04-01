@@ -75,11 +75,9 @@ class OSPFRouter(Router):
                         print("Dest: " + str(dest))
                         self.lock.acquire()
                         next_hop, t = self.table.check_ip(dest)
-                        if next_hop != None:    
-                            print("next_hop:" + str(next_hop))
-                            
+                        if next_hop != None:
                             try:
-                                self.forward(data,next_hop)
+                                self.forward(data,next_hop, t)
                                 print(f"Successfully sent message to {data['dest_ip']}")
                             except Exception:
                                 print("Error!!!!")
