@@ -34,10 +34,10 @@ class Monitor(Router):
         monitor.close()
         
     def print_network(self):
-        output = "=================="
+        output = "==================\n"
         for k,v  in self.network.items():
             output += f"{k}\t: {v}\n"
-        output += "=================="
+        output += "==================\n"
         print(output)
 
 class TableCommandThread(ThreadSock):
