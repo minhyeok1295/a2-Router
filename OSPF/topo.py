@@ -26,13 +26,13 @@ class NetworkTopo(Topo):
         m = self.addHost('m', cls=LinuxRouter, ip='10.0.0.1/24')
         r1 = self.addHost('r1', cls=LinuxRouter, ip='10.1.0.1/24' )
         r2 = self.addHost('r2', cls=LinuxRouter, ip='10.2.0.1/24')
-        #r3 = self.addHost('r3', cls=LinuxRouter, ip='10.3.0.1/24')
+        r3 = self.addHost('r3', cls=LinuxRouter, ip='10.3.0.1/24')
 
         # Add 2 switches
         sm = self.addSwitch('s0')
         s1 = self.addSwitch('s1')
         s2 = self.addSwitch('s2')
-        #s3 = self.addSwitch('s3')
+        s3 = self.addSwitch('s3')
         
         # Add host-switch links in the same subnet
         self.addLink(sm, m, intfName2='m-eth0', params2={'ip': '10.0.0.1/24'})
