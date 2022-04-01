@@ -124,7 +124,4 @@ if __name__ == "__main__":
     router.thread_sock.close()
     broadcast_t.join()
     command_t.join()
-    #1. receive broadcast message
-    #2. send packet to host who sent broadcast message
-    #3. forward the message packet received to the final destination
     
