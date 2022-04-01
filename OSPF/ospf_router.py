@@ -22,6 +22,7 @@ class OSPFRouter(Router):
     def receive(self): #wait for broadcast
         recv_data, addr = self.thread_sock.recvfrom(1024)
         data = pickle.loads(recv_data)
+        self.notify_monitor_new_host(data['src_ip'])
         if (check_on_same_switch(self.ip, data['src_ip'])):
             self.lock.acquire()
             # set src ip as key, the ip where the message is coming from as value 
