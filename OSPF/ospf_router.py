@@ -38,6 +38,12 @@ class OSPFRouter(Router):
         s.connect((ip, 8000))
         s.send(make_packet(self.ip, ip, "cr", -1))
         s.close()
+        self.lock.acquire()
+        dip = ip.rpartition(".")[0]
+        self.table.create_entry(dip, ip)
+        self.table.add_neighbors(ip, "router"
+        
+        self.lock.release()
         
     def open_server(self):
         self.notify_monitor_new_router()
@@ -56,6 +62,7 @@ class OSPFRouter(Router):
                     self.lock.acquire()
                     # set src ip as key, the ip where the message is coming from as value 
                     dip = data['src_ip'].rpartition(".")[0]
+                    print("dip:" + str(dip))
                     self.table.create_entry(dip, addr[0])
                     self.table.add_neighbors(data['src_ip'], "router")
                     self.lock.release()
