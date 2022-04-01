@@ -20,7 +20,6 @@ class Monitor(Router):
         monitor.listen(5)
         while True:
             conn, addr = monitor.accept()
-            print(addr)
             packet = conn.recv(4096)
             data = pickle.loads(packet)
             

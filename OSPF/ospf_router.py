@@ -4,6 +4,7 @@ from helper import *
 class OSPFRouter(Router):
     def __init__(self, ip):
         super().__init__(ip)
+        self.table = OSPFTable()
         
     def notify_monitor_new_router(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -17,6 +18,21 @@ class OSPFRouter(Router):
         s.send(make_packet(ip, self.ip, "host", 0))
         s.close()
     
+    def receive(self): #wait for broadcast
+        recv_data, addr = self.thread_sock.recvfrom(1024)
+        data = pickle.loads(recv_data)
+        if (check_on_same_switch(self.ip, data['src_ip'])):
+            self.lock.acquire()
+            # set src ip as key, the ip where the message is coming from as value 
+            self.table.add_neighbors(data['src_ip'], "host")
+            self.lock.release()
+            self.thread_sock.sendto(make_packet(self.ip,addr,'',0),addr)
+        else: #it is router
+            self.thread_sock.sendto(make_packet(self.ip,addr,'NA',0),addr)
+    
+    def send_attach(self, ip):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.close()
     def open_server(self):
         self.notify_monitor_new_router()
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

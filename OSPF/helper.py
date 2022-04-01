@@ -32,8 +32,9 @@ class TableCommandThread(ThreadSock):
             if command == "print":
                 print("Executing print command")
                 print(self.node.table)
-            if command == "print2":
-                self.node.table.print2()
+            if command == "connect":
+                ip = input("Enter Ip address: ")
+                self.node.send_attach(ip)
 
 
 def make_packet(src_ip, dest_ip, message, ttl):

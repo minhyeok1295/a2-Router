@@ -35,7 +35,7 @@ class ForwardTable:
         print(self.table.values())
 
     def __str__(self):
-        output = "======= Original Table =======\n"
+        output = "======= Original Table =======\n" 
         output += "Source IP\t: Next Hop IP\n"
         for k,v in self.table.items():
             output += f"{k}\t: {v}\n"
