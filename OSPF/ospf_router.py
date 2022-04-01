@@ -1,6 +1,6 @@
 from router import *
 
-class OSPFRouter(ROUTER):
+class OSPFRouter(Router):
     def __init__(ip):
         super.__init__(ip)
         
