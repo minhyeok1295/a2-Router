@@ -84,8 +84,8 @@ def run():
 
     # type the following command in the mininet shell
     
-    info(net['m1'].cmd("ip route add 10.1.0.0/24 via 10.11.0.1 dev m-eth1"))
-    info(net['m1'].cmd("ip route add 10.2.0.0/24 via 10.12.0.1 dev m-eth2"))
+    info(net['m1'].cmd("ip route add 10.1.0.0/24 via 10.11.0.1 dev m1-eth1"))
+    info(net['m1'].cmd("ip route add 10.2.0.0/24 via 10.12.0.1 dev m1-eth2"))
     
     info(net['r1'].cmd("ip route add 10.2.0.0/24 via 10.100.0.2 dev r1-eth2"))
     info(net['r1'].cmd("ip route add 10.0.0.0/24 via 10.101.0.2 dev r1-eth1"))
