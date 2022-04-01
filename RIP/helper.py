@@ -22,7 +22,17 @@ class ThreadSock(threading.Thread):
             self.node.receive()
         self.node.thread_sock.close()
 
-
+class TableCommandThread(ThreadSock):
+    def run(self):
+        print("Start Command Thread")
+        while not self.stopped():
+            command = input()
+            print("Command you entered is ",command)
+            if command == "print":
+                print("Executing print command")
+                print(self.node.table)
+            if command == "print2":
+                self.node.table.print2()
 
 def make_packet(src_ip, dest_ip, message, ttl):
     data = {

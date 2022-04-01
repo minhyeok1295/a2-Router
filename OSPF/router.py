@@ -32,20 +32,8 @@ class Router():
         else: #it is router
             self.thread_sock.sendto(make_packet(self.ip,addr,'NA',0),addr)
             
-    def notify_monitor_new_router(self):
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect(("10.0.0.1", 8888))
-        s.send(make_packet(self.ip, "10.0.0.1", "router", 0))
-        s.close()
-        
-    def notify_monitor_new_host(self, ip):
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect(("10.0.0.1", 8888))
-        s.send(make_packet(ip, self.ip, "host", 0))
-        s.close()
     
     def open_server(self):
-        self.notify_monitor_new_router()
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.bind((self.ip, 8000))
         server.listen(5)
@@ -53,7 +41,6 @@ class Router():
             conn, addr = server.accept()
             print("Server connected to")
             print(addr)
-            self.notify_monitor_new_host()
             packet = conn.recv(4096)
             if len(packet) != 0:
                 data = pickle.loads(packet)
@@ -90,19 +77,6 @@ class Router():
         sock.connect((next_hop,8100))
         sock.send(packet)
         sock.close()
-
-
-class TableCommandThread(ThreadSock):
-    def run(self):
-        print("Start Command Thread")
-        while not self.stopped():
-            command = input()
-            print("Command you entered is ",command)
-            if command == "print":
-                print("Executing print command")
-                print(self.node.table)
-            if command == "print2":
-                self.node.table.print2()
         
 
 
