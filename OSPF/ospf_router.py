@@ -77,6 +77,7 @@ class OSPFRouter(Router):
             else:
                 print("nothing received")
             conn.close()
+        print("con closed")
         conn.close()
         server.close()
         
