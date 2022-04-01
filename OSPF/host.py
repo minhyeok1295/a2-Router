@@ -10,7 +10,7 @@ class Host():
     and send a simple message to the IP address 255.255.255.255 with TTL=0 in order to broadcast its existence
     '''
     
-    def __init__(self, ip, port):
+    def __init__(self, ip):
         self.ip = ip
         self.ttl = 0
         self.next_ip = ''
@@ -109,7 +109,7 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Incorrect number of arguments: IP address needed")
         raise
-    host = Host(sys.argv[1], 9999)
+    host = Host(sys.argv[1])
     print("created host")
     print("Start broadcasting")
     broadcast_data = host.broadcast()
