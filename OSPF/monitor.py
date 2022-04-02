@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 from router import *
 from helper import *
+from dijkstra import *
 
 
 class Monitor(Router):
     def __init__(self, ip):
         super().__init__(ip)
         self.network = {}
+        self.routers = []
         
     
     def open_server(self):
@@ -25,6 +27,7 @@ class Monitor(Router):
             else:
                 if (data['message'] == 'router'): #router added
                     self.network[src_ip] = {}
+                    self.routers.append(src_ip)
                 elif (data['message'] == 'host'): #host added
                     self.network[dst_ip][src_ip] = ("host", 1)
             conn.close()
@@ -46,6 +49,8 @@ class TableCommandThread(ThreadSock):
             if command == "print":
                 print("Executing print command")
                 self.node.print_network()
+                print(self.node.routers)
+            
         
         
 if __name__ == "__main__":
