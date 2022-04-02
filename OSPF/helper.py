@@ -45,11 +45,11 @@ def make_packet(src_ip, dest_ip, message, ttl):
     }
     return pickle.dumps(data)
 
-def make_table_packet(src_ip, dest_ip, table):
+def make_table_packet(ip, table, neighbors):
     data = {
-        'src_ip': src_ip,
-        'dest_ip': dest_ip,
-        'table': table
+        'ip': ip
+        'table': table,
+        'neighbors': neighbors
     }
     return pickle.dumps(data)
 

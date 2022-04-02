@@ -29,23 +29,28 @@ class Monitor(Router):
                 if (data['message'] == 'router'): #router added
                     self.network[src_ip] = {}
                     self.routers.append(src_ip)
+                    self.update_tables()
                 elif (data['message'] == 'host'): #host added
                     self.network[dst_ip][src_ip] = ("host", 1)
                     self.update_tables()
             conn.close()
         monitor.close()
         
-    def send_table(self, ip, table):
+    def send_table(self, ip, table, neighbors):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((ip, 8000))
-        s.send(make_table_packet(None, ip, table))
+        s.send(make_table_packet(ip, table, neighbors))
         s.close()
         
     def update_tables(self):
         for router in self.routers:
+            neighbors = {}
+            for k,v in self.network[router].items():
+                neighbors[k] = v[0]
             table = update_table(self.network, self.routers, router)
-            print(table)
             self.send_table(router, table)
+                  
+            
             
     def print_network(self):
         output = "==================\n"

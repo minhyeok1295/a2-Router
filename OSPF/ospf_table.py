@@ -35,6 +35,10 @@ class OSPFTable():
             return self.table[mip], "router"
         return None, None
     
+    def update_info(self, data):
+        self.neighbors = data['neighbors']
+        self.table = data['table']
+    
     def __str__(self):
         output = "======= Neighbors =======\n" 
         for k,v in self.neighbors.items():
