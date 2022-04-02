@@ -47,7 +47,7 @@ def make_packet(src_ip, dest_ip, message, ttl):
 
 def make_table_packet(ip, table, neighbors):
     data = {
-        'ip': ip
+        'ip': ip,
         'table': table,
         'neighbors': neighbors
     }
