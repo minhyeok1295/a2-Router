@@ -38,6 +38,24 @@ class OSPFRouter(Router):
         s.connect(("10.0.0.1", 8888))
         s.send(make_table_packet(self.ip, ip, self.table))
         s.close()
+   
+    def handle_message_packet(self, data):
+        data['ttl'] -= 1
+        if (data['ttl'] > 0):
+            dest = data['dest_ip']
+            self.lock.acquire()
+            next_hop, t = self.table.check_ip(dest)
+            if next_hop != None:
+                try:
+                    self.forward(data,next_hop, t)
+                    print(f"Successfully sent message to {t}, {next_hop}")
+                except Exception:
+                    print("Error!!!!")
+            else:
+                print_error(data['src_ip'],data['dest_ip'])
+                self.lock.release()
+        else:
+            print_ttl_expired(self.ip,data)    
         
     def open_server(self):
         self.notify_monitor_new_router()
@@ -50,30 +68,18 @@ class OSPFRouter(Router):
             packet = conn.recv(4096)
             if len(packet) != 0:
                 data = pickle.loads(packet)
-                if (data['message'] == 'exit'):
-                    break
-                data['ttl'] -= 1
-                if (data['ttl'] > 0):
-                    dest = data['dest_ip']
-                    self.lock.acquire()
-                    next_hop, t = self.table.check_ip(dest)
-                    if next_hop != None:
-                        try:
-                            self.forward(data,next_hop, t)
-                            print(f"Successfully sent message to {t}, {next_hop}")
-                        except Exception:
-                            print("Error!!!!")
-                    else:
-                        print_error(data['src_ip'],data['dest_ip'])
-                    self.lock.release()
+                if (len(data) == 3): #updating table
+                     pass
                 else:
-                    print_ttl_expired(self.ip,data)
+                    if (data['message'] == 'exit'):
+                        break
+                    self.handle_message_packet(data)
             else:
                 print("nothing received")
             conn.close()
         conn.close()
         server.close()
-        
+    
     def forward(self,recv_data, next_hop, tp):
         data = recv_data.copy()
         packet = make_packet(data['src_ip'],data['dest_ip'],data['message'],data['ttl']) 

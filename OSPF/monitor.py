@@ -2,12 +2,6 @@
 from router import *
 from helper import *
 
-class Node:
-    def __init__(self, ip):
-        self.ip = ip
-        self.hosts = []
-
-
 
 class Monitor(Router):
     def __init__(self, ip):
@@ -28,7 +22,6 @@ class Monitor(Router):
             if (len(data) == 3): #table packet
                 self.network[src_ip][dst_ip] = ('router', 1)
                 self.network[dst_ip][src_ip] = ('router', 1)
-                
             else:
                 if (data['message'] == 'router'): #router added
                     self.network[src_ip] = {}
