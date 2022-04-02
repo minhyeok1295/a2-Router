@@ -67,7 +67,7 @@ class OSPFRouter(Router):
             packet = conn.recv(4096)
             if len(packet) != 0:
                 data = pickle.loads(packet)
-                if (len(data) == 3): #updating table
+                if (len(data) == 5): #updating table
                     self.table.update_info(data)
                     print("updated table")
                 else:

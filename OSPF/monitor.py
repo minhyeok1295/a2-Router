@@ -21,7 +21,7 @@ class Monitor(Router):
             data = pickle.loads(packet) 
             src_ip = data['src_ip']
             dst_ip = data['dest_ip']
-            if (len(data) == 3): #table packet
+            if (len(data) == 5): #table packet
                 self.network[src_ip][dst_ip] = ('router', 1)
                 self.network[dst_ip][src_ip] = ('router', 1)
                 self.update_tables()
