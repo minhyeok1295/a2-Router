@@ -44,6 +44,7 @@ class Monitor(Router):
     def update_tables(self):
         for router in self.routers:
             table = update_table(self.network, self.routers, router)
+            print(table)
             self.send_table(router, table)
             
     def print_network(self):
