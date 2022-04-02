@@ -3,6 +3,7 @@ import pickle
 import sys
 from helper import *
 import threading
+import ifaddr
 
 class Host():
     '''
@@ -10,14 +11,20 @@ class Host():
     and send a simple message to the IP address 255.255.255.255 with TTL=0 in order to broadcast its existence
     '''
     
-    def __init__(self, ip, port):
-        self.ip = ip
-        self.ttl = 0
-        self.next_ip = ''
+    def __init__(self):
+        self.init_ip()
+        self.next_hop = ''
         self.broad_socket = None
         self.send_sock = None
         self.thread_sock = None #listening socket: receives message from other
     
+    def init_ip(self):
+        for adapter in ifaddr.get_adapters():
+            if adapter.name[-4:] == "eth0":
+                print("Found IP address on eth0")
+                self.ip = adapter.ips[0].ip
+                return
+        raise Exception("Network configuration error: missing eth0 on host")
     '''
     send a simple message to the IP address 255.255.255.255 with TTL = 0
     in order to broadcast its existence
@@ -26,19 +33,19 @@ class Host():
         self.broad_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.broad_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.broad_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        self.broad_socket.sendto(make_packet(self.ip, '255.255.255.255','', 0),
-                                    ('255.255.255.255', 9999))
+        self.broad_socket.sendto(make_packet(self.ip, BRAODCAST_ADDR,'', 0),
+                                    (BRAODCAST_ADDR, BRAODCAST_PORT))
         recv_data, addr = self.broad_socket.recvfrom(1024)
         data = pickle.loads(recv_data)
         self.broad_socket.close()
         return data
         
     def set_next_hop(self,next_hop):
-        self.next_ip = next_hop
+        self.next_hop = next_hop
 
     def connect(self):
         self.send_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.send_sock.connect((self.next_ip, 8000))
+        self.send_sock.connect((self.next_hop, SEND_PORT))
 
     '''Given a destination IP address, a text message and TTL,
     the end system will attempt to send the message through the network
@@ -70,12 +77,12 @@ class Host():
 
     def send_to_host(self, dest_ip, packet):
         self.send_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.send_sock.connect((dest_ip, 8100))
+        self.send_sock.connect((dest_ip, RECV_PORT))
         self.send_sock.send(packet)
 
     def open_thread_sock(self):
         self.thread_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.thread_sock.bind((self.ip, 8100))
+        self.thread_sock.bind((self.ip, RECV_PORT))
         self.thread_sock.listen(5)
     
     def get_ttl(self):
@@ -104,11 +111,8 @@ class Host():
         
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Incorrect number of arguments: IP address needed")
-        raise
-    host = Host(sys.argv[1], 9999)
-    print("created host")
+    print("Searching host IP")
+    host = Host()
     print("Start broadcasting")
     broadcast_data = host.broadcast()
     
