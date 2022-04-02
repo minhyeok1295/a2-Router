@@ -24,12 +24,14 @@ class Monitor(Router):
             if (len(data) == 3): #table packet
                 self.network[src_ip][dst_ip] = ('router', 1)
                 self.network[dst_ip][src_ip] = ('router', 1)
+                self.update_tables()
             else:
                 if (data['message'] == 'router'): #router added
                     self.network[src_ip] = {}
                     self.routers.append(src_ip)
                 elif (data['message'] == 'host'): #host added
                     self.network[dst_ip][src_ip] = ("host", 1)
+                    self.update_tables()
             conn.close()
         monitor.close()
         
