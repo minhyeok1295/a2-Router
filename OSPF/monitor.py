@@ -29,7 +29,6 @@ class Monitor(Router):
                 if (data['message'] == 'router'): #router added
                     self.network[src_ip] = {}
                     self.routers.append(src_ip)
-                    self.update_tables()
                 elif (data['message'] == 'host'): #host added
                     self.network[dst_ip][src_ip] = ("host", 1)
                     self.update_tables()
