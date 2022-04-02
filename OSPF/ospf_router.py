@@ -69,7 +69,7 @@ class OSPFRouter(Router):
             if len(packet) != 0:
                 data = pickle.loads(packet)
                 if (len(data) == 3): #updating table
-                     pass
+                     self.table.table = data['table']
                 else:
                     if (data['message'] == 'exit'):
                         break

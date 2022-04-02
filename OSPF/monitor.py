@@ -33,6 +33,17 @@ class Monitor(Router):
             conn.close()
         monitor.close()
         
+    def send_table(self, ip, table):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((ip, 8000))
+        s.send(make_table_packet(None, ip, table))
+        s.close()
+        
+    def update_tables(self):
+        for router in self.routers:
+            table = update_table(self.network, self.routers, router)
+            self.send_table(router, table)
+            
     def print_network(self):
         output = "==================\n"
         for k,v  in self.network.items():
