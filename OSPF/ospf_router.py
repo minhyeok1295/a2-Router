@@ -36,7 +36,7 @@ class OSPFRouter(Router):
     def send_attach(self, ip):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect(("10.0.0.1", 8888))
-        s.send(make_table_packet(self.ip, ip, self.table, []))
+        s.send(make_table_packet(self.ip, ip, self.table, {}))
         s.close()
    
     def handle_message_packet(self, data):
