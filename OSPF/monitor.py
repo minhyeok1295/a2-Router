@@ -48,7 +48,7 @@ class Monitor(Router):
             for k,v in self.network[router].items():
                 neighbors[k] = v[0]
             table = update_table(self.network, self.routers, router)
-            self.send_table(router, table)
+            self.send_table(router, table, neighbors)
                   
             
             
