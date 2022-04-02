@@ -44,34 +44,34 @@ def get_next_hop(network, start_node, path):
             p[router] = curr
     return p
 
-def get_host(network, next_hop, start):
+def get_host(network, next_hop, start, shortest_path):
     dic = {}
     for router in network:
         if (router in next_hop):
             if router == start:
                 for k,v in network[router].items():
                     if v[0] == 'host':
-                        dic[k] = k
+                        dic[k] = [k]
             else:
                 for k,v in network[router].items():
                     if v[0] == 'host':
                         if (next_hop[router] == start):
-                            dic[k] = router
+                            dic[k] = [router, shortest_path[router] + 2]
                         else:
-                            dic[k] = next_hop[router]
+                            dic[k] = [next_hop[router], shortest_path[router] + 2]
     return dic
 
 
 def update_table(network, router, start_node):
-    p, sp = dijkstra_algorithm(network, start_node, router)
-    next_hop = get_next_hop(network, start_node, p)
-    table = get_host(network, next_hop, start_node)
+    path, shortest_path = dijkstra_algorithm(network, start_node, router)
+    next_hop = get_next_hop(network, start_node, path)
+    table = get_host(network, next_hop, start_node, shortest_path)
     return table
 '''
 r1-r2-r3-r4-r7-r6
         -r5-r6
 '''
-'''
+
 d = {"10.1.0.1": {"10.2.0.1": ('router', 1), "10.1.0.10": ("host", 1)},
      "10.2.0.1": {"10.1.0.1": ("router", 1), "10.3.0.1": ("router", 1), "10.2.0.10": ("host", 1)},
      "10.3.0.1": {"10.2.0.1": ("router", 1), "10.4.0.1": ("router", 1), "10.5.0.1": ("router", 1), "10.3.0.10": ("host", 1)},
@@ -81,20 +81,19 @@ d = {"10.1.0.1": {"10.2.0.1": ('router', 1), "10.1.0.10": ("host", 1)},
      "10.7.0.1": {"10.4.0.1": ("router", 1), "10.6.0.1": ("router", 1), "10.7.0.10": ("host", 1)}
      }
 
-
 d1 = {"10.1.0.1": {"10.2.0.1": ('router', 1), "10.1.0.10": ("host", 1)},
-     "10.2.0.1": {"10.1.0.1": ("router", 1), "10.2.0.10": ("host", 1)}
+     "10.2.0.1": {"10.1.0.1": ("router", 1), "10.3.0.1": ("router", 1), "10.2.0.10": ("host", 1)},
+     "10.3.0.1": {"10.2.0.1": ("router", 1), "10.3.0.10": ("host", 1)},
      }
 
-
-r = ["10.1.0.1", "10.2.0.1"]
-
-u1 = update_table(d1, r, "10.1.0.1")
-u2 = update_table(d1, r, "10.2.0.1")
+r = ["10.1.0.1", "10.2.0.1", "10.3.0.1"]
+p, sp = dijkstra_algorithm(d1, "10.1.0.1", r)
+next_hop = get_next_hop(d1, "10.1.0.1", p)
+table = get_host(d1, next_hop, "10.1.0.1", sp)
 
 
 router = ["10.1.0.1", "10.2.0.1", "10.3.0.1", "10.4.0.1", "10.5.0.1", "10.6.0.1", "10.7.0.1"]
-
+'''
 t1 = update_table(d, router, "10.1.0.1")
 t2 = update_table(d, router, "10.2.0.1")
 t3 = update_table(d, router, "10.3.0.1")
