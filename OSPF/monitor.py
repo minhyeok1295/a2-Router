@@ -38,7 +38,7 @@ class Monitor(Router):
     def send_table(self, ip, table, neighbors):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((ip, 8000))
-        s.send(make_table_packet(ip, table, neighbors))
+        s.send(make_table_packet(None, ip, table, neighbors))
         s.close()
         
     def update_tables(self):
