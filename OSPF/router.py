@@ -1,6 +1,11 @@
 import socket
+import pickle
 import threading
 from helper import *
+from forward_table import ForwardTable
+import sys
+
+broadcast = '255.255.255.255'
 
 
 class Router():
@@ -15,11 +20,12 @@ class Router():
         self.thread_sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         self.thread_sock.bind(('255.255.255.255',9999))
     
-    def receive(self):
+    def receive(self): #wait for broadcast
         pass
+            
     
     def open_server(self):
         pass
-    
-    def forward(self):
+
+    def forward(self,recv_data, next_hop, tp):
         pass
