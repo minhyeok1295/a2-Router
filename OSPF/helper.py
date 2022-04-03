@@ -29,7 +29,6 @@ class TableCommandThread(ThreadSock):
         while not self.stopped():
             command = input()
             if command == "print":
-                print("Executing print command")
                 print(self.node.table)
             if command == "connect":
                 ip = input("Enter Ip address: ")
