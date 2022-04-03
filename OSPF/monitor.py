@@ -17,12 +17,7 @@ class Monitor(Router):
             if (self.network[router].get(ip, False) != False):
                 self.network[router].pop(ip)
             if router == ip:
-                cp = self.network[router].copy()
-                for k, v in cp.items():
-                    if v[0] == "router":
-                        cp.pop(k)
-                self.network[router] = cp
-    
+                self.network[router] = {k:v for k,v in self.network[router].items() if v[0] != "router"}
     
     def open_server(self):
         monitor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
