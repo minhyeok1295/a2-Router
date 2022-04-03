@@ -2,11 +2,13 @@ from router import *
 from helper import *
 from simple_table import *
 
+
 class SimpleRouter(Router):
     def __init__(self, ip):
         super().__init__(ip)
         self.table = SimpleTable()
         
+    #override    
     def receive(self): #wait for broadcast
         recv_data, addr = self.thread_sock.recvfrom(1024)
         data = pickle.loads(recv_data)
@@ -17,6 +19,8 @@ class SimpleRouter(Router):
         self.lock.release()
         self.thread_sock.sendto(make_packet(self.ip,addr,'',0),addr)
     
+    
+    #override    
     def open_server(self):
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.bind((self.ip, 8000))
@@ -53,6 +57,14 @@ class SimpleRouter(Router):
         server.close()
         
     
+    #override    
+    def forward(self,recv_data, next_hop, tp):
+        data = recv_data.copy()
+        packet = make_packet(data['src_ip'],data['dest_ip'],data['message'],data['ttl']) 
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect((next_hop,8100))
+        sock.send(packet)
+        sock.close()
         
 
 if __name__ == "__main__":

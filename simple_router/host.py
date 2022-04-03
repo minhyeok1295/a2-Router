@@ -70,7 +70,7 @@ class Host():
                 else:
                     print("invalid ip address format")
         return 0
-
+    #if it is on the same switch, send it directly.
     def send_to_host(self, dest_ip, packet):
         self.send_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.send_sock.connect((dest_ip, 8100))
