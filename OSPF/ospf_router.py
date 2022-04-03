@@ -1,6 +1,7 @@
 from router import *
 from helper import *
 from ospf_table import *
+import sys
 
 class OSPFRouter(Router):
     def __init__(self, ip):
