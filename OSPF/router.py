@@ -2,7 +2,6 @@ import socket
 import pickle
 import threading
 from helper import *
-from forward_table import ForwardTable
 import sys
 
 broadcast = '255.255.255.255'
