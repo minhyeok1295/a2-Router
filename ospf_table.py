@@ -1,33 +1,19 @@
 # -*- coding: utf-8 -*-
-class OSPFTable():
+from forward_table import *
+class OSPFTable(ForwardTable):
     
     def __init__(self):
         self.neighbors = {}
-        self.table = {}
+        super().__init__()
         
     
     #add neighbors  
     def add_neighbors(self, ip, t):
         self.neighbors[ip] = t
-        
-    #add entry in the OSPF table    
-    def create_entry(self, ip, addr):
-        self.table[ip] = addr
-    
-    #returns the table
-    def get_table(self):
-        return self.table
     
     #returns the neighbors
     def get_neighbors(self):
         return self.neighbors
-    
-    
-    def has_ip(self,ip):
-        """
-        check if table has src_ip as key
-        """
-        return ip in self.table
     
     def check_ip(self, ip):
         if ip in self.neighbors:
@@ -41,7 +27,6 @@ class OSPFTable():
     def update_info(self, data):
         self.neighbors = data['neighbors']
         self.table = data['table']
-    
     
     
     #print out the table for testing purpose.

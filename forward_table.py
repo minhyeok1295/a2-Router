@@ -9,8 +9,8 @@ class ForwardTable:
         check if table has src_ip as key
         """
         return ip in self.table
-    
-    def create_entry(self,ip,addr,ttl=None):
+    #add entry in the table   
+    def create_entry(self,ip,addr):
         """
         add src_ip to table and the value is addr (ip of the incoming packet)
         """
@@ -22,17 +22,13 @@ class ForwardTable:
     
     def _update_table(self,ip,ttl,addr):
         pass
-    
+    #returns the table
     def get_table(self):
         return self.table
 
     def set_table(self,table):
         self.table = table
 
-    def print2(self):
-        print(self.table)
-        print("=========")
-        print(self.table.values())
 
     def __str__(self):
         output = "======= Original Table =======\n" 

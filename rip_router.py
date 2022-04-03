@@ -1,6 +1,6 @@
 
 from router import *
-from rip_table import RIPTbable
+from rip_table import RIPTable
 import time
 import ifaddr
 from interface import Interface 
@@ -8,7 +8,7 @@ from interface import Interface
 class RIPRouter(Router):
 
     def __init__(self):
-        self.table = RIPTbable()
+        self.table = RIPTable()
         self.init_update_sock()
         self.interfaces = self.init_interfaces()
         self.interface_ip = [interface.ip for interface in self.interfaces]
