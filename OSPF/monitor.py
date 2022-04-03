@@ -17,7 +17,7 @@ class Monitor(Router):
             if (self.network[router].get(ip, False) != False):
                 self.network[router].pop(ip)
             if router == ip:
-                for k, v in self.network[router]:
+                for k, v in self.network[router].items():
                     if v[0] == "router":
                         self.network[router].pop(k)
     
