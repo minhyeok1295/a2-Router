@@ -50,7 +50,7 @@ class OSPFTable():
         for k,v in self.neighbors.items():
             output += f"{v}\t: {k}\n"
         output += "======= Original Table =======\n" 
-        output += "Source IP\t: Next Hop IP\t Cost\n"
+        output += "Destination IP\t: Next Hop IP\t Cost\n"
         for k,v in self.table.items():
             output += f"{k}\t: {v[0]}\t {v[1]}\n"
         output += "=========================="
