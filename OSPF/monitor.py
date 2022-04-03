@@ -44,7 +44,7 @@ class Monitor(Router):
                     self.network[dst_ip][src_ip] = ("host", 1)
                     self.update_tables()
                 elif (data['message'] == 'disconnect'): #disconnect router.
-                    self.disconnect_from_network(ip)
+                    self.disconnect_from_network(src_ip)
                     self.update_tables()
             conn.close()
         monitor.close()

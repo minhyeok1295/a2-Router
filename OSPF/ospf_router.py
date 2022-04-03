@@ -23,31 +23,32 @@ class OSPFRouter(Router):
         else: #it is router
             self.thread_sock.sendto(make_packet(self.ip,addr,'NA',0),addr)
     
+    #connect to monitor
+    def connect_to_monitor(self):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect(("10.0.0.1", 8888))
+        return s
+    
     #notify the monitor node that the router has been connected to the given ip.
     def notify_monitor_connect(self, ip):
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect(("10.0.0.1", 8888))
+        s = self.connect_to_monitor()
         s.send(make_table_packet(self.ip, ip, self.table, {}))
         s.close()
-   
-    
+
     #notify the monitor node that new router has been added    
     def notify_monitor_new_router(self):
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect(("10.0.0.1", 8888))
+        s = self.connect_to_monitor()
         s.send(make_packet(self.ip, "10.0.0.1", "router", 0))
         s.close()
         
     #notify the monitor node that new host has been added    
     def notify_monitor_new_host(self, ip):
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect(("10.0.0.1", 8888))
+        s = self.connect_to_monitor()
         s.send(make_packet(ip, self.ip, "host", 0))
         s.close()
         
     def notify_monitor_disconnect(self):
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect(("10.0.0.1", 8888))
+        s = self.connect_to_monitor()
         s.send(make_packet(self.ip, "10.0.0.1", "disconnect", 0))
         s.close()
         
@@ -85,7 +86,9 @@ class OSPFRouter(Router):
             if len(packet) != 0:
                 data = pickle.loads(packet)
                 if (len(data) == 5): #updating table
+                    self.lock.acquire()
                     self.table.update_info(data)
+                    self.lock.release()
                     print("updated table")
                 else:
                     if (data['message'] == 'exit'):
