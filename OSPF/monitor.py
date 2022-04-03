@@ -10,6 +10,17 @@ class Monitor(Router):
         self.network = {}
         self.routers = []
         
+        
+    #disconnect router with "ip" from all other routers that are connected    
+    def disconnect_from_network(self, ip):
+        for router in self.network:
+            if (self.network[router].get(ip, False) != False):
+                self.network[router].pop(ip)
+            if router == ip:
+                for k, v in self.network[router]:
+                    if v[0] == "router":
+                        self.network[router].pop(k)
+    
     
     def open_server(self):
         monitor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -32,15 +43,20 @@ class Monitor(Router):
                 elif (data['message'] == 'host'): #host added
                     self.network[dst_ip][src_ip] = ("host", 1)
                     self.update_tables()
+                elif (data['message'] == 'disconnect'): #disconnect router.
+                    self.disconnect_from_network(ip)
+                    self.update_tables()
             conn.close()
         monitor.close()
         
+    #send the updated table back to router.
     def send_table(self, ip, table, neighbors):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((ip, 8000))
         s.send(make_table_packet(None, ip, table, neighbors))
         s.close()
         
+    #update the table in the monitor node using dijkstra algorithm in dijkstra.py    
     def update_tables(self):
         for router in self.routers:
             neighbors = {}
@@ -49,8 +65,7 @@ class Monitor(Router):
             table = update_table(self.network, self.routers, router)
             self.send_table(router, table, neighbors)
                   
-            
-            
+    #print out the list of routers and all connected neighbors for each of them.        
     def print_network(self):
         output = "==================\n"
         for k,v  in self.network.items():
@@ -65,17 +80,12 @@ class TableCommandThread(ThreadSock):
             command = input()
             print("Command you entered is ",command)
             if command == "print":
-                print("Executing print command")
                 self.node.print_network()
-                print(self.node.routers)
             
         
         
 if __name__ == "__main__":
-    if (len(sys.argv) != 2):
-        print("error occured")
-        exit(1)
-    monitor = Monitor(sys.argv[1])
+    monitor = Monitor("10.0.0.1")
     
     command_t = TableCommandThread(monitor)
     command_t.start()

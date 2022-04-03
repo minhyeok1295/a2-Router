@@ -7,18 +7,8 @@ class OSPFRouter(Router):
         super().__init__(ip)
         self.table = OSPFTable()
         
-    def notify_monitor_new_router(self):
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect(("10.0.0.1", 8888))
-        s.send(make_packet(self.ip, "10.0.0.1", "router", 0))
-        s.close()
-        
-    def notify_monitor_new_host(self, ip):
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect(("10.0.0.1", 8888))
-        s.send(make_packet(ip, self.ip, "host", 0))
-        s.close()
     
+    #receive 
     def receive(self): #wait for broadcast
         recv_data, addr = self.thread_sock.recvfrom(1024)
         data = pickle.loads(recv_data)
@@ -33,12 +23,38 @@ class OSPFRouter(Router):
         else: #it is router
             self.thread_sock.sendto(make_packet(self.ip,addr,'NA',0),addr)
     
-    def send_attach(self, ip):
+    #notify the monitor node that the router has been connected to the given ip.
+    def notify_monitor_connect(self, ip):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect(("10.0.0.1", 8888))
         s.send(make_table_packet(self.ip, ip, self.table, {}))
         s.close()
    
+    
+    #notify the monitor node that new router has been added    
+    def notify_monitor_new_router(self):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect(("10.0.0.1", 8888))
+        s.send(make_packet(self.ip, "10.0.0.1", "router", 0))
+        s.close()
+        
+    #notify the monitor node that new host has been added    
+    def notify_monitor_new_host(self, ip):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect(("10.0.0.1", 8888))
+        s.send(make_packet(ip, self.ip, "host", 0))
+        s.close()
+        
+    def notify_monitor_disconnect(self):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect(("10.0.0.1", 8888))
+        s.send(make_packet(self.ip, "10.0.0.1", "disconnect", 0))
+        s.close()
+        
+   
+    
+    #decrement 1 ttl and forward message to next hop if it is possible. Drop packet
+    #if its not possible.
     def handle_message_packet(self, data):
         data['ttl'] -= 1
         if (data['ttl'] > 0):
@@ -57,6 +73,7 @@ class OSPFRouter(Router):
         else:
             print_ttl_expired(self.ip,data)    
         
+    #open up the server for router.    
     def open_server(self):
         self.notify_monitor_new_router()
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -80,6 +97,7 @@ class OSPFRouter(Router):
         conn.close()
         server.close()
     
+    #forward the received data to next hop port 8100: host, 8000: router
     def forward(self,recv_data, next_hop, tp):
         data = recv_data.copy()
         packet = make_packet(data['src_ip'],data['dest_ip'],data['message'],data['ttl']) 

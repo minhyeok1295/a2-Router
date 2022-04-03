@@ -1,19 +1,25 @@
 # -*- coding: utf-8 -*-
 class OSPFTable():
+    
     def __init__(self):
         self.neighbors = {}
         self.table = {}
+        
     
+    #add neighbors  
     def add_neighbors(self, ip, t):
         self.neighbors[ip] = t
         
+    #add entry in the OSPF table    
     def create_entry(self, ip, addr):
         self.table[ip] = addr
     
-    def get_table():
+    #returns the table
+    def get_table(self):
         return self.table
     
-    def get_neighbors():
+    #returns the neighbors
+    def get_neighbors(self):
         return self.neighbors
     
     
@@ -35,10 +41,15 @@ class OSPFTable():
             return self.table[mip], "router"
         return None, None
     
+    
+    #using data sent from the monitor node, update the table and neighbors
     def update_info(self, data):
         self.neighbors = data['neighbors']
         self.table = data['table']
     
+    
+    
+    #print out the table for testing purpose.
     def __str__(self):
         output = "======= Neighbors =======\n" 
         for k,v in self.neighbors.items():
@@ -46,6 +57,6 @@ class OSPFTable():
         output += "======= Original Table =======\n" 
         output += "Source IP\t: Next Hop IP\t Cost\n"
         for k,v in self.table.items():
-            output += f"{k}\t: {v}\n"
+            output += f"{k}\t: {v[0]}\t {v[1]}\n"
         output += "=========================="
         return output

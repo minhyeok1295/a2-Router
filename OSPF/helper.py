@@ -33,7 +33,9 @@ class TableCommandThread(ThreadSock):
                 print(self.node.table)
             if command == "connect":
                 ip = input("Enter Ip address: ")
-                self.node.send_attach(ip)
+                self.node.notify_monitor_connect(ip)
+            if command == "disconnect":
+                self.node.notify_monitor_disconnect()
 
 
 def make_packet(src_ip, dest_ip, message, ttl):
@@ -56,7 +58,6 @@ def make_table_packet(src_ip, dest_ip, table, neighbors):
     return pickle.dumps(data)
 
 
-
 def print_packet(packet):
     print("-----packet info-----")
     print("src_ip: " + packet["src_ip"])
@@ -66,14 +67,14 @@ def print_packet(packet):
     print("=====================")
     
 def print_error(src_ip,dest_ip):
-        print("========== Error ==========")
-        print(f"Bad request from {src_ip}")
-        print(f"Destination {dest_ip} is unreachable\n\n")
+    print("========== Error ==========")
+    print(f"Bad request from {src_ip}")
+    print(f"Destination {dest_ip} is unreachable\n\n")
 
 def print_ttl_expired(cur_ip, data):
-        print("========== TTL Expired ==========")
-        print_packet(data)
-        print(f"Package dropped At router {cur_ip} from {data['src_ip']} to {data['dest_ip']}\n\n")
+    print("========== TTL Expired ==========")
+    print_packet(data)
+    print(f"Package dropped At router {cur_ip} from {data['src_ip']} to {data['dest_ip']}\n\n")
 
 #Validate format of ip address
 def validate_ip(ip):
