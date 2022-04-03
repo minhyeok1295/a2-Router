@@ -195,7 +195,7 @@ def run():
     info(net['m'].cmd("ip route add 10.7.0.0/24 via 10.107.0.1 dev m-eth7"))
     
     
-    #net.startTerms()
+    net.startTerms()
     CLI(net)
     net.stop()
 
