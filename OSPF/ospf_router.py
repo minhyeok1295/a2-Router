@@ -88,7 +88,7 @@ class OSPFRouter(Router):
         server.listen(5)
         while True:
             conn, addr = server.accept()
-            start = time.time()
+            #start = time.time()
             packet = conn.recv(4096)
             if len(packet) != 0:
                 data = pickle.loads(packet)
@@ -103,8 +103,8 @@ class OSPFRouter(Router):
                     self.handle_message_packet(data)
             else:
                 print("nothing received")
-            end = time.time()
-            print("time: " + str(end - start))
+            #end = time.time()
+            #print("time: " + str(end - start))
             conn.close()
         conn.close()
         server.close()
