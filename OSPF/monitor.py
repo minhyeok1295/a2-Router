@@ -78,7 +78,6 @@ class TableCommandThread(ThreadSock):
         print("Start Command Thread")
         while not self.stopped():
             command = input()
-            print("Command you entered is ",command)
             if command == "print":
                 self.node.print_network()
             

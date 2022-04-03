@@ -34,7 +34,7 @@ class OSPFTable():
         if ip in self.neighbors:
             return ip, self.neighbors[ip]
         elif ip in self.table:
-            return self.table[ip], self.neighbors[self.table[ip]]
+            return self.table[ip], self.neighbors[self.table[ip][0]]
         elif mip in self.table:
             print("here")
             self.create_entry(ip, self.table[mip])
