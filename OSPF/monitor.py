@@ -57,10 +57,9 @@ class Monitor(Router):
     def update_tables(self):
         for router in self.routers:
             neighbors = {}
-            for k,v in self.network[router].items():
+            for k,v in self.network[router].items(): #get all neighbors in a new dic.
                 neighbors[k] = v[0]
             table = update_table(self.network, self.routers, router) #FUNCTION IN dijkstra.py
-            print(table)
             self.send_table(router, table, neighbors)
                   
     #print out the list of routers and all connected neighbors for each of them.        
