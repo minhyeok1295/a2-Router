@@ -72,6 +72,7 @@ class OSPFRouter(Router):
                         print(f"Successfully sent message to {t}, {next_hop}")
                 except Exception:
                     print("Error!!!!")
+                self.lock.release() 
             else:
                 print_error(data['src_ip'],data['dest_ip'])
                 self.lock.release()
