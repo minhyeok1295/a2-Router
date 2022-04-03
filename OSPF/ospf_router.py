@@ -89,7 +89,7 @@ class OSPFRouter(Router):
                     self.lock.acquire()
                     self.table.update_info(data)
                     self.lock.release()
-                    print("updated table")
+                    #print("updated table")
                 else:
                     if (data['message'] == 'exit'):
                         break
