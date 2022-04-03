@@ -111,10 +111,8 @@ class NetworkTopo(Topo):
         self.addLink(h2, s2)
 
 def run():
-    c = RemoteController('c', '0.0.0.0', 6633)
     topo = NetworkTopo()
     net = Mininet(topo=topo)
-    net.addController(c)
     net.start()
 
     # Add routing for reaching networks that aren't directly connected
@@ -136,7 +134,7 @@ def run():
     info(net['r5'].cmd("ip route add 10.3.0.0/24 via 10.103.0.1 dev r5-eth1"))
     info(net['r5'].cmd("ip route add 10.0.0.0/24 via 10.104.0.2 dev r5-eth2"))
 
-    
+    net.startTerms()
     CLI(net)
     net.stop()
 
