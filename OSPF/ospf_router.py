@@ -104,7 +104,7 @@ class OSPFRouter(Router):
             else:
                 print("nothing received")
             end = time.time()
-            print("time: " + (end - start))
+            print("time: " + str(end - start))
             conn.close()
         conn.close()
         server.close()

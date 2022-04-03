@@ -63,7 +63,7 @@ class Monitor(Router):
             table = update_table(self.network, self.routers, router) #FUNCTION IN dijkstra.py
             self.send_table(router, table, neighbors)
         end = time.time()
-        print("time: " + (end - start))
+        print("time: " + str(end - start))
                   
     #print out the list of routers and all connected neighbors for each of them.        
     def print_network(self):
