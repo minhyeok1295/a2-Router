@@ -128,10 +128,7 @@ if __name__ == "__main__":
     command_t = TableCommandThread(router)
     broadcast_t.start()
     command_t.start()
-    
     router.open_server()
-    
-    
     broadcast_t.stop()
     command_t.stop()
     router.thread_sock.close()

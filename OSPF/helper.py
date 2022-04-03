@@ -36,7 +36,7 @@ class TableCommandThread(ThreadSock):
             if command == "disconnect":
                 self.node.notify_monitor_disconnect()
 
-
+#Make message packet and dump it into pickle
 def make_packet(src_ip, dest_ip, message, ttl):
     data = {
         'src_ip' : src_ip,
@@ -46,6 +46,7 @@ def make_packet(src_ip, dest_ip, message, ttl):
     }
     return pickle.dumps(data)
 
+#include table information and the corresponding routers for sending purpose.
 def make_table_packet(src_ip, dest_ip, table, neighbors):
     data = {
         'src_ip': src_ip,
