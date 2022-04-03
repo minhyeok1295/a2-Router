@@ -10,7 +10,7 @@ class Host():
     and send a simple message to the IP address 255.255.255.255 with TTL=0 in order to broadcast its existence
     '''
     
-    def __init__(self, ip, port):
+    def __init__(self, ip):
         self.ip = ip
         self.ttl = 0
         self.next_ip = ''
@@ -26,10 +26,12 @@ class Host():
         self.broad_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.broad_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.broad_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        self.broad_socket.sendto(make_packet(self.ip, '255.255.255.255','', 0),
+        self.broad_socket.sendto(make_packet(self.ip, '255pr.255.255.255','', 0),
                                     ('255.255.255.255', 9999))
         recv_data, addr = self.broad_socket.recvfrom(1024)
         data = pickle.loads(recv_data)
+        if (data['message'] == 'NA'):
+            print("provided ip can't connect to the router")
         self.broad_socket.close()
         return data
         
@@ -49,13 +51,14 @@ class Host():
             if(msg == 'exit'):
                 exit_packet = make_packet("", "", msg, 0)
                 self.connect()
-                self.send_sock.send(exit_packet)
+                self.send_sock.send(exit_packet)        
                 self.send_sock.close()
                 break
             else:
                 dest_ip = input("Enter destination: ")
                 ttl = self.get_ttl()
                 if (validate_ip(dest_ip)):
+                    print(self.next_ip)
                     self.connect()
                     print("send msg: " + msg + ", to dest: ", dest_ip)
                     data_packet = make_packet(self.ip, dest_ip, msg, ttl)
@@ -68,6 +71,7 @@ class Host():
                     print("invalid ip address format")
         return 0
 
+    #if it is on the same switch, send it directly.
     def send_to_host(self, dest_ip, packet):
         self.send_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.send_sock.connect((dest_ip, 8100))
@@ -96,10 +100,9 @@ class Host():
     '''
     def receive(self):
         recv_sock,addr = self.thread_sock.accept()
-        print(addr)
         recv_data = recv_sock.recv(4096)
         data = pickle.loads(recv_data)
-        print(f"From {data['src_ip']}: {data['message']}")
+        print(f"\nFrom {data['src_ip']}: {data['message']}")
         recv_sock.close()
         
 
@@ -107,20 +110,19 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Incorrect number of arguments: IP address needed")
         raise
-    host = Host(sys.argv[1], 9999)
+    host = Host(sys.argv[1])
     print("created host")
     print("Start broadcasting")
     broadcast_data = host.broadcast()
-    
-    print("router ip: " + broadcast_data['src_ip'])
-    host.set_next_hop(broadcast_data['src_ip'])
-
-    recv_t = ThreadSock(host)
-    recv_t.start()
-    host.send()
-    print("send terminated")
-    recv_t.stop()
-    print("end")
-    host.thread_sock.close()
-    recv_t.join()
-    print('Program Terminated')
+    if (broadcast_data['message'] != "NA"):
+        print("router ip: " + broadcast_data['src_ip'])
+        host.set_next_hop(broadcast_data['src_ip'])
+        recv_t = ThreadSock(host)
+        recv_t.start()
+        host.send()
+        print("send terminated")
+        recv_t.stop()
+        print("end")
+        host.thread_sock.close()
+        recv_t.join()
+        print('Program Terminated')

@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Mar 24 06:09:51 2022
-
-@author: MinHyeok
-"""
-
 from mininet.topo import Topo
 from mininet.net import Mininet
 from mininet.node import Node
 from mininet.log import setLogLevel, info
 from mininet.cli import CLI
 
+'''
+TOPOLOGY:
+
+d1 - s1 - r1 - s2 - d2
+'''
 topos = { 'mytopo': ( lambda: NetworkTopo() ) } 
 
 class LinuxRouter(Node):
@@ -69,18 +68,15 @@ def run():
     topo = NetworkTopo()
 
     net = Mininet(topo=topo)
-    net.pingAll()
     # Add routing for reaching networks that aren't directly connected
-    #info(net['r1'].cmd("ip route add 10.1.0.0/24 via 10.0.0.1 dev r1-eth2"))
-    #info(net['r1'].cmd("ip route add 10.0.0.0/24 via 10.1.0.1 dev r1-eth1"))
-
-    #net.start()
-    #CLI(net)
-    #net.stop()
+    net.start()
+    
+    net.startTerms()
+    CLI(net)
+    net.stop()
 
 
 if __name__ == '__main__':
     setLogLevel('info')
-    #topo = { 'mytopo': ( lambda: NetworkTopo() ) } 
     run()
     

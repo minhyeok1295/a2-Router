@@ -27,9 +27,7 @@ class ThreadSock(threading.Thread):
         while not self.stopped():
             self.node.receive()
         self.node.thread_sock.close()
-
-
-
+        
 def make_packet(src_ip, dest_ip, message, ttl):
     data = {
         'src_ip' : src_ip,

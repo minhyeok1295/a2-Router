@@ -23,6 +23,19 @@ class ThreadSock(threading.Thread):
         self.node.thread_sock.close()
 
 
+class TableCommandThread(ThreadSock):
+    def run(self):
+        print("Start Command Thread")
+        while not self.stopped():
+            command = input()
+            print("Command you entered is ",command)
+            if command == "print":
+                print("Executing print command")
+                print(self.node.table)
+            if command == "connect":
+                ip = input("Enter Ip address: ")
+                self.node.send_attach(ip)
+
 
 def make_packet(src_ip, dest_ip, message, ttl):
     data = {
@@ -41,15 +54,17 @@ def print_packet(packet):
     print("dest_ip: " + packet["dest_ip"])
     print("msg: " + packet['message'])
     print("ttl: " + str(packet['ttl']))
+    print("=====================")
     
 def print_error(src_ip,dest_ip):
         print("========== Error ==========")
         print(f"Bad request from {src_ip}")
         print(f"Destination {dest_ip} is unreachable\n\n")
 
-def print_ttl_expired(cur_ip,src_ip,dest_ip):
+def print_ttl_expired(cur_ip, data):
         print("========== TTL Expired ==========")
-        print(f"At router {cur_ip} from {src_ip} to {dest_ip}\n\n")
+        print_packet(data)
+        print(f"Package dropped At router {cur_ip} from {data['src_ip']} to {data['dest_ip']}\n\n")
 
 #Validate format of ip address
 def validate_ip(ip):
