@@ -18,7 +18,7 @@ class Monitor(Router):
                 self.network[router].pop(ip)
             if router == ip:
                 cp = self.network[router].copy()
-                for k, v in cp:
+                for k, v in cp.items():
                     if v[0] == "router":
                         cp.pop(k)
                 self.network[router] = cp
