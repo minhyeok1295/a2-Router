@@ -55,6 +55,7 @@ class Monitor(Router):
         
     #update the table in the monitor node using dijkstra algorithm in dijkstra.py    
     def update_tables(self):
+        
         for router in self.routers:
             neighbors = {}
             for k,v in self.network[router].items(): #get all neighbors in a new dic.
