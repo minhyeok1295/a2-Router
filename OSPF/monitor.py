@@ -56,17 +56,12 @@ class Monitor(Router):
         
     #update the table in the monitor node using dijkstra algorithm in dijkstra.py    
     def update_tables(self):
-        start = time.time()
         for router in self.routers:
             neighbors = {}
             for k,v in self.network[router].items(): #get all neighbors in a new dic.
                 neighbors[k] = v[0]
             table = update_table(self.network, self.routers, router) #FUNCTION IN dijkstra.py
             self.send_table(router, table, neighbors)
-        end = time.time()
-        print("time: " + str(end - start))
-        self.total_time += (end - start)
-        self.num += 1
                   
     #print out the list of routers and all connected neighbors for each of them.        
     def print_network(self):

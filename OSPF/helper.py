@@ -42,8 +42,6 @@ class TableCommandThread(ThreadSock):
                 self.node.notify_monitor_connect(ip)
             if command == "disconnect":
                 self.node.notify_monitor_disconnect()
-            if command == "time":
-                print(self.node.total_time / self.node.num)
 
 #Make message packet and dump it into pickle
 def make_packet(src_ip, dest_ip, message, ttl):

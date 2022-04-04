@@ -7,8 +7,6 @@ class OSPFRouter(Router):
     def __init__(self, ip):
         super().__init__(ip)
         self.table = OSPFTable()
-        self.total_time = 0
-        self.num = 0
     
     #receive 
     def receive(self): #wait for broadcast
@@ -89,7 +87,6 @@ class OSPFRouter(Router):
         server.listen(5)
         while True:
             conn, addr = server.accept()
-            start = time.time()
             packet = conn.recv(4096)
             if len(packet) != 0:
                 data = pickle.loads(packet)
@@ -104,10 +101,6 @@ class OSPFRouter(Router):
                     self.handle_message_packet(data)
             else:
                 print("nothing received")
-            end = time.time()
-            print("time: " + str(end - start))
-            self.total_time += (end-start)
-            self.num +=1
             conn.close()
         conn.close()
         server.close()
