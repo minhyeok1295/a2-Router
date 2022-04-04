@@ -84,7 +84,7 @@ class TableCommandThread(ThreadSock):
             if command == "print":
                 self.node.print_network()
             if command == "time":
-                print(self.node.total_time / self.num)
+                print(self.node.total_time / self.node.num)
             
         
         
