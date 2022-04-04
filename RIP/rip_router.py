@@ -1,6 +1,6 @@
 
 from router import *
-from rip_table import RIPTbable
+from rip_table import RIPTable
 import time
 import ifaddr
 from interface import Interface 
@@ -8,13 +8,15 @@ from interface import Interface
 class RIPRouter(Router):
 
     def __init__(self):
-        self.table = RIPTbable()
+        self.table = RIPTable()
         self.init_update_sock()
         self.interfaces = self.init_interfaces()
         self.interface_ip = [interface.ip for interface in self.interfaces]
         self.interface_lock = self.init_locks()
         self.table_lock = threading.Lock()
         self.init_table()
+        self.update_table_timer = []
+        self.advertise_table_timer = []
     
     def start(self):
         broadcast_t = ThreadSock(self)
@@ -106,17 +108,20 @@ class RIPRouter(Router):
     def advertise(self):
         print("======== Advertising ========")
         self.table_lock.acquire()
+        start_time = time.time()
         for interface in self.interfaces:
             self.init_advertise_sock(interface.ip)
             data = make_table(self.table.get_table())
             self.advertise_sock.sendto(data,('255.255.255.255', UPDATE_PORT))
             self.advertise_sock.close()
+        self.advertise_table_timer.append(time.time()-start_time)
         self.table_lock.release()
         print("======== Done Advertising ========")
 
     def update(self,table,last_hop,interface):
         print("======== Got Update Message ========")
         table = table.copy()
+        start_time = time.time()
         if len(self.table.get_table().keys()) == 0:
             self.set_forwarding_table(table)
             return
@@ -134,6 +139,7 @@ class RIPRouter(Router):
                 modified = True
         print(self.table)
         self.table_lock.release()
+        self.update_table_timer.append(time.time()-start_time)
         print("======== Done Update Message ========")
         if modified:
             self.advertise()
@@ -159,12 +165,6 @@ class RIPRouter(Router):
                 if self.table.has_ip(dest):
                     table_entry = self.table.get_next_hop(dest)
                     self.send(data,table_entry)
-                    print(f"Successfully sent message to {data['dest_ip']}")
-                    """try:
-                        self.send(data,table_entry)
-                        print(f"Successfully sent message to {data['dest_ip']}")
-                    except Exception:
-                        print("Error!!!!")"""
                 else:
                     print_error(data['src_ip'],data['dest_ip'])
                 self.table_lock.release()
@@ -201,6 +201,19 @@ class RIPRouter(Router):
                 print(self.table)
             if command == "print2":
                 self.table.print2()
+            if command == "timer":
+                print("Printing Time Measurement")
+                print("Time Spent on Updating Table")
+                print(self.update_table_timer)
+                print("Sum : ", sum(self.update_table_timer))
+                if len(self.update_table_timer) > 0:
+                    print("Average : ",sum(self.update_table_timer)/len(self.update_table_timer))
+                print("Time Spent on Advertising Table")
+                print(self.advertise_table_timer)
+                print("Sum : ", sum(self.advertise_table_timer))
+                if len(self.advertise_table_timer) > 0:
+                    print("Average : ",sum(self.advertise_table_timer)/len(self.advertise_table_timer))
+
 
 
 class UpdateThread(ThreadSock):

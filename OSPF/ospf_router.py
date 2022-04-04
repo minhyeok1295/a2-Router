@@ -2,12 +2,11 @@ from router import *
 from helper import *
 from ospf_table import *
 import sys
-
+import time
 class OSPFRouter(Router):
     def __init__(self, ip):
         super().__init__(ip)
         self.table = OSPFTable()
-        
     
     #receive 
     def receive(self): #wait for broadcast

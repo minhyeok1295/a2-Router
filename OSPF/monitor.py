@@ -2,14 +2,15 @@
 from router import *
 from helper import *
 from dijkstra import *
-
+import time
 
 class Monitor(Router):
     def __init__(self, ip):
         super().__init__(ip)
         self.network = {}
         self.routers = []
-        
+        self.total_time = 0
+        self.num = 0
         
     #disconnect router with "ip" from all other routers that are connected    
     def disconnect_from_network(self, ip):
@@ -77,6 +78,8 @@ class TableCommandThread(ThreadSock):
             command = input()
             if command == "print":
                 self.node.print_network()
+            if command == "time":
+                print(self.node.total_time / self.node.num)
             
         
         

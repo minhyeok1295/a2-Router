@@ -19,15 +19,12 @@ class Router():
         self.thread_sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
         self.thread_sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         self.thread_sock.bind(('0.0.0.0',9999))
-
-    def receive(self): #wait for broadcast
-        recv_data, addr = self.thread_sock.recvfrom(1024)
-        data = pickle.loads(recv_data)
-        self.lock.acquire()
-        # set src ip as key, the ip where the message is coming from as value
-        self.table.create_entry(data['src_ip'],addr[0])
-        self.lock.release()
-        self.thread_sock.sendto(make_packet(self.ip,addr,'',0),addr)
+        
+    def receive(self):
+        pass
+    
+    def forward(self):
+        pass
     
     def open_server(self):
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -65,14 +62,6 @@ class Router():
             conn.close()
         conn.close()
         server.close()
-
-    def forward(self,recv_data,next_hop):
-        data =recv_data.copy()
-        packet = make_packet(data['src_ip'],data['dest_ip'],data['message'],data['ttl'])
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect((next_hop,8100))
-        sock.send(packet)
-        sock.close()
 
 
 class TableCommandThread(ThreadSock):

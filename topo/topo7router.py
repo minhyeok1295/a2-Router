@@ -97,22 +97,22 @@ class NetworkTopo(Topo):
         
         # Adding hosts specifying the default route
         h1 = self.addHost(name='h1', ip='10.1.0.10/24', defaultRoute='via 10.1.0.1')
-        h2 = self.addHost(name='h2', ip='10.2.0.10/24', defaultRoute='via 10.2.0.1')
-        h3 = self.addHost(name='h3', ip='10.3.0.10/24', defaultRoute='via 10.3.0.1')
-        h4 = self.addHost(name='h4', ip='10.4.0.10/24', defaultRoute='via 10.4.0.1')
-        h5 = self.addHost(name='h5', ip='10.5.0.10/24', defaultRoute='via 10.5.0.1')
-        h6 = self.addHost(name='h6', ip='10.6.0.10/24', defaultRoute='via 10.6.0.1')
+        #h2 = self.addHost(name='h2', ip='10.2.0.10/24', defaultRoute='via 10.2.0.1')
+        #h3 = self.addHost(name='h3', ip='10.3.0.10/24', defaultRoute='via 10.3.0.1')
+        #h4 = self.addHost(name='h4', ip='10.4.0.10/24', defaultRoute='via 10.4.0.1')
+        #h5 = self.addHost(name='h5', ip='10.5.0.10/24', defaultRoute='via 10.5.0.1')
+        #h6 = self.addHost(name='h6', ip='10.6.0.10/24', defaultRoute='via 10.6.0.1')
         h7 = self.addHost(name='h7', ip='10.7.0.10/24', defaultRoute='via 10.7.0.1')
         
         
         
         # Add host-switch links
         self.addLink(h1, s1)
-        self.addLink(h2, s2)
-        self.addLink(h3, s3)
-        self.addLink(h4, s4)
-        self.addLink(h5, s5)
-        self.addLink(h6, s6)
+        #self.addLink(h2, s2)
+        #self.addLink(h3, s3)
+        #self.addLink(h4, s4)
+        #self.addLink(h5, s5)
+        #self.addLink(h6, s6)
         self.addLink(h7, s7)
 
 def run():

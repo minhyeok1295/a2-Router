@@ -1,6 +1,13 @@
 import pickle
 import threading
 
+SEND_PORT = 8000
+RECV_PORT = 8100
+BRAODCAST_ADDR = '255.255.255.255'
+BRAODCAST_PORT = 9999
+UPDATE_PORT = 8200
+ADVERTISE_PORT = 8300
+
 
 class ThreadSock(threading.Thread):
     
@@ -45,6 +52,12 @@ def make_packet(src_ip, dest_ip, message, ttl):
         'ttl' : ttl
     }
     return pickle.dumps(data)
+
+#save table inforamtion for RIP algorithm
+def make_table(table):
+    return pickle.dumps({
+        "table": table
+    })
 
 #include table information and the corresponding routers for sending purpose.
 def make_table_packet(src_ip, dest_ip, table, neighbors):

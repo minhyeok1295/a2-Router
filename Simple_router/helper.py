@@ -1,6 +1,13 @@
 import pickle
 import threading
 
+SEND_PORT = 8000
+RECV_PORT = 8100
+BRAODCAST_ADDR = '255.255.255.255'
+BRAODCAST_PORT = 9999
+UPDATE_PORT = 8200
+ADVERTISE_PORT = 8300
+
 
 class ThreadSock(threading.Thread):
     
@@ -28,15 +35,15 @@ class TableCommandThread(ThreadSock):
         print("Start Command Thread")
         while not self.stopped():
             command = input()
-            print("Command you entered is ",command)
             if command == "print":
-                print("Executing print command")
                 print(self.node.table)
             if command == "connect":
                 ip = input("Enter Ip address: ")
-                self.node.send_attach(ip)
+                self.node.notify_monitor_connect(ip)
+            if command == "disconnect":
+                self.node.notify_monitor_disconnect()
 
-
+#Make message packet and dump it into pickle
 def make_packet(src_ip, dest_ip, message, ttl):
     data = {
         'src_ip' : src_ip,
@@ -46,6 +53,22 @@ def make_packet(src_ip, dest_ip, message, ttl):
     }
     return pickle.dumps(data)
 
+#save table inforamtion for RIP algorithm
+def make_table(table):
+    return pickle.dumps({
+        "table": table
+    })
+
+#include table information and the corresponding routers for sending purpose.
+def make_table_packet(src_ip, dest_ip, table, neighbors):
+    data = {
+        'src_ip': src_ip,
+        'dest_ip': dest_ip,
+        'table': table,
+        'neighbors': neighbors,
+        'packet' : "table"
+    }
+    return pickle.dumps(data)
 
 
 def print_packet(packet):
@@ -57,14 +80,14 @@ def print_packet(packet):
     print("=====================")
     
 def print_error(src_ip,dest_ip):
-        print("========== Error ==========")
-        print(f"Bad request from {src_ip}")
-        print(f"Destination {dest_ip} is unreachable\n\n")
+    print("========== Error ==========")
+    print(f"Bad request from {src_ip}")
+    print(f"Destination {dest_ip} is unreachable\n\n")
 
 def print_ttl_expired(cur_ip, data):
-        print("========== TTL Expired ==========")
-        print_packet(data)
-        print(f"Package dropped At router {cur_ip} from {data['src_ip']} to {data['dest_ip']}\n\n")
+    print("========== TTL Expired ==========")
+    print_packet(data)
+    print(f"Package dropped At router {cur_ip} from {data['src_ip']} to {data['dest_ip']}\n\n")
 
 #Validate format of ip address
 def validate_ip(ip):

@@ -40,6 +40,7 @@ class Host():
 
     def connect(self):
         self.send_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.send_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.send_sock.connect((self.next_ip, 8000))
 
     '''Given a destination IP address, a text message and TTL,

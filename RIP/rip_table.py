@@ -1,5 +1,5 @@
 from forward_table import * 
-class RIPTbable(ForwardTable):
+class RIPTable(ForwardTable):
     
     def __init__(self):
         # dest_ip : [next_hop, cost]
